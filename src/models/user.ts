@@ -1,10 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose"; 
 
 const UserSchema = new mongoose.Schema({
     id: Schema.Types.ObjectId,
-    name: {
+    fullname: {
         type: String,
         required: true,
+    },
+    pen_name: {
+        type: String,
+        required: true,
+        unique: true,
     },
     email: {
         type: String,
@@ -21,6 +26,9 @@ const UserSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default: "user",
     },
+    dob: {
+        type: Date,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
@@ -29,6 +37,7 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    subscription_end: { type: Date }
 });
 
 const User = mongoose.model("User", UserSchema);

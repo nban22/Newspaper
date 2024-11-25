@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/home.css" />
+        <link rel="stylesheet" href="/css/global.css" />
+        <link rel="stylesheet" href="/css/components/header.css" />
+        <!-- <link rel="stylesheet" href="/css/components/slideshow.css" /> -->
+    </head>
+    <body>
+        <%- include('../components/header') %>
+
+        <!-- <%- include('../components/slideshow') %> -->
+
+
+        <div class="container my-5">
+            <!-- Carousel -->
+            <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="Featured Article 1">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Bài viết nổi bật 1</h5>
+                    <p>Mô tả ngắn về bài viết nổi bật 1</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="Featured Article 2">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Bài viết nổi bật 2</h5>
+                    <p>Mô tả ngắn về bài viết nổi bật 2</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="Featured Article 3">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h5>Bài viết nổi bật 3</h5>
+                    <p>Mô tả ngắn về bài viết nổi bật 3</p>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+        
+            <!-- Nổi bật trong tuần -->
+            <div class="my-5">
+              <h3 class="mb-4">Nổi bật trong tuần</h3>
+              <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col">
+                  <div class="card">
+                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Article 1">
+                    <div class="card-body">
+                      <h5 class="card-title">Bài viết nổi bật 1</h5>
+                      <p class="card-text">Mô tả ngắn về bài viết.</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Thêm bài viết nổi bật -->
+              </div>
+            </div>
+        
+            <!-- Được xem nhiều nhất -->
+            <div class="my-5">
+              <h3 class="mb-4">Được xem nhiều nhất</h3>
+              <ul class="list-group">
+                <li class="list-group-item">Bài viết 1</li>
+                <li class="list-group-item">Bài viết 2</li>
+                <li class="list-group-item">Bài viết 3</li>
+                <!-- Thêm bài viết -->
+              </ul>
+            </div>
+        
+            <!-- Mới nhất -->
+            <div class="my-5">
+              <h3 class="mb-4">Mới nhất</h3>
+              <ul class="list-group">
+                <li class="list-group-item">Bài viết mới nhất 1</li>
+                <li class="list-group-item">Bài viết mới nhất 2</li>
+                <li class="list-group-item">Bài viết mới nhất 3</li>
+                <!-- Thêm bài viết -->
+              </ul>
+            </div>
+        
+            <!-- Top chuyên mục -->
+            <div class="my-5">
+              <h3 class="mb-4">Top 10 chuyên mục</h3>
+              <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col">
+                  <div class="card">
+                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 1">
+                    <div class="card-body">
+                      <h5 class="card-title">Chuyên mục 1</h5>
+                      <p class="card-text">Bài viết mới nhất thuộc chuyên mục này.</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Thêm chuyên mục -->
+              </div>
+            </div>
+          </div>
+            
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+        <script src="js/home.js"></script>
+    </body>
+</html>

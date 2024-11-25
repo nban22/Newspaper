@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose"; 
 
+
 const UserSchema = new mongoose.Schema({
     id: Schema.Types.ObjectId,
     fullname: {

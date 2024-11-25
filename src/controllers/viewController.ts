@@ -10,7 +10,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         return next(new GlobalError(404, "No users found!"));
     }
 
-    res.status(200).render("home", {
+    res.status(200).render("pages/home", {
         users: users,
     });
 });

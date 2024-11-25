@@ -1,0 +1,29 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+:root {
+    --primary-color: crimson;
+    --secondary-color: #333;
+}
+
+
+.no-underline {
+    text-decoration: none; 
+  }
+  
+  .no-underline:hover {
+    color: #007bff; 
+    text-decoration: underline;
+  }
+  

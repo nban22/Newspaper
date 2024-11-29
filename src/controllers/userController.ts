@@ -20,14 +20,15 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
 });
 
 export const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, password, role} = req.body;
-    console.log({user: req.body});
+    const { full_name, pen_name,  email, password, role, dob} = req.body;
     
     const newUser = await User.create({
-        name,
+        full_name,
+        pen_name,
         email,
         password,
-        role
+        role,
+        dob
     });
 
     if (!newUser) {
@@ -93,3 +94,25 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
     });
 });
 
+
+export const updateUserProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    if (req.file) {
+        req.body.avatar = `/uploads/${req.file.filename}`;
+    }
+
+    console.log(req.body);
+
+    const user = await User.findByIdAndUpdate
+    (req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
+
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            user,
+        }   
+    });
+});

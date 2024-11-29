@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new mongoose.Schema({
     id: Schema.Types.ObjectId,
-    fullname: {
+    full_name: {
         type: String,
         required: true,
     },
@@ -38,7 +38,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    subscription_end: { type: Date }
+    subscription_end: { type: Date },
+    avatar: { type: String }
 });
 
 const User = mongoose.model("User", UserSchema);

@@ -26,3 +26,16 @@ export const getSignupPage = (req: Request, res: Response, next: NextFunction) =
 export const getCreateUserPage = (req: Request, res: Response, next: NextFunction) => { 
     res.status(200).render("create_user");
 }
+
+export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // const userId = req.body.userId;
+    const user = await User.findById("6749c7792eaf7933d51f8fae");
+
+    if (!user) {
+        return next(new GlobalError(404, "No user found with that ID!"));
+    }
+
+    console.log(">>>",  user);
+
+    res.status(200).render("pages/update_user_profile", {user: user});
+});

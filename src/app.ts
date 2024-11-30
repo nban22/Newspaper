@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
 import methodOverride from "method-override";
+import authRouter from "./routers/authRouter";
 
 
 import GlobalError from "./utils/GlobalError";
@@ -20,8 +21,8 @@ app.use(methodOverride("_method"));
 
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/", viewRouter);
-
 
 app.all("*", (req, res, next) => {
     return next(new GlobalError(404, `Can't find ${req.originalUrl} on this server!`));

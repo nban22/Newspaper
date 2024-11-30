@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import catchAsync from "../utils/catchAsync";
 import GlobalError from "../utils/GlobalError";
+import { StatusCodes } from "http-status-codes";
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.find();
@@ -50,7 +51,7 @@ export const getUser = catchAsync(async (req: Request, res: Response, next: Next
     const user = await User.findById(req.params.id);
 
     if (!user) {
-        return next(new GlobalError(404, "No user found with that ID!"));
+        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
 
     res.status(200).json({
@@ -100,14 +101,15 @@ export const updateUserProfile = catchAsync(async (req: Request, res: Response, 
         req.body.avatar = `/uploads/${req.file.filename}`;
     }
 
-    console.log(req.body);
-
     const user = await User.findByIdAndUpdate
     (req.params.id, req.body, {
         new: true,
         runValidators: true,
     });
 
+    if (!user) {
+        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+    }
 
     res.status(200).json({
         status: "success",

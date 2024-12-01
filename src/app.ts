@@ -2,6 +2,7 @@ import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
+import categoriesRouter from "./routers/categoriesRouter";
 
 
 import GlobalError from "./utils/GlobalError";
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/api/v1/users", userRouter);
 app.use("/", viewRouter);
+app.use("/api/v1/categories", categoriesRouter); 
 
 
 app.all("*", (req, res, next) => {

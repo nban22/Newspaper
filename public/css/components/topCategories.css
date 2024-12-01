@@ -1,0 +1,30 @@
+.card {
+  height: 300px; /* Set a uniform height for all cards */
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  height: 200px; /* Set fixed height for the image */
+  object-fit: cover; /* Ensures the image fits nicely */
+}
+
+.card-body {
+  flex-grow: 1; /* Ensures the card body takes the remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 1rem; /* Adjust font size as needed */
+  overflow: hidden; /* Truncate long text */
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limits title to 3 lines */
+  -webkit-box-orient: vertical;
+}
+
+.card-text {
+  font-size: 0.9rem; /* Adjust text size for uniformity */
+}

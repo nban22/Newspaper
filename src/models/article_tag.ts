@@ -1,10 +1,15 @@
-import mongoose, { Schema } from "mongoose"; 
+import mongoose, { Schema, Document } from "mongoose";
 
-const ArticleTagSchema = new Schema({
-    id: Schema.Types.ObjectId,
+interface IArticleTag extends Document {
+    article_id: mongoose.Types.ObjectId; 
+    tag_id: mongoose.Types.ObjectId;     
+}
+
+const ArticleTagSchema: Schema<IArticleTag> = new mongoose.Schema({
     article_id: { type: Schema.Types.ObjectId, ref: "Article", required: true },
     tag_id: { type: Schema.Types.ObjectId, ref: "Tag", required: true }
 });
 
-const ArticleTag = mongoose.model("ArticleTag", ArticleTagSchema);
+const ArticleTag = mongoose.model<IArticleTag>("ArticleTag", ArticleTagSchema);
+
 export default ArticleTag;

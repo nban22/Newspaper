@@ -1,8 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import app from './app';
-
-const browserSync = require('browser-sync');
+import browserSync from 'browser-sync';
 
 browserSync.init({
   proxy: "http://localhost:3002", 

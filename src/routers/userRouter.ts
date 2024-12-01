@@ -9,12 +9,14 @@ const upload = multer({ dest: 'public/uploads/' });
 
 userRouter.use(attachUserId);
 
+userRouter.post("/", authorizeRole(["admin"]), userController.createUser);
 userRouter.get("/", authorizeRole(["admin"]), userController.getAllUsers);
+userRouter.put("/:id", authorizeRole(["admin"]), userController.updateUser);
+userRouter.delete("/:id", authorizeRole(["admin"]), userController.deleteUser);
 
-userRouter.post("/", userController.createUser);
 userRouter.get("/:id", userController.getUser);
-userRouter.delete("/:id", userController.deleteUser);
 
-userRouter.put("/:id", authorizeRole(["admin"]), upload.single("avatar"), userController.updateUserProfile);
+
+userRouter.put("/me", authorizeRole(["writer", "editor", "subscriber"]), upload.single("avatar"), userController.updateMyProfile);
 
 export default userRouter;

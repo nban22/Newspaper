@@ -1,6 +1,5 @@
 import { Router } from "express";
 import * as authController from "../controllers/authController";
-import { attachUserId } from "../middlewares/authMiddlewares";
 
 const router = Router();
 

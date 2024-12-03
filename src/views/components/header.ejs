@@ -2,36 +2,43 @@
   <div class="header-top">
     <div class="container">
       <div class="row" style="height: 90px">
-        <div class="col-md-12 header-top d-flex align-items-center gap-2" style="height: 100%">
+        <div class="col-md-12 header-top d-flex align-items-center justify-content-between gap-2" style="height: 100%">
           <div class="header-logo-container d-flex align-items-center" style="height: 100%">
             <img src="images/logo.png" alt="newspaper logo" />
           </div>
-          <nav style="margin-left: 10px; margin-right: 45px;">
-            <ul class="w-full d-flex list-unstyled gap-2 m-0 justify-between">
-              <li><a href="/" class="btn text-black">Trang chủ</a></li>
-              <li><a href="/about" class="btn text-black">Giới thiệu</a></li>
-              <li><a href="/contact" class="btn text-black">Liên hệ</a></li>
-            </ul>
-          </nav>
           <form class="header-search-form" action="search" method="GET">
             <input type="search" name="q" id="q" placeholder="Search..." required />
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
           </form>
-          <nav style="margin-left: 80px;">
-            <ul class="d-flex gap-3 m-0 list-unstyled">
+          <nav>
+            <ul class="d-flex list-unstyled gap-1 m-0">
               <li>
-                <a href="/signup" class="signup m-0 text-white no-underline btn" style="font-size: 0.9rem">Đăng ký</a>
+                <a href="/signup" class="m-0 text-white no-underline btn" style="font-size: 0.9rem">Đăng nhập</a>
               </li>
               <li>
-                <a href="/login" class="login m-0 no-underline btn" style="font-size: 0.9rem">Đăng nhập</a>
+                <a href="/login" class="m-0 text-white no-underline btn" style="font-size: 0.9rem">Đăng ký</a>
               </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="row border-top">
+        <div class="col-md-12 header-bottom d-flex justify-content-center">
+          <nav>
+            <ul class="d-flex list-unstyled gap-2 m-0">
+              <li><a href="/" class="btn text-white no-underline">Trang chủ</a></li>
+              <!-- <li class="dropdown">
+                <span class="btn text-white no-underline dropdown-toggle" id="dropdownCategories">Danh mục</span>
+              </li> -->
+              <li><a href="/about" class="btn text-white no-underline">Giới thiệu</a></li>
+              <li><a href="/contact" class="btn text-white no-underline">Liên hệ</a></li>
             </ul>
           </nav>
         </div>
       </div>
     </div>
   </div>
-  <div class="header-categories">
+  <div class="header-categories" style="background-color: rgb(246, 246, 246)">
     <div class="container">
       <div class="row">
         <div class="col-md-12 classynav">

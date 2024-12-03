@@ -13,24 +13,17 @@ body {
 }
 
 :root {
-    --primary-color: white;
-    --secondary-color: rgb(0, 72, 154);
+    --primary-color: crimson;
+    --secondary-color: #333;
 }
 
 
 .no-underline {
     text-decoration: none; 
-}
+  }
   
-.no-underline:hover {
+  .no-underline:hover {
     color: #007bff; 
     text-decoration: underline;
-}
+  }
   
-.btn {
-    padding: 10px;
-}
-
-.btn:hover {
-    border-bottom: 2px solid var(--secondary-color);
-}

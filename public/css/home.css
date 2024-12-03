@@ -1,0 +1,50 @@
+.rect {
+    width: 8px;
+    height: 30px;
+    background-color: var(--secondary-color);
+    margin-top: 3px;
+    margin-right: 8px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.list-group {
+    width: 720px;
+}
+
+.list-group-item {
+    display: flex;
+    padding: 0;
+    margin: 3px;
+}
+
+.group-item-img {
+    margin-right: 20px;
+}
+
+.group-item-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.trending {
+    width: 380px;
+    color: var(--secondary-color);
+}
+
+.list-item {
+    list-style: none;
+}
+
+.item-title {
+    color: black;
+}
+
+.item-body {
+    color: black;
+}

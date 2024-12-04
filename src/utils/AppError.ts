@@ -1,4 +1,4 @@
-class GlobalError extends Error {
+class AppError extends Error {
     statusCode: number;
     status: string;
     stack: string | undefined;
@@ -11,4 +11,4 @@ class GlobalError extends Error {
     }
 }
 
-export default GlobalError;
+export default AppError;

@@ -8,7 +8,7 @@ import authRouter from "./routers/authRouter";
 
 
 
-import GlobalError from "./utils/GlobalError";
+import AppError from "./utils/AppError";
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use("/", viewRouter);
 app.use("/api/v1/categories", categoriesRouter); 
 
 app.all("*", (req, res, next) => {
-    return next(new GlobalError(404, `Can't find ${req.originalUrl} on this server!`));
+    return next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));
 })
 
 

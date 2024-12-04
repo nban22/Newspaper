@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import catchAsync from "../utils/catchAsync";
-import GlobalError from "../utils/GlobalError";
+import AppError from "../utils/AppError";
 import { StatusCodes } from "http-status-codes";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
@@ -12,7 +12,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
     const users = await User.find();
 
     if (!users) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No users found!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No users found!"));
     }
 
     // i want to create user profile array
@@ -22,7 +22,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
         if (users[i].role === "writer") {
             const writerProfile = await WriterProfile.findOne({ user_id: users[i]._id });
             if (!writerProfile) {
-                return next(new GlobalError(StatusCodes.NOT_FOUND, `No writer profile found for user with email: ${users[i].email}!`));
+                return next(new AppError(StatusCodes.NOT_FOUND, `No writer profile found for user with email: ${users[i].email}!`));
             }
             userProfiles.push({
                 email: users[i].email,
@@ -35,7 +35,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
         } else if (users[i].role === "editor") {
             const editorProfile = await EditorProfile.findOne({ user_id: users[i]._id });
             if (!editorProfile) {
-                return next(new GlobalError(StatusCodes.NOT_FOUND, `No editor profile found for user with email: ${users[i].email}!`));
+                return next(new AppError(StatusCodes.NOT_FOUND, `No editor profile found for user with email: ${users[i].email}!`));
             }
             userProfiles.push({
                 email: users[i].email,
@@ -47,7 +47,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
         } else if (users[i].role === "subscriber") {
             const subscriberProfile = await SubscriberProfile.findOne({ user_id: users[i]._id });
             if (!subscriberProfile) {
-                return next(new GlobalError(StatusCodes.NOT_FOUND, `No subscriber profile found for user with email: ${users[i].email}!`));
+                return next(new AppError(StatusCodes.NOT_FOUND, `No subscriber profile found for user with email: ${users[i].email}!`));
             }
             userProfiles.push({
                 email: users[i].email,
@@ -71,24 +71,24 @@ export const createUser = catchAsync(async (req: Request, res: Response, next: N
     const {email, password, role, full_name, pen_name, dob, avatar} = req.body;
    // Check if all required fields are filled
     if (!email || !password || !role) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
     }
 
     // Check email format
     if (!validator.isEmail(email)) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Email is not valid"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
     }
 
     const validRoles = ["admin", "writer", "subscriber", "editor"];
 
     if (!validRoles.includes(role)) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Role must be one of the following: admin, writer, subscriber, editor"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Role must be one of the following: admin, writer, subscriber, editor"));
     }
 
 
     // Check if user already exists
     if (await User.findOne({ email: email })) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "User already exists"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "User already exists"));
     }
 
     // Create new user
@@ -131,7 +131,7 @@ export const getUser = catchAsync(async (req: Request, res: Response, next: Next
     const user = await User.findById(req.params.id);
 
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
 
     res.status(200).json({
@@ -147,13 +147,13 @@ export const updateUser = catchAsync(async (req: Request, res: Response, next: N
 
     // at least one field must be provided
     if (!email && !password && !role && !full_name && !pen_name && !subscription_status && !dob && !avatar) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Please provide at least one field to update"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide at least one field to update"));
     }
 
     const user = await User.findById(req.params.id);
 
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
 
     await User.findByIdAndUpdate(req.params.id, {
@@ -173,7 +173,7 @@ export const updateUser = catchAsync(async (req: Request, res: Response, next: N
     }
 
     if (!profile) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, `No profile found for user`));
+        return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
     }
 
     await profile.updateOne({
@@ -194,7 +194,7 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
     const user = await User.findById(req.params.id);
 
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
 
     await User.findByIdAndDelete(req.params.id);
@@ -210,7 +210,7 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
     }
 
     if (!profile) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, `No profile found for user`));
+        return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
     }
 
     await profile.deleteOne();
@@ -231,7 +231,7 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
     const user = await User.findById(userId);
 
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
 
     let profile: any;
@@ -245,7 +245,7 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
     }
 
     if (!profile) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, `No profile found for user`));
+        return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
     }
 
     try {
@@ -267,6 +267,6 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
             },
         });
     } catch (err) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Failed to update profile!"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Failed to update profile!"));
     }
 });

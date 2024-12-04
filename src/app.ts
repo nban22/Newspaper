@@ -3,7 +3,6 @@ import express, { NextFunction, Request, Response } from "express";
 import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
 import categoriesRouter from "./routers/categoriesRouter";
-import methodOverride from "method-override";
 import authRouter from "./routers/authRouter";
 
 
@@ -19,7 +18,6 @@ app.set("view engine", "ejs");
 app.set("views", "src/views");
 
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(methodOverride("_method"));
 
 
 app.use("/api/v1/users", userRouter);

@@ -44,8 +44,8 @@ export const getLatestArticles = catchAsync(async (req: Request, res: Response, 
 });
 
 export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.body.userId;
-
+    // const userId = req.body.userId;
+    const userId = "674bcfa74ebc5c5911e75887";
     const user = await User.findById(userId);
 
     if (!user) {

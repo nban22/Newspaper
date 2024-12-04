@@ -222,12 +222,13 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
 
 
 export const updateMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    console.log()
     if (req.file) {
         req.body.avatar = `/uploads/${req.file.filename}`;
     }
 
     const { userId, ...updateData } = req.body;
-    
+
     const user = await User.findById(userId);
 
     if (!user) {

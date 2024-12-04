@@ -16,7 +16,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     // }
 
     const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(5)
+        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("author_id")
     ]);
 
     res.status(StatusCodes.OK).render("pages/home", {

@@ -8,23 +8,23 @@ import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.find();
+    
+    const user = req.body.user;
 
-    if (!users) {
-        return next(new AppError(404, "No users found!"));
-    }
+    
+   
 
     res.status(200).render("pages/home", {
-        users: users,
+        user: user,
     });
 });
 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("login");
+    res.status(200).render("pages/login");
 };
 
 export const getSignupPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("signup");
+    res.status(200).render("pages/signup");
 }
 
 export const getCreateUserPage = (req: Request, res: Response, next: NextFunction) => { 

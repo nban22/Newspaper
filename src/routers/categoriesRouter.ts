@@ -1,9 +1,21 @@
-import express from "express";
-import * as categoriesController from "../controllers/categoriesController";
+import { Router } from "express";
 
-const router = express.Router();
+import * as categoryController from "../controllers/categoryController";
 
-router.get("/top-categories", categoriesController.getTopCategories);
-router.post("/create-category", categoriesController.createCategory);
+const categoryRouter = Router();
 
-export default router;
+categoryRouter.get("/top-categories", categoryController.getTopCategories);
+categoryRouter.post("/create-category", categoryController.createCategory);
+categoryRouter.get("/", categoryController.getAllCategories);
+
+
+
+export default categoryRouter;
+
+
+
+
+
+
+
+

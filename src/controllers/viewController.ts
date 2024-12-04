@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import catchAsync from "../utils/catchAsync";
-import GlobalError from "../utils/GlobalError";
+import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
@@ -11,7 +11,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     const users = await User.find();
 
     if (!users) {
-        return next(new GlobalError(404, "No users found!"));
+        return next(new AppError(404, "No users found!"));
     }
 
     res.status(200).render("pages/home", {
@@ -35,7 +35,7 @@ export const getLatestArticles = catchAsync(async (req: Request, res: Response, 
     const users = await User.find();
 
     if (!users) {
-        return next(new GlobalError(404, "No users found!"));
+        return next(new AppError(404, "No users found!"));
     }
 
     res.status(200).render("pages/latest_article", {
@@ -49,7 +49,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
     const user = await User.findById(userId);
 
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
     }
     
     let profileOwner: any;
@@ -60,7 +60,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
     } else if (user.role === "editor") {
         profileOwner = await EditorProfile.findOne({user_id: userId});
     } else {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
     res.status(200).render("pages/update_user_profile", {user: user, profile: profileOwner});

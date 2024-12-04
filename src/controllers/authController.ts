@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import GlobalError from "../utils/GlobalError";
+import AppError from "../utils/AppError";
 import catchAsync from "../utils/catchAsync";
 import User from "../models/user";
 import validator from "validator";
@@ -14,24 +14,24 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     const { email, password, role } = req.body;
     // Check if all required fields are filled
     if (!email || !password || !role) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
     }
 
     // Check email format
     if (!validator.isEmail(email)) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Email is not valid"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
     }
 
     const validRoles = ["admin", "writer", "subscriber", "editor"];
 
     if (!validRoles.includes(role)) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Role must be one of the following: admin, writer, subscriber, editor"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Role must be one of the following: admin, writer, subscriber, editor"));
     }
 
 
     // Check if user already exists
     if (await User.findOne({ email: email })) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "User already exists"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "User already exists"));
     }
 
     // Create new user
@@ -59,18 +59,18 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return next(new GlobalError(StatusCodes.BAD_REQUEST, "Please provide email and password"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email and password"));
     }
 
     // Check if user exists
     const user = await User.findOne({ email: email }).select("+password");
     if (!user) {
-        return next(new GlobalError(StatusCodes.NOT_FOUND, "Email is not found"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "Email is not found"));
     }
 
     // Check if password is correct
     if (!user.password || !(await bcrypt.compare(password, user.password))) {
-        return next(new GlobalError(StatusCodes.UNAUTHORIZED, "Wrong password"));
+        return next(new AppError(StatusCodes.UNAUTHORIZED, "Wrong password"));
     }
 
     createSendToken(user, StatusCodes.OK, res);

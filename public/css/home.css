@@ -1,0 +1,7 @@
+.rect {
+    width: 8px;
+    height: 30px;
+    background-color: var(--secondary-color);
+    margin-top: 3px;
+    margin-right: 8px;
+}

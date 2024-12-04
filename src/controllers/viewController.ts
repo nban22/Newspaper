@@ -31,6 +31,18 @@ export const getCreateUserPage = (req: Request, res: Response, next: NextFunctio
     res.status(200).render("create_user");
 }
 
+export const getLatestArticles = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find();
+
+    if (!users) {
+        return next(new GlobalError(404, "No users found!"));
+    }
+
+    res.status(200).render("pages/latest_article", {
+        users: users,
+    });
+});
+
 export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.body.userId;
 

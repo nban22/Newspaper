@@ -1,10 +1,15 @@
-import mongoose, { Schema } from "mongoose"; 
+import mongoose, { Schema, Document } from "mongoose";
 
-const AssignmentSchema = new Schema({
-    id: Schema.Types.ObjectId,
+interface IAssignment extends Document {
+    editor_id: mongoose.Types.ObjectId; 
+    category_id: mongoose.Types.ObjectId; 
+}
+
+const AssignmentSchema: Schema<IAssignment> = new mongoose.Schema({
     editor_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true }
 });
 
-const Assignment = mongoose.model("Assignment", AssignmentSchema);
+const Assignment = mongoose.model<IAssignment>("Assignment", AssignmentSchema);
+
 export default Assignment;

@@ -1,12 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 import app from './app';
-
-const browserSync = require('browser-sync');
+import browserSync from 'browser-sync';
 
 browserSync.init({
   proxy: "http://localhost:3002", 
-  files: ["src/views/**/*.ejs", "src/views/*.ejs", "public/**/*.*", "src/*"], // Theo dõi thay đổi file
+  files: ["src/views/**/*.ejs", "src/views/*", "public/**/*.*", "src/*"], // Theo dõi thay đổi file
   reloadDelay: 500, 
     open: false
 });

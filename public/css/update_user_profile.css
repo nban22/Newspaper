@@ -1,0 +1,40 @@
+.update-form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.update-form-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+.update-form-container hr {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+}
+
+.btn-update {
+    background: #007bff; /* Primary blue color */
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-update:hover {
+    background: #0056b3;
+}
+
+form div {
+    margin-bottom: 20px;
+}

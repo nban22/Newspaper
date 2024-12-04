@@ -1,17 +1,14 @@
-import mongoose, { Schema } from "mongoose"; 
+import mongoose, { Schema, Document } from "mongoose";
+import bcrypt from "bcrypt";
 
+export interface IUser extends Document {
+    email: string;
+    password?: string;
+    role: "writer" | "editor" | "subscriber" | "admin";
+    createdAt: Date;
+}
 
-const UserSchema = new mongoose.Schema({
-    id: Schema.Types.ObjectId,
-    fullname: {
-        type: String,
-        required: true,
-    },
-    pen_name: {
-        type: String,
-        required: true,
-        unique: true,
-    },
+const UserSchema: Schema<IUser> = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -24,23 +21,22 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
-        enum: ["user", "admin"],
-        default: "user",
-    },
-    dob: {
-        type: Date,
+        enum: ["writer", "editor", "subscriber", "admin"],
     },
     createdAt: {
         type: Date,
         default: Date.now,
     },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
-    subscription_end: { type: Date }
 });
 
-const User = mongoose.model("User", UserSchema);
+UserSchema.pre<IUser>('save', async function(next) {
+    if (this.password) {
+        this.password = await bcrypt.hash(this.password, 12);
+    }
+
+    next();
+});
+
+const User = mongoose.model<IUser>("User", UserSchema);
 
 export default User;

@@ -4,7 +4,7 @@ interface IArticle extends Document {
     title: string;
     summary?: string;
     content: string;
-    profile_picture?: string;
+    thumbnail?: string;
     category_id: mongoose.Types.ObjectId; 
     author_id: mongoose.Types.ObjectId; 
     publish_date?: Date;
@@ -17,7 +17,7 @@ const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     title: { type: String, required: true },
     summary: { type: String },
     content: { type: String, required: true },
-    profile_picture: { type: String },
+    thumbnail: { type: String },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     author_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
     publish_date: { type: Date },

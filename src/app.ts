@@ -8,11 +8,13 @@ import articleRouter from "./routers/articleRouter";
 
 
 import AppError from "./utils/AppError";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 app.set("views", "src/views");
@@ -20,9 +22,10 @@ app.set("views", "src/views");
 app.use(express.static(path.join(__dirname, "../public")));
 
 
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/auth", authRouter);
+app.use("/api/v1", authRouter);
 app.use("/", viewRouter);
+app.use("/api/v1/users", userRouter);
+
 app.use("/api/v1/categories", categoriesRouter); 
 app.use("/api/v1/articles", articleRouter);
 

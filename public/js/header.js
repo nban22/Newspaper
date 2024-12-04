@@ -1,23 +1,13 @@
 const categoriesList = document.querySelector("categories-list");
 
-// categoriesList.innerHTML = `
-//     <ul class="dropdown-menu">
-//         <li><a href="/categories/1">Category 1</a></li>
-//         <li><a href="/categories/2">Category 2</a></li>
-//         <li><a href="/categories/3">Category 3</a></li>
-//     </ul>
-// `;
+const logoutForm = document.querySelector('#logout-form');
 
-
-
-fetch("/api/v1/categories", {
-    headers: {
-        "Content-Type": "application/json"
-    },
-    method: "GET",
-    credentials: "include"
+logoutForm.addEventListener('submit', (e) => {
+    const ok = confirm('Bạn có chắc chắn muốn đăng xuất?');
+    if (!ok) {
+        e.preventDefault();
+    } else {
+        return;
+    }
 })
-.then(response => response.json())
-.then(data => {
-    console.log({data});
-})
+    

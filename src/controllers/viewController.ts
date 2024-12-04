@@ -9,28 +9,27 @@ import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // const users = await User.find();
-
-    // if (!users) {
-    //     return next(new AppError(404, "No users found!"));
-    // }
+    const user = req.body.user;
 
     const [latestArticles] = await Promise.all([
         Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("author_id")
     ]);
 
+    console.log(latestArticles);
+    
+
     res.status(StatusCodes.OK).render("pages/home", {
-        // users: users,
+        user: user,
         latestArticle: latestArticles
     });
 });
 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("login");
+    res.status(200).render("pages/login");
 };
 
 export const getSignupPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("signup");
+    res.status(200).render("pages/signup");
 }
 
 export const getCreateUserPage = (req: Request, res: Response, next: NextFunction) => { 

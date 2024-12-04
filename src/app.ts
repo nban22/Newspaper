@@ -5,7 +5,7 @@ import viewRouter from "./routers/viewRouter";
 import categoriesRouter from "./routers/categoriesRouter";
 import methodOverride from "method-override";
 import authRouter from "./routers/authRouter";
-
+import articleRouter from "./routers/articleRouter";
 
 
 import AppError from "./utils/AppError";
@@ -26,6 +26,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/", viewRouter);
 app.use("/api/v1/categories", categoriesRouter); 
+app.use("/api/v1/articles", articleRouter);
 
 app.all("*", (req, res, next) => {
     return next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));

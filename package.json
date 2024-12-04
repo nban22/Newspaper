@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules"
+    "start": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules",
+    "seed": "ts-node src/seeds/datafake.ts"
   },
   "author": "",
   "license": "ISC",

@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import AppError from "../utils/AppError";
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { title, summary, content, profile_picture, category_id, author_id } = req.body;
+    const { title, summary, content, thumbnail, category_id, author_id } = req.body;
 
     // Validate required fields
     if (!title && !summary && !content && !category_id) {
@@ -16,7 +16,7 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
     const newArticle = await Article.create({
         title,
         summary,
-        profile_picture,
+        thumbnail,
         content,
         author_id,
         category_id,

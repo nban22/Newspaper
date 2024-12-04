@@ -10,21 +10,14 @@ const categoriesList = document.querySelector("categories-list");
 
 
 
-// fetch("http://localhost:3002/api/v1/categories", {
-//     headers: {
-//         "Content-Type": "application/json"
-//     },
-//     method: "GET"
-// })
-// .then(response => response.json())
-// .then(data => {
-//     console.log({data});
-// })
-
-window.axiosInstance.get("/categories")
-.then(response => {
-    console.log(response);
+fetch("/api/v1/categories", {
+    headers: {
+        "Content-Type": "application/json"
+    },
+    method: "GET",
+    credentials: "include"
 })
-.catch(error => {
-    console.log(error);
-});
+.then(response => response.json())
+.then(data => {
+    console.log({data});
+})

@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import app from './app';
 import browserSync from 'browser-sync';
+import mongooseConnection from "./config/database";
 
 browserSync.init({
   proxy: "http://localhost:3002", 
@@ -10,7 +11,7 @@ browserSync.init({
     open: false
 });
 
-import './config/database';
+mongooseConnection();
 
 // import { connectToDatabase } from './database';
 // connectToDatabase();

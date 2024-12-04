@@ -1,6 +1,5 @@
 import mongooseConnection from "../config/database";
 import Category from "../models/category"; 
-import User from "../models/user";
 import seedCategory from "./categorySeeder";
 
 mongooseConnection();

@@ -1,11 +1,11 @@
 .card {
-  height: 350px; /* Set an appropriate fixed height */
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .card-img-top {
-  height: 200px; /* Adjust as needed */
-  object-fit: cover; /* Ensures the image scales nicely */
+  min-height: 200px;
+  object-fit: cover;
 }

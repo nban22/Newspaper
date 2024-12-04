@@ -64,3 +64,16 @@ export const createCategory = catchAsync(
         res.status(201).json({ status: "success", data: { category } });
     }
 );
+
+export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const category = req.params.categoryName;
+    if (!category) {
+        return new AppError(StatusCodes.BAD_REQUEST, "Please provide a category!");
+    }
+    
+    const articles = await Article.find({name: category}).populate("category_id").populate("author_id").sort({createdAt: -1});
+    res.status(StatusCodes.OK).render("pages/category_articles", {
+        category: category,
+        articles: articles
+    })
+})

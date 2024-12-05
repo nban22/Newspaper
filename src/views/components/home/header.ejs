@@ -18,14 +18,40 @@
                     placeholder="Tìm kiếm..."
                     aria-label="Search"
                 />
-            </form>
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light mr-2 text-dark border-info">Đăng nhập</button>
-                <button type="button" class="btn btn-info mr-2">Đăng ký</button>
-            </div>
+            </form>  
+            <% if (user) { %>
+                <div class="dropdown text-end">
+                    <a
+                        href="#"
+                        class="d-block link-dark text-decoration-none dropdown-toggle"
+                        id="dropdownUser1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="50" height="50" class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
+                    </a>
+                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                        <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <form action="/api/v1/logout" method="post" id="logout-form">
+                                <button type="submit" class="dropdown-item">Đăng xuất</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            <% } else { %>
+                <div class="text-end">
+                    <a href="/login" ><button type="button" class="btn btn-outline-light mr-2 text-dark border-info">Đăng nhập</button></a>
+                    <a href="/signup"><button type="button" class="btn btn-info mr-2">Đăng ký</button></a>
+                </div>
+            <% } %>
+                       
         </div>
     </div>
-</header>  
+</header>
 
 <div class="header-categories">
     <div class="container">

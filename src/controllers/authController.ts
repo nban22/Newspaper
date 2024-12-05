@@ -5,7 +5,7 @@ import catchAsync from "../utils/catchAsync";
 import User from "../models/user";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { createSendToken } from "../utils/tokenServices";
+import { accessToken, createSendToken, refreshToken } from "../utils/tokenServices";
 import SubscriberProfile from "../models/subscriberProfile";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
@@ -72,6 +72,66 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     if (!user.password || !(await bcrypt.compare(password, user.password))) {
         return next(new AppError(StatusCodes.UNAUTHORIZED, "Wrong password"));
     }
+    // const refreshTokenStr = refreshToken(user);
+    const accessTokenStr = accessToken(user);
 
-    createSendToken(user, StatusCodes.OK, res);
+    // res.cookie("refreshToken", refreshTokenStr, {
+    //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    //     httpOnly: true,
+    // });
+    res.cookie("accessToken", accessTokenStr, {
+        expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
+        httpOnly: true,
+        // sameSite: "strict",
+        path: "/",
+    });
+    // httpOnly: true,
+    // path: "/",
+    // sameSite: "strict",
+    
+    user.password = undefined;
+
+    res.status(StatusCodes.OK).json({
+        status: "success",
+        data: {
+            user,
+            accessToken: accessTokenStr,
+        },
+    });
+
+});
+
+export const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie("accessToken", "", {
+        expires: new Date(Date.now() + 1),
+        httpOnly: true,
+        path: '/'
+    })
+    res.redirect("/");
+});
+
+
+export const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const currentUser = req.body.user;
+    if (!currentUser) {
+        return next(new AppError( 500, "attachUser middleware must be called before getMe route"));
+    }
+
+    // let profile;
+    // if (currentUser.role === "candidate") {
+    //     profile = await CandidateProfile.findOne({ user_id: currentUser._id });
+    // } else if (currentUser.role === "employer") {
+    //     profile = await EmployerProfile.findOne({ user_id: currentUser._id });
+    // }
+    // if (!profile) {
+    //     return next(new AppError("Profile not found for this user", 500));
+    // }
+
+    res.status(StatusCodes.OK).json({
+        status: "success",
+        data: {
+            user: currentUser,
+            // profile: profile
+        },
+    });
 });

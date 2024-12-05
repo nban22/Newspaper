@@ -7,6 +7,7 @@ import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
+import mongoose from "mongoose";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;

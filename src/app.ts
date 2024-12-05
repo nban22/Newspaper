@@ -4,7 +4,7 @@ import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
 import categoriesRouter from "./routers/categoriesRouter";
 import authRouter from "./routers/authRouter";
-
+import subcriberRouter from "./routers/subscriberRouter";
 
 
 import AppError from "./utils/AppError";
@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/subscribers", subcriberRouter);
 app.use("/", viewRouter);
 app.use("/api/v1/categories", categoriesRouter); 
 

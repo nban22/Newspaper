@@ -10,6 +10,7 @@ import SubscriberProfile from "../models/subscriberProfile";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 
+
 export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, role } = req.body;
     // Check if all required fields are filled
@@ -71,6 +72,17 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     // Check if password is correct
     if (!user.password || !(await bcrypt.compare(password, user.password))) {
         return next(new AppError(StatusCodes.UNAUTHORIZED, "Wrong password"));
+    }
+
+    if (user.role === "subscriber") {
+        const subscriberProfile = await SubscriberProfile.findOne({ user_id: user._id });
+        if (!subscriberProfile) {
+            return next(new AppError(StatusCodes.NOT_FOUND, "No subscriber profile found!"));
+        }
+        
+        if (new Date() > subscriberProfile.expiryDate) {
+            return next(new AppError(StatusCodes.UNAUTHORIZED, "Subscription expired"));
+        }
     }
 
     createSendToken(user, StatusCodes.OK, res);

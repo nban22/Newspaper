@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface IArticle extends Document {
     title: string;
+    level: string;
     summary?: string;
     content: string;
     profile_picture?: string;
@@ -15,11 +16,12 @@ interface IArticle extends Document {
 
 const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     title: { type: String, required: true },
+    level: { type: String, required: true , enum: ["premium", "free"]},
     summary: { type: String },
     content: { type: String, required: true },
     profile_picture: { type: String },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    author_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    author_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
     publish_date: { type: Date },
     status: { type: String, enum: ["draft", "published", "archived"], default: "draft", required: true },
     created_at: { type: Date, default: Date.now },

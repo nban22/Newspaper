@@ -12,7 +12,7 @@ document.getElementById('updateProfileForm').addEventListener('submit', async fu
 
         if (response.ok) {
             const result = await response.json(); // Parse the response as JSON
-            console.log(result); // Log the result to the console
+            // console.log(result); // Log the result to the console
 
             alert('Profile updated successfully!');
             // Optionally, you can redirect the user or update the UI with new profile data

@@ -7,7 +7,8 @@ import Article from "../models/article";
 
 export const getAllCategories = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        const categories = await Category.find();
+       
+            const categories = await Category.find();
 
         return res.status(StatusCodes.OK).json({
             status: "success",

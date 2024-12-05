@@ -65,9 +65,7 @@ export const authMiddlewares = catchAsync(async (req: Request, res: Response, ne
             req.body.user = null;
             return next();
         } else {
-            console.log("xin ch");
-            
-            return next(new AppError(StatusCodes.UNAUTHORIZED, err.message));
+            return next(new AppError(StatusCodes.UNAUTHORIZED, "Invalid accesstoken"));
         }
     }
 

@@ -14,7 +14,9 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     const { email, password, role } = req.body;
     // Check if all required fields are filled
     if (!email || !password || !role) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
+        return next(
+            new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role")
+        );
     }
 
     // Check email format
@@ -25,9 +27,13 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     const validRoles = ["admin", "writer", "subscriber", "editor"];
 
     if (!validRoles.includes(role)) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Role must be one of the following: admin, writer, subscriber, editor"));
+        return next(
+            new AppError(
+                StatusCodes.BAD_REQUEST,
+                "Role must be one of the following: admin, writer, subscriber, editor"
+            )
+        );
     }
-
 
     // Check if user already exists
     if (await User.findOne({ email: email })) {
@@ -39,11 +45,11 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     newUser.password = undefined;
 
     if (role === "subscriber") {
-        await SubscriberProfile.create({user_id: newUser._id});
+        await SubscriberProfile.create({ user_id: newUser._id });
     } else if (role === "writer") {
-        await WriterProfile.create({user_id: newUser._id});
+        await WriterProfile.create({ user_id: newUser._id });
     } else if (role === "editor") {
-        await EditorProfile.create({user_id: newUser._id});
+        await EditorProfile.create({ user_id: newUser._id });
     }
 
     res.status(StatusCodes.CREATED).json({
@@ -53,7 +59,6 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
         },
     });
 });
-
 
 export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
@@ -88,7 +93,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     // httpOnly: true,
     // path: "/",
     // sameSite: "strict",
-    
+
     user.password = undefined;
 
     res.status(StatusCodes.OK).json({
@@ -98,23 +103,21 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
             accessToken: accessTokenStr,
         },
     });
-
 });
 
 export const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     res.cookie("accessToken", "", {
         expires: new Date(Date.now() + 1),
         httpOnly: true,
-        path: '/'
-    })
+        path: "/",
+    });
     res.redirect("/");
 });
-
 
 export const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const currentUser = req.body.user;
     if (!currentUser) {
-        return next(new AppError( 500, "attachUser middleware must be called before getMe route"));
+        return next(new AppError(500, "attachUser middleware must be called before getMe route"));
     }
 
     // let profile;

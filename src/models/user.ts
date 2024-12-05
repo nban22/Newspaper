@@ -3,9 +3,12 @@ import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
     email: string;
+    facebookId?: string;
+    name?: string;
     password?: string;
     role: "writer" | "editor" | "subscriber" | "admin";
     createdAt: Date;
+    
 }
 
 const UserSchema: Schema<IUser> = new mongoose.Schema({
@@ -14,9 +17,15 @@ const UserSchema: Schema<IUser> = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    name: {
+        type: String,
+    },
+    facebookId: {
+        type: String,
+    },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
     role: {
         type: String,

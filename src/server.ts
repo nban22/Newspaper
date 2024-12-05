@@ -13,9 +13,6 @@ browserSync.init({
 
 mongooseConnection();
 
-// import { connectToDatabase } from './database';
-// connectToDatabase();
-
 const PORT = parseInt(process.env.PORT || "3006", 10);
 const HOST = process.env.HOST || '0.0.0.0';
 

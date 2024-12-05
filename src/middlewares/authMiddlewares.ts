@@ -11,9 +11,6 @@ export const attachUserId = catchAsync(async (req: Request, res: Response, next:
         ? req.headers.authorization?.split(" ")[1]
         : null;
 
-    if (!accessToken) {
-        return next(new AppError(StatusCodes.UNAUTHORIZED, "accessToken must be sent into body"));
-    }
     if (!process.env.JWT_ACCESS_SECRET) {
         return next(new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "The JWT_ACCESS_SECRET variable is not defined"));
     }
@@ -21,7 +18,7 @@ export const attachUserId = catchAsync(async (req: Request, res: Response, next:
 
     let decode: any;
     try {
-        decode = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!);
+        decode = jwt.verify(accessToken!, process.env.JWT_ACCESS_SECRET!);
     } catch (err: any) {
         if (err.name === "TokenExpiredError") {
             return next(new AppError(StatusCodes.UNAUTHORIZED, "accessToken expired"));
@@ -46,6 +43,51 @@ export const attachUserId = catchAsync(async (req: Request, res: Response, next:
 
     next();
 });
+
+export const authMiddlewares = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
+    const accessToken = req.cookies?.accessToken;
+    
+
+    if (!accessToken) {
+        req.body.user = null;
+        return next();
+    }
+    
+    if (!process.env.JWT_ACCESS_SECRET) {
+        return next(new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "The JWT_ACCESS_SECRET variable is not defined"));
+    }
+
+    let decode: any;
+    try {
+        decode = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+    } catch (err: any) {
+        if (err.name === "TokenExpiredError") {
+            req.body.user = null;
+            return next();
+        } else {
+            return next(new AppError(StatusCodes.UNAUTHORIZED, "Invalid accesstoken"));
+        }
+    }
+
+    const userId = decode.id;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        req.body.user = null;
+        return next();
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        req.body.user = null;
+        return next();
+    }
+
+    // Grant access to protected route
+    req.body.user = user;
+    req.body.userId = userId;
+    req.body.accessToken = accessToken;
+
+    next();    
+})
 
 
 type Role = "writer" | "editor" | "subscriber" | "admin";

@@ -5,7 +5,7 @@ interface IArticle extends Document {
     level: string;
     summary?: string;
     content: string;
-    profile_picture?: string;
+    thumbnail?: string;
     category_id: mongoose.Types.ObjectId; 
     author_id: mongoose.Types.ObjectId; 
     publish_date?: Date;
@@ -19,7 +19,7 @@ const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     level: { type: String, required: true , enum: ["premium", "free"]},
     summary: { type: String },
     content: { type: String, required: true },
-    profile_picture: { type: String },
+    thumbnail: { type: String },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     author_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
     publish_date: { type: Date },

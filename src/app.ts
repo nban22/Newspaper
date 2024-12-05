@@ -5,14 +5,31 @@ import viewRouter from "./routers/viewRouter";
 import categoriesRouter from "./routers/categoriesRouter";
 import authRouter from "./routers/authRouter";
 import subcriberRouter from "./routers/subscriberRouter";
+import articleRouter from "./routers/articleRouter";
+import facebookRouter from "./routers/facebookRouter";
+import session from "express-session";
+import facebookPassport from "./config/facebookPassport";
 
 
 import AppError from "./utils/AppError";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
+}))
+app.use(facebookPassport.initialize());
+app.use(facebookPassport.session());
 
 app.set("view engine", "ejs");
 app.set("views", "src/views");
@@ -20,11 +37,15 @@ app.set("views", "src/views");
 app.use(express.static(path.join(__dirname, "../public")));
 
 
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/subscribers", subcriberRouter);
+app.use("/auth/facebook", facebookRouter)
+app.use("/api/v1", authRouter);
 app.use("/", viewRouter);
+app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter); 
+app.use("/api/v1/articles", articleRouter);
+app.use("/api/v1/subscribers", subcriberRouter);
+
+
 
 app.all("*", (req, res, next) => {
     return next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));

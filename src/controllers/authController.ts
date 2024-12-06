@@ -12,14 +12,12 @@ import EditorProfile from "../models/editorProfile";
 
 export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, role } = req.body;
-    // Check if all required fields are filled
     if (!email || !password || !role) {
         return next(
             new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role")
         );
     }
 
-    // Check email format
     if (!validator.isEmail(email)) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
     }
@@ -41,7 +39,7 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     }
 
     // Create new user
-    const newUser = await User.create({ email, password, role });
+    const newUser = await User.create({ email, password, role, loginMethod: "local" });
     newUser.password = undefined;
 
     if (role === "subscriber") {
@@ -77,22 +75,13 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     if (!user.password || !(await bcrypt.compare(password, user.password))) {
         return next(new AppError(StatusCodes.UNAUTHORIZED, "Wrong password"));
     }
-    // const refreshTokenStr = refreshToken(user);
     const accessTokenStr = accessToken(user);
 
-    // res.cookie("refreshToken", refreshTokenStr, {
-    //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-    //     httpOnly: true,
-    // });
     res.cookie("accessToken", accessTokenStr, {
         expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
         httpOnly: true,
-        // sameSite: "strict",
         path: "/",
     });
-    // httpOnly: true,
-    // path: "/",
-    // sameSite: "strict",
 
     user.password = undefined;
 
@@ -112,29 +101,4 @@ export const logout = catchAsync(async (req: Request, res: Response, next: NextF
         path: "/",
     });
     res.redirect("/");
-});
-
-export const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const currentUser = req.body.user;
-    if (!currentUser) {
-        return next(new AppError(500, "attachUser middleware must be called before getMe route"));
-    }
-
-    // let profile;
-    // if (currentUser.role === "candidate") {
-    //     profile = await CandidateProfile.findOne({ user_id: currentUser._id });
-    // } else if (currentUser.role === "employer") {
-    //     profile = await EmployerProfile.findOne({ user_id: currentUser._id });
-    // }
-    // if (!profile) {
-    //     return next(new AppError("Profile not found for this user", 500));
-    // }
-
-    res.status(StatusCodes.OK).json({
-        status: "success",
-        data: {
-            user: currentUser,
-            // profile: profile
-        },
-    });
 });

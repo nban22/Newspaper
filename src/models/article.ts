@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface IArticle extends Document {
     title: string;
-    level: string;
     summary?: string;
     content: string;
     thumbnail?: string;
@@ -16,7 +15,6 @@ interface IArticle extends Document {
 
 const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     title: { type: String, required: true },
-    level: { type: String, required: true , enum: ["premium", "free"]},
     summary: { type: String },
     content: { type: String, required: true },
     thumbnail: { type: String },

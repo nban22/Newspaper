@@ -37,13 +37,8 @@ export const getCreateUserPage = (req: Request, res: Response, next: NextFunctio
 }
 
 export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // const userId = req.body.userId;
-    const userId = "674bcfa74ebc5c5911e75887";
-    const user = await User.findById(userId);
-
-    if (!user) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
-    }
+    const userId = req.body.userId;
+    const user = req.body.user;
     
     let profileOwner: any;
     if (user.role === "subscriber") {
@@ -56,5 +51,10 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
-    res.status(200).render("pages/update_user_profile", {user: user, profile: profileOwner});
+    res.status(200).render("pages/update_profile", {user: user, profile: profileOwner});
 });
+
+export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    res.status(200).render("pages/create_article", {user: user});
+}   

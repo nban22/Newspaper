@@ -81,7 +81,6 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     // const refreshTokenStr = refreshToken(user);
     const accessTokenStr = accessToken(user);
 
-<<<<<<< HEAD
     if (user.role === "subscriber") {
         const subscriberProfile = await SubscriberProfile.findOne({ user_id: user._id });
         if (!subscriberProfile) {
@@ -93,9 +92,6 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
         }
     }
 
-    createSendToken(user, StatusCodes.OK, res);
-});
-=======
     // res.cookie("refreshToken", refreshTokenStr, {
     //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     //     httpOnly: true,
@@ -154,4 +150,3 @@ export const getMe = catchAsync(async (req: Request, res: Response, next: NextFu
         },
     });
 });
->>>>>>> 41e2e5c30ec202a16cf9d3c4a7552e925d8578f4

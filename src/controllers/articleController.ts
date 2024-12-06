@@ -3,9 +3,13 @@ import Article from "../models/article";
 import catchAsync from "../utils/catchAsync";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../utils/AppError";
+import WriterProfile from "../models/writerProfile";
+
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { title, summary, content, thumbnail, category_id, author_id } = req.body;
+    const { title, summary, content, thumbnail, category_id, userId } = req.body;
+
+    const author_id = await WriterProfile.findOne({ user_id: userId });
 
     // Validate required fields
     if (!title && !summary && !content && !category_id) {

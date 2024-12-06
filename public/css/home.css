@@ -24,3 +24,8 @@
     left: 50%; /* Center the image horizontally */
     transform: translate(-50%, -50%); /* Adjust position to center */
 }
+
+.card img {
+    object-fit: contain;
+}
+

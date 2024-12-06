@@ -17,10 +17,14 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     // console.log(latestArticles);
     
+    const [popularArticles] = await Promise.all([
+        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
+    ]);
 
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
-        latestArticle: latestArticles
+        latestArticle: latestArticles,
+        popularArticle: popularArticles
     });
 });
 

@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Article</title>
+    <title>Tạo bài viết</title>
+    <link rel="stylesheet" href="/css/components/header.css" /> 
+    <link rel="stylesheet" href="/css/global.css" />
 </head>
 <body>
+    <%- include('../components/home/header') %>
+
+    <br>
     <%- include('../components/wysiwyg.ejs', {script:'js/pages/create_article.js'}) %>
 </body>
 </html>

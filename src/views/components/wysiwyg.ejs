@@ -1,3 +1,4 @@
+<!-- Import Styles and Scripts -->
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
@@ -7,6 +8,65 @@
 />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+<style>
+  body {
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .form-label {
+    font-weight: bold;
+  }
+
+  .form-control, .form-select, .quill-editor {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .quill-editor {
+    min-height: 150px;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+
+  .mb-3 {
+    margin-bottom: 20px !important;
+  }
+
+  #editor-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<!-- Form -->
 <form method="get" id="editor-form">
   <!-- Title Section -->
   <div class="mb-3">
@@ -28,7 +88,7 @@
 
   <!-- Thumbnail Section -->
   <div class="mb-3">
-    <label for="thumbnail" class="form-label"><h2>Thumbnail URL</h2></label>
+    <label for="thumbnail" class="form-label"><h2>Ảnh nổi bật</h2></label>
     <input type="url" id="thumbnail" name="thumbnail" class="form-control" placeholder="Enter thumbnail URL" required/>
   </div>
 
@@ -42,9 +102,10 @@
   </div>
 
   <!-- Submit Button -->
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
 </form>
 
+<!-- Quill Initialization -->
 <script>
   // Initialize Quill editors
   const summaryEditor = new Quill('#summary-editor', {
@@ -82,8 +143,4 @@
     },
     placeholder: 'Compose the main content...',
   });
-
 </script>
-
-
-<script src="<%= script %>"></script>

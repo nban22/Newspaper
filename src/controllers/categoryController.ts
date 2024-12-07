@@ -56,10 +56,6 @@ export const updateCategory = catchAsync(async (req: Request, res: Response, nex
     const categoryId = req.params.id;
     const { name, parent_name } = req.body;
 
-    if (name === "") {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Name cannot be empty!"));
-    }
-
     const category = await Category.findById(categoryId);
     if (!category) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Category_id not found!"));
@@ -85,10 +81,6 @@ export const createCategory = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const { name, parent_name } = req.body;
 
-        if (name === "") {
-            return next(new AppError(StatusCodes.BAD_REQUEST, "Name cannot be empty!"));
-        }
-        
         // Check if category already exists
         const existingCategory = await Category.findOne({ name });
         if (existingCategory) {
@@ -112,7 +104,7 @@ export const createCategory = catchAsync(
 export const deleteCategory = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const categoryId = req.params.id;
-        const category = await Category.findById(categoryId);
+        const category = await Category.findByIdAndDelete(categoryId);
         if (!category) {
             return next(new AppError(StatusCodes.NOT_FOUND, "Category not found!"));
         }

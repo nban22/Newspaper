@@ -7,7 +7,6 @@ import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
 import adminRouter from "./routers/adminRouter";
 import categoriesRouter from "./routers/categoriesRouter";
-import tagRouter from "./routers/tagRouter";
 import authRouter from "./routers/authRouter";
 import articleRouter from "./routers/articleRouter";
 import facebookRouter from "./routers/facebookRouter";
@@ -48,7 +47,6 @@ app.use("/", viewRouter);
 app.use("/admin", adminRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter);
-app.use("/api/v1/tags", tagRouter);
 app.use("/api/v1/articles", articleRouter);
 
 app.all("*", (req, res, next) => {

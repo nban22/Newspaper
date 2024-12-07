@@ -92,7 +92,7 @@ const articlesList = [
         content: "Blockchain không chỉ là nền tảng của các đồng tiền ảo mà còn có tiềm năng ứng dụng trong nhiều lĩnh vực như ngân hàng, bảo hiểm, logistics và chăm sóc sức khỏe. Công nghệ này giúp đảm bảo tính bảo mật và minh bạch trong giao dịch.",
         thumbnail: "https://robohash.org/8",
         category_name: "Công nghệ",
-        author_id: "60a6b3a0c7f8f4b0f4c3f4e7",
+        author_id: "6752a00622211c211a903e8a",
         publish_date: new Date(),
         status: "published"
     },
@@ -102,7 +102,7 @@ const articlesList = [
         content: "Giao thông thông minh là sự kết hợp giữa công nghệ và các phương tiện giao thông để tối ưu hóa lưu thông, giảm tắc nghẽn và nâng cao an toàn cho người tham gia giao thông. Đây là xu hướng phát triển trong tương lai cho các thành phố thông minh.",
         thumbnail: "https://robohash.org/9",
         category_name: "Giao thông",
-        author_id: "60a6b3a0c7f8f4b0f4c3f4e7",
+        author_id: "6752a00622211c211a903e8a",
         publish_date: new Date(),
         status: "published"
     },
@@ -112,7 +112,7 @@ const articlesList = [
         content: "Công nghệ 5G không chỉ cung cấp tốc độ truy cập nhanh hơn mà còn giúp kết nối nhiều thiết bị cùng lúc. Điều này mở ra nhiều cơ hội mới cho các ứng dụng như xe tự hành, truyền hình 4K và thực tế ảo.",
         thumbnail: "https://robohash.org/10",
         category_name: "Công nghệ",
-        author_id: "60a6b3a0c7f8f4b0f4c3f4e7",
+        author_id: "6752a00622211c211a903e8a",
         publish_date: new Date(),
         status: "published"
     },
@@ -122,7 +122,7 @@ const articlesList = [
         content: "Biến đổi khí hậu gây ra hiện tượng thất thu, hạn hán và lũ lụt, ảnh hưởng đến năng suất và chất lượng nông sản. Để giải quyết vấn đề này, cần có các biện pháp như ứng dụng công nghệ vào sản xuất và bảo vệ môi trường.",
         thumbnail: "https://robohash.org/11",
         category_name: "Môi trường - Khí hậu",
-        author_id: "60a6b3a0c7f8f4b0f4c3f4e7",
+        author_id: "6752a00622211c211a903e8a",
         publish_date: new Date(),
         status: "published"
     }

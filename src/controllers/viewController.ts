@@ -17,10 +17,12 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     // console.log(latestArticles);
     
+    const featuredArticles = await Article.getFeaturedArticles();
 
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
-        latestArticle: latestArticles
+        latestArticle: latestArticles,
+        featuredArticles: featuredArticles
     });
 });
 

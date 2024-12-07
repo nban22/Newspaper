@@ -42,9 +42,17 @@ ArticleSchema.statics.incrementViewCount = async function (articleId: mongoose.T
 
 ArticleSchema.statics.getFeaturedArticles = async function (): Promise<IArticle[]> {
     return this.find({ status: "published" }) // Only fetch published articles
-        .sort({ view_count: -1 })            // Sort by view_count in descending order
-        .limit(4)                            // Limit to 4 articles // Select specific fields if needed
-        .populate("category_id", "name")     // Populate category_id with name field
+        .sort({ view_count: -1 })             // Sort by view_count in descending order
+        .limit(4)                             // Limit to 4 articles
+        .select("title publish_date thumbnail view_count summary category_id") // Select specific fields if needed
+        .populate({
+            path: "category_id",              // Populate category_id
+            select: "name parent_id",         // Select name and parent_id fields
+            populate: {                       // Populate parent_id to get parent category
+                path: "parent_id",
+                select: "name",               // Select the name field of the parent category
+            },
+        });
 };
 
 

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../models/user";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
@@ -7,7 +6,6 @@ import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
-import Category from "../models/category";
 import moment from "moment";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

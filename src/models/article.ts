@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 interface IArticle extends Document {
     title: string;
+    is_premium: boolean;
     summary?: string;
     content: string;
     thumbnail?: string;
@@ -22,6 +23,7 @@ export interface ArticleModel extends Model<IArticle> {
 
 const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     title: { type: String, required: true },
+    is_premium: { type: Boolean, default: false },
     summary: { type: String },
     content: { type: String, required: true },
     thumbnail: { type: String },
@@ -41,8 +43,8 @@ ArticleSchema.statics.incrementViewCount = async function (articleId: mongoose.T
 ArticleSchema.statics.getFeaturedArticles = async function (): Promise<IArticle[]> {
     return this.find({ status: "published" }) // Only fetch published articles
         .sort({ view_count: -1 })            // Sort by view_count in descending order
-        .limit(4)                            // Limit to 4 articles
-        .select("title publish_date thumbnail view_count summary"); // Select specific fields if needed
+        .limit(4)                            // Limit to 4 articles // Select specific fields if needed
+        .populate("category_id", "name")     // Populate category_id with name field
 };
 
 

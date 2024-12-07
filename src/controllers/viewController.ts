@@ -7,6 +7,8 @@ import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
+import Category from "../models/category";
+import moment from "moment";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -17,8 +19,12 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     // console.log(latestArticles);
     
-    const featuredArticles = await Article.getFeaturedArticles();
+    const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
+        ...article.toObject(),
+        publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
+    }));
 
+    
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,

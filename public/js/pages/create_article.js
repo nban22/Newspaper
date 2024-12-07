@@ -26,6 +26,7 @@
       content: contentEditor.root.innerHTML,
       thumbnail: document.getElementById('thumbnail').value,
       category_id: document.getElementById('category').value,
+      
     };
 
     console.log("Form data:", formData);

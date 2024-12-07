@@ -63,7 +63,8 @@
                                     <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>" class="card-img-top" alt="<%= article.title || 'Featured Article' %>" />
                                     <div class="card-body">
                                         <h5 class="card-title"><%= article.title || 'No Title' %></h5>
-                                        <p class="card-text"><%= article.summary || 'No description available.' %></p>
+                                        <p class="card-text"><%= article.category_id.name %></p>
+                                        <p class="card-text">Ngày đăng: <%= article.publish_date %></p>                                        
                                     </div>
                                 </div>
                             </div>

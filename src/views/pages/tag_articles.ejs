@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh sách bài báo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/components/header.css" />
+  <link rel="stylesheet" href="/css/articles.css" />
+  <!-- <link rel="stylesheet" href="/css/components/slideshow.css" /> -->
+</head>
+
+<body>
+  <%- include('../components/header') %>
+
+    <!-- <%- include('../components/slideshow') %> -->
+
+
+    <div class="latest_articles my-5 mx-5">
+      <h2>Khám phá những tin tức thuộc nhãn <%= tag %></h2>
+      <ul class="list-group">
+        <% articles.forEach(article => { %>
+            <li class="list-group-item d-flex align-items-start">
+                <div class="image-container">
+                    <img src="<%= article.profile_picture %>" class="item-img" alt="<%= article.title %>"/>
+                </div>
+                <div class="group-item-body ms-3 mt-3">
+                    <h5 class="group-item-title">
+                        <%= article.title %>
+                    </h5>
+                    <p class="group-item-text">
+                        <%= article.summary %>
+                    </p>
+                </div>
+            </li>
+        <% }) %>
+        <li class="list-group-item">
+          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
+          <div class="group-item-body">
+            <h5 class="group-item-title">Bài viết mới nhất 1</h5>
+            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
+          <div class="group-item-body">
+            <h5 class="group-item-title">Bài viết mới nhất 2</h5>
+            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
+          <div class="group-item-body">
+            <h5 class="group-item-title">Bài viết mới nhất 3</h5>
+            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
+          <div class="group-item-body">
+            <h5 class="group-item-title">Bài viết mới nhất 4</h5>
+            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
+          </div>
+        </li>
+      </ul>
+
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>

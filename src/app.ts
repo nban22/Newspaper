@@ -13,7 +13,7 @@ import facebookRouter from "./routers/facebookRouter";
 import googleRouter from "./routers/googleRouter";
 import facebookPassport from "./config/facebookPassport";
 import cors from "cors";
-
+import tagRouter from "./routers/tagRouter";    
 
 
 import googlePassport from "./config/googlePassport";
@@ -51,6 +51,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/articles", articleRouter);
 app.use("/api/v1/subscribers", subcriberRouter);
+app.use("/api/v1/tags", tagRouter);
 
 app.all("*", (req, res, next) => {
     return next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));

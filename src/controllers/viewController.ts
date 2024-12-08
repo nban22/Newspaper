@@ -62,5 +62,30 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(200).render("pages/create_article", {user: user});
+    
+    res.status(200).render("pages/create_article", {user: user, article: null});
 }   
+
+export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const articleId = req.params.articleId;
+
+    const user = req.body.user;
+
+    const writer = await WriterProfile.findOne({ user_id: user._id })
+    if (!writer) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+    }
+
+    // status draft or rejected
+    const article = await Article.findOne({_id: articleId, status: { $in: ["draft", "rejected"] }}).
+                                    populate("category_id")
+    if (!article) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
+    }
+
+    if (article.author_id.toString() !== writer._id?.toString()) {   
+        return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
+    }
+    
+    res.status(200).render("pages/edit_article", {user: user, article: article});
+});

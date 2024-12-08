@@ -8,7 +8,7 @@ interface IArticle extends Document {
     content: string;
     thumbnail?: string;
     category_id: mongoose.Types.ObjectId; 
-    author_id: mongoose.Types.ObjectId; 
+    writer_id: mongoose.Types.ObjectId; 
     publish_date?: Date;
     view_count: number;
     status: "draft" | "published" | "archived"; 
@@ -28,7 +28,7 @@ const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     content: { type: String, required: true },
     thumbnail: { type: String },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    author_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
+    writer_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
     publish_date: { type: Date },
     view_count: { type: Number, default: 0 },
     status: { type: String, enum: ["draft", "published", "archived"], default: "draft", required: true },

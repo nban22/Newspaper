@@ -12,13 +12,13 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     const user = req.body.user;
 
     const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("author_id")
+        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("writer_id")
     ]);
 
     // console.log(latestArticles);
     
     const [popularArticles] = await Promise.all([
-        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
+        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("writer_id")
     ]);
     const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
         ...article.toObject(),
@@ -87,7 +87,7 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    if (article.author_id.toString() !== writer._id?.toString()) {   
+    if (article.writer_id.toString() !== writer._id?.toString()) {   
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
     }
     

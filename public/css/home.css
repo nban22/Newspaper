@@ -32,6 +32,6 @@
 .carousel-inner img {
     width: 800px;
     height: 400px;
-    object-fit: cover; /* Ensures the image fills the dimensions without distortion */
+    object-fit: contain; /* Ensures the image fills the dimensions without distortion */
     margin: 0 auto;    /* Centers the image horizontally */
 }

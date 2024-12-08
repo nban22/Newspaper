@@ -5,18 +5,31 @@ import cookieParser from "cookie-parser";
 
 import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
+import adminRouter from "./routers/adminRouter";
 import categoriesRouter from "./routers/categoriesRouter";
+import tagRouter from "./routers/tagRouter";
 import authRouter from "./routers/authRouter";
+import subcriberRouter from "./routers/subscriberRouter";
 import articleRouter from "./routers/articleRouter";
 import facebookRouter from "./routers/facebookRouter";
 import googleRouter from "./routers/googleRouter";
 import facebookPassport from "./config/facebookPassport";
+import cors from "cors";
+
+
+
 import googlePassport from "./config/googlePassport";
 
 const app = express();
+const methodOverride = require("method-override");
 
+app.use(methodOverride('_method'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
 app.use(cookieParser());
 
 // app.use(session({
@@ -41,9 +54,12 @@ app.use("/auth/facebook", facebookRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/v1", authRouter);
 app.use("/", viewRouter);
+app.use("/admin", adminRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter);
+app.use("/api/v1/tags", tagRouter);
 app.use("/api/v1/articles", articleRouter);
+app.use("/api/v1/subscribers", subcriberRouter);
 
 app.all("*", (req, res, next) => {
     return next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../models/user";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
@@ -7,6 +6,7 @@ import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
+import moment from "moment";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -20,11 +20,17 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     const [popularArticles] = await Promise.all([
         Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
     ]);
+    const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
+        ...article.toObject(),
+        publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
+    }));
 
+    
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,
         popularArticle: popularArticles
+        featuredArticles: featuredArticles
     });
 });
 
@@ -41,13 +47,8 @@ export const getCreateUserPage = (req: Request, res: Response, next: NextFunctio
 }
 
 export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // const userId = req.body.userId;
-    const userId = "674bcfa74ebc5c5911e75887";
-    const user = await User.findById(userId);
-
-    if (!user) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
-    }
+    const userId = req.body.userId;
+    const user = req.body.user;
     
     let profileOwner: any;
     if (user.role === "subscriber") {
@@ -60,5 +61,10 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
-    res.status(200).render("pages/update_user_profile", {user: user, profile: profileOwner});
+    res.status(200).render("pages/update_profile", {user: user, profile: profileOwner});
 });
+
+export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    res.status(200).render("pages/create_article", {user: user});
+}   

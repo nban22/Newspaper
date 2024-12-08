@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= article.title %></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/components/header.css" />
+    <link rel="stylesheet" href="/css/components/topCategories.css" />
+    <link rel="stylesheet" href="/css/detail_article.css" />
+  </head>
+  <body>
+    <%- include('../components/home/header', {user: user}) %>
+    <main class="container">
+      <h1><%= article.title %></h1>
+
+      <div class="section1">
+        <p><%= article.categoryName %></p>
+        <p><%= article.publish_date %></p>
+      </div>
+
+      <!-- download button -->
+      <div class="btn download-btn">
+        <a href="<%= article.file %>" download="<%= article.title %>">
+          <i class="fas fa-download"></i> Download
+        </a>
+      </div>
+
+      <!--Summary  -->
+      <div class="summary">
+        <p><%= article.summary %></p>
+      </div>
+
+      <!--Thumbnail image -->
+      <div class="thumbnail">
+        <img src="<%= article.thumbnail %>" alt="<%= article.title %>" />
+      </div>
+
+      <!--Content -->
+      <div class="content">
+        <p><%= article.content %></p>
+      </div>
+
+      <!--Author -->
+      <div class="author">
+        <p></p>
+        <p><%= article.authorName %></p>
+      </div>
+
+      <!-- Tags -->
+      <div class="tags">
+        <span>Nhãn</span>
+        <% article.tags.forEach(tag => { %>
+        <a href="/tag/<%= tag._id %>">#<%= tag.name %></a>
+        <% }) %>
+      </div>
+
+      <%- include('../components/footer.ejs') %>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/65d6f9b274.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/pages/home.js"></script>
+    <script src="/js/header.js"></script>
+  </body>
+</html>

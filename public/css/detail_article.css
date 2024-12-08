@@ -1,0 +1,82 @@
+h1 {
+  font-size: 2.5em;
+  margin-top: 1em;
+  margin-bottom: 0, 5em;
+}
+.section1 {
+  display: flex;
+  font-size: 24px;
+  gap: 2em;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.btn.download-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.btn.download-btn a {
+  text-decoration: none;
+  color: inherit; /* Inherit the button color */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.btn.download-btn i {
+  font-size: 18px; /* Icon size */
+}
+
+.btn.download-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight upward movement */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+}
+
+.btn.download-btn:active {
+  background-color: #004080; /* Even darker blue on active */
+  transform: translateY(0); /* Reset movement */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow on click */
+}
+
+.btn.download-btn:focus {
+  outline: 2px solid #007bff; /* Blue focus outline */
+  outline-offset: 4px; /* Larger outline */
+}
+
+.summary,
+.content,
+.tags,
+.author {
+  font-size: 1.2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tags {
+  display: flex;
+  gap: 1em;
+}

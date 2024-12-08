@@ -56,6 +56,17 @@
                     <h3 class="mb-4">Nổi bật trong tuần</h3>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+                    <% popularArticle.forEach(article => { %>
+                        <div class="col" style="padding: 5px">
+                            <div class="card h-100">
+                                <img src="<%= article.thumbnail %>" class="card-img-top" alt="<%= article.title %>" />
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= article.title %></h5>
+                                    <p class="card-text"><%= article.summary %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
                     <% if (featuredArticles && featuredArticles.length > 0) { %>
                         <% featuredArticles.forEach((article) => { %>
                             <div class="col" style="padding: 5px">

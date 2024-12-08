@@ -17,6 +17,9 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     // console.log(latestArticles);
     
+    const [popularArticles] = await Promise.all([
+        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
+    ]);
     const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
         ...article.toObject(),
         publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
@@ -26,6 +29,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,
+        popularArticle: popularArticles
         featuredArticles: featuredArticles
     });
 });

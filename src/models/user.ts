@@ -2,21 +2,40 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
 export interface IUser extends Document {
-    email: string;
     password?: string;
+    email?: string;
+    googleId?: string;
+    facebookId?: string;
+    loginMethod?: "local" | "google" | "facebook";
+    name?: string;
     role: "writer" | "editor" | "subscriber" | "admin";
     createdAt: Date;
+    active?: boolean;
 }
 
 const UserSchema: Schema<IUser> = new mongoose.Schema({
     email: {
         type: String,
-        required: true,
+        // required: true,
         unique: true,
     },
     password: {
         type: String,
+        required: false,
+    },
+    googleId: {
+        type: String,
+    },
+    facebookId: {
+        type: String,
+    },
+    loginMethod: {
+        type: String,
+        enum: ["local", "google", "facebook"],
         required: true,
+    },
+    name: {
+        type: String,
     },
     role: {
         type: String,
@@ -33,7 +52,6 @@ UserSchema.pre<IUser>('save', async function(next) {
     if (this.password) {
         this.password = await bcrypt.hash(this.password, 12);
     }
-
     next();
 });
 

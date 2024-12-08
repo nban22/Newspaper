@@ -1,0 +1,140 @@
+<!-- Import Styles and Scripts -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/components/wysiwyg.css">
+
+<!-- Form -->
+<form method="get" id="editor-form">
+  <!-- Title Section -->
+  <div class="mb-3">
+    <label for="title" class="form-label">
+      <h2>Tiêu đề</h2>
+    </label>
+    <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tiêu đề"
+      value="<%= article ? article.title : '' %>" required />
+  </div>
+
+  <!-- Summary Section -->
+  <div class="mb-3">
+    <label for="summary-editor" class="form-label">
+      <h2>Tóm tắt</h2>
+    </label>
+    <div id="summary-editor" class="quill-editor" data-content="<%= article ? article.summary : '' %>"></div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="mb-3">
+    <label for="content-editor" class="form-label">
+      <h2>Nội dung</h2>
+    </label>
+    <div id="content-editor" class="quill-editor" data-content="<%= article ? article.content : '' %>"></div>
+  </div>
+
+  <!-- Thumbnail Section -->
+  <div class="mb-3">
+    <label for="thumbnail" class="form-label">
+      <h2>Ảnh nổi bật</h2>
+    </label>
+    <input type="url" id="thumbnail" name="thumbnail" class="form-control" placeholder="Enter thumbnail URL"
+      value="<%= article ? article.thumbnail : '' %>" required />
+  </div>
+
+  <!-- Category Section -->
+  <div class="mb-3">
+    <label for="category" class="form-label">
+      <h2>Chuyên mục</h2>
+    </label>
+    <select id="category" name="category_id" class="form-select" required>
+      <option value="" disabled selected>Chọn chuyên mục cho bài viết</option>
+      <% if (article) { %>
+        <option value="<%= article.category_id._id %>" selected>
+          <%= article.category_id.name %>
+        </option>
+        <% } %>
+          <!-- Categories will be dynamically loaded here -->
+    </select>
+  </div>
+
+
+  <!-- Tags Section -->
+  <div id="article-id-container" data-article-id="<%= article ? article._id : '' %>"></div>
+  <div class="mb-3">
+    <label for="tags" class="form-label">
+      <h2>Nhãn</h2>
+    </label>
+    <div id="tags-container" class="tag-selection-container">
+      <!-- Selected tags will be shown here -->
+      <div id="selected-tags-preview" class="selected-tags"></div>
+
+      <!-- Available tags grid -->
+      <div id="tags-grid" class="tags-grid">
+        <!-- Tags will be dynamically inserted here -->
+      </div>
+    </div>
+    <input type="hidden" id="selected-tags" name="tags" />
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+</form>
+
+
+
+<!-- Quill Initialization -->
+<script>
+  // Initialize Quill editors
+  const summaryEditor = new Quill('#summary-editor', {
+    theme: 'snow',
+    modules: {
+      syntax: true,
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'header': [1, 2, 3, false] }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],    // Subscript/Superscript
+        [{ 'align': [] }],                              // Text Alignment
+        [{ 'color': [] }, { 'background': [] }],        // Text/Background color
+        ['link', 'image', 'video']                      // Links, Images, Videos
+      ],
+    },
+    placeholder: 'Compose the summary content...',
+  });
+
+  const contentEditor = new Quill('#content-editor', {
+    theme: 'snow',
+    modules: {
+      syntax: true,
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'header': [1, 2, 3, false] }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],    // Subscript/Superscript
+        [{ 'align': [] }],                              // Text Alignment
+        [{ 'color': [] }, { 'background': [] }],        // Text/Background color
+        ['link', 'image', 'video']                      // Links, Images, Videos
+      ],
+    },
+    placeholder: 'Compose the main content...',
+  });
+
+  const summaryContent = document.querySelector('#summary-editor').getAttribute('data-content');
+  const contentContent = document.querySelector('#content-editor').getAttribute('data-content');
+
+  if (summaryContent) {
+    summaryEditor.clipboard.dangerouslyPasteHTML(summaryContent);
+  }
+
+  if (contentContent) {
+    contentEditor.clipboard.dangerouslyPasteHTML(contentContent);
+  }
+
+</script>
+
+
+<script src="<%= script %>"></script>

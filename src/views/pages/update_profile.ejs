@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profile</title>
+    <title>Cập nhật thông tin</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    
 
@@ -12,22 +12,22 @@
     <link rel="stylesheet" href="/css/update_user_profile.css" />
 </head>
 <body>
-    <%- include('../components/home/header') %>
+    <%- include('../components/home/header') %><br>
 
     <div class="update-form-container container-sm">
-        <h1>Update Profile</h1><hr/> 
+        <h1>Cập nhật thông tin</h1><hr/> 
         <form id="updateProfileForm" enctype="multipart/form-data">
           <input type="hidden" name="user_id" value="<%= user._id %>">
 
           <div class="col-12">
-              <label for="inputFullName1" class="form-label" name="full_Name">Full name</label>
+              <label for="inputFullName1" class="form-label" name="full_Name">Họ tên</label>
               <input type="text" class="form-control" name="full_name" id="inputFullName1" value="<%= profile.full_name || ''%>" required>
           </div>
 
 
           <% if (user.role === 'writer') { %>
           <div class="col-12">
-            <label for="inputPenName1" class="form-label" name="pen_name">Pen name</label>
+            <label for="inputPenName1" class="form-label" name="pen_name">Bút danh</label>
             <input type="text" class="form-control" id="inputPenName1" value="<%= profile.pen_name || ''%>" required>
           </div>
           <% } %>
@@ -38,22 +38,22 @@
           </div>
   
           <div class="col-12">
-            <label for="inputDOB" class="form-label" name="dob">Date of Birth</label>
+            <label for="inputDOB" class="form-label" name="dob">Ngày sinh</label>
             <input type="date" class="form-control" id="inputDOB" name="dob" value="<%= profile.dob ? profile.dob.toISOString().split('T')[0] : '' %>" required>
           </div>
 
           <div class="mb-3">
-              <label for="formFile" class="form-label">Upload profile picture</label>
+              <label for="formFile" class="form-label">Ảnh đại diện</label>
               <input class="form-control" type="file" id="formFile" name="avatar" required>
           </div>
 
           <div class="col-12 d-flex justify-content-center">
-              <button type="submit" class="btn-update btn btn-secondary">Update</button>
+              <button type="submit" class="btn-update btn btn-secondary">Cập nhật</button>
           </div>
         </form>   
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <script src="js/update_user_profile.js"></script> <!-- Link to the external JS file -->
+    <script src="js/update_profile.js"></script> <!-- Link to the external JS file -->
 </body>
 </html>

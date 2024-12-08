@@ -17,7 +17,7 @@ signupForm.addEventListener('submit', (e) => {
             email: email.value,
             password: password.value,
             confirmPassword: confirmPassword.value,
-            role: role.value
+            role: role.value,
         }),
         credentials: 'include'
     })

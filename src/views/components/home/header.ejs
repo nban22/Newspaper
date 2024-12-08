@@ -2,13 +2,17 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <img src="images/logo.png" alt="newspaper logo" style="height: 60px; object-fit: contain" class="" />
+                <img src="/images/logo.png" alt="newspaper logo" style="height: 60px; object-fit: contain" class="" />
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="#" class="nav-link px-2 text-dark">Trang chủ</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
+                <% if (user && user.role === 'admin') {%>
+                    <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
+                    <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
+                <% } %>
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -63,7 +67,7 @@
                         <ul class="dropdown-menu" aria-labelledby="22dropdownMenuButton2">
                             <li><a class="dropdown-item" href="category.html">Thời sự</a></li>
                             <li><a class="dropdown-item" href="category.html">Giao thông</a></li>
-                            <li><a class="dropdown-item" href="category.html">Môi trường - khí hấu</a></li>
+                            <li><a class="dropdown-item" href="category.html">Môi trường - khí hậu</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>

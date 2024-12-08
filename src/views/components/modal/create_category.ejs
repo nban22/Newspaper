@@ -1,0 +1,32 @@
+<div class="modal fade" id="createCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered h-auto">
+        <div class="modal-content">
+            <form id="createCategoryForm" method="POST" action="/api/v1/categories/create">    
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Thêm danh mục mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="categoryNameInput" class="form-label">Tên danh mục</label>
+                        <input type="text" class="form-control" id="categoryNameInput" name="name" required/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="parentNameInput" class="form-label">Danh mục gốc</label>
+                        <!-- <input type="text" class="form-control" id="parentNameInput" name="parent_name"/> -->
+                        <select class="form-select" id="parentNameInput" name="parent_name">
+                            <option value="">-Không-</option> 
+                            <% categories.forEach((category, index) => { %>
+                                <option value="<%= category.name %>"><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,8 @@ export interface ISubscriberProfile extends Document {
     dob?: Date;
     createdAt: Date;
     updatedAt: Date;
-    subscription_end?: Date;
+    expiryDate: Date;
+    subscription_status: string;
     avatar?: string;
 }
 
@@ -31,7 +32,18 @@ const SubscriberProfileSchema: Schema<ISubscriberProfile> = new mongoose.Schema(
         type: Date,
         default: Date.now,
     },
-    subscription_end: { type: Date },
+    expiryDate: {
+        type: Date,
+        default: function () {
+            return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        },
+    },
+
+    subscription_status: {
+        type: String,
+        enum: ["active", "expired"],
+        default: "active",
+    },
     avatar: { type: String },
 });
 

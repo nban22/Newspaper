@@ -6,7 +6,7 @@ interface IAssignment extends Document {
 }
 
 const AssignmentSchema: Schema<IAssignment> = new mongoose.Schema({
-    editor_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    editor_id: { type: Schema.Types.ObjectId, ref: "EditorProfile", required: true },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true }
 });
 

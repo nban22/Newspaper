@@ -10,6 +10,7 @@ import SubscriberProfile from "../models/subscriberProfile";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 
+
 export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, role } = req.body;
     if (!email || !password || !role) {
@@ -77,6 +78,22 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     }
     const accessTokenStr = accessToken(user);
 
+    if (user.role === "subscriber") {
+        const subscriberProfile = await SubscriberProfile.findOne({ user_id: user._id });
+        if (!subscriberProfile) {
+            return next(new AppError(StatusCodes.NOT_FOUND, "No subscriber profile found!"));
+        }
+        
+        if (new Date() > subscriberProfile.expiryDate) {
+            subscriberProfile.subscription_status = "expired";
+            await subscriberProfile.save();
+        }
+    }
+
+    // res.cookie("refreshToken", refreshTokenStr, {
+    //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    //     httpOnly: true,
+    // });
     res.cookie("accessToken", accessTokenStr, {
         expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
         httpOnly: true,

@@ -9,6 +9,10 @@
                 <li><a href="#" class="nav-link px-2 text-dark">Trang chủ</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
+                <% if (user && user.role === 'admin') {%>
+                    <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
+                    <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
+                <% } %>
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">

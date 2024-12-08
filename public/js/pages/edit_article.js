@@ -14,7 +14,7 @@ fetch('/api/v1/tags/')
     // If an article ID exists, fetch its tags
     const articleId = document.getElementById('article-id-container').getAttribute('data-article-id');
     if (articleId) {
-      fetch(`/api/v1/tags/${articleId}`)
+      fetch(`/api/v1/tags/article/${articleId}`)
         .then(response => response.json())
         .then(response => {
           const articleTags = response.data.tags || [];

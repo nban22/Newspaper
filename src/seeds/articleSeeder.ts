@@ -125,7 +125,57 @@ const articlesList = [
         author_id: "60a6b3a0c7f8f4b0f4c3f4e7",
         publish_date: new Date(),
         status: "published"
-    }
+    },
+    {
+        "title": "Công nghệ VAR và sự thay đổi trong bóng đá hiện đại",
+        "summary": "VAR đang tạo ra một bước ngoặt lớn trong cách thức điều hành các trận đấu bóng đá.",
+        "content": "Công nghệ VAR (Video Assistant Referee) mang đến sự chính xác và minh bạch hơn trong việc ra quyết định trên sân. Mặc dù còn gây tranh cãi, nhưng đây được xem là công cụ quan trọng giúp giảm sai sót của trọng tài.",
+        "thumbnail": "https://robohash.org/10",
+        "category_name": "Bóng đá Quốc tế",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "publish_date": new Date(),
+        "status": "published"
+    },
+    {
+        "title": "Xu hướng phim siêu anh hùng: Liệu có đang bão hòa?",
+        "summary": "Dòng phim siêu anh hùng đang đối mặt với áp lực từ sự kỳ vọng cao của khán giả.",
+        "content": "Trong khi các bộ phim như Marvel và DC từng làm mưa làm gió, gần đây nhiều người cho rằng thể loại này đang mất dần sức hút. Các nhà sản xuất cần đổi mới để duy trì sự quan tâm của khán giả.",
+        "thumbnail": "https://robohash.org/20",
+        "category_name": "Phim ảnh",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "publish_date": new Date(),
+        "status": "published"
+    },
+    {
+        "title": "Những bài hát nổi bật từ các nghệ sĩ trẻ năm 2024",
+        "summary": "2024 là năm ghi nhận nhiều bước đột phá từ các tài năng âm nhạc trẻ.",
+        "content": "Các ca khúc từ những nghệ sĩ như Billie Eilish hay Olivia Rodrigo đã trở thành hiện tượng toàn cầu, mang đến làn gió mới cho làng nhạc quốc tế. Những câu chuyện đằng sau mỗi bài hát cũng là điểm nhấn thú vị.",
+        "thumbnail": "https://robohash.org/30",
+        "category_name": "Âm nhạc",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "publish_date": new Date(),
+        "status": "published"
+    },
+    {
+        "title": "Tầm quan trọng của thời trang bền vững trong năm 2024",
+        "summary": "Thời trang bền vững đang trở thành xu hướng chính trong ngành công nghiệp toàn cầu.",
+        "content": "Với việc ngày càng nhiều người tiêu dùng quan tâm đến môi trường, các thương hiệu thời trang lớn đang đầu tư mạnh vào việc phát triển sản phẩm thân thiện với thiên nhiên và quy trình sản xuất bền vững.",
+        "thumbnail": "https://robohash.org/40",
+        "category_name": "Thời trang",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "publish_date": new Date(),
+        "status": "published"
+    },
+    {
+        "title": "Lợi ích của yoga đối với sức khỏe tâm lý",
+        "summary": "Yoga không chỉ tốt cho cơ thể mà còn mang lại sự bình an cho tâm hồn.",
+        "content": "Yoga đã được chứng minh giúp giảm căng thẳng, cải thiện giấc ngủ và tăng cường sức khỏe tinh thần. Đây là bộ môn phù hợp cho mọi lứa tuổi, đặc biệt trong nhịp sống hiện đại đầy áp lực.",
+        "thumbnail": "https://robohash.org/50",
+        "category_name": "Sức khỏe",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "publish_date": new Date(),
+        "status": "published"
+    },   
 ]
 
 export const seedArticles = async () => {

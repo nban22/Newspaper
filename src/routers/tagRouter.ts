@@ -1,10 +1,22 @@
 import { Router } from "express";
 import * as tagController from "../controllers/tagController";
 
+const tagRouter = Router();
 
-const router = Router();
 
-router.get("/", tagController.getAllTags);
-router.get("/:articleId", tagController.getTagsByAriticleId);
+tagRouter.get("/article/:articleId", tagController.getTagsByAriticleId);
+tagRouter.get("/", tagController.getAllTags);
+tagRouter.post("/create", tagController.createTag);
+tagRouter.put("/update/:id", tagController.updateTag);
+tagRouter.delete("/delete/:id", tagController.deleteTag);
 
-export default router;
+
+export default tagRouter;
+
+
+
+
+
+
+
+

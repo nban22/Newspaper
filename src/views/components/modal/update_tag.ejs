@@ -1,0 +1,22 @@
+<div class="modal fade" id="updateTagModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="tagModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered h-auto">
+        <div class="modal-content">
+            <form id="updateTagForm" method="POST">    
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tagModalLabel">Cập nhật nhãn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="tagNameInput" class="form-label">Tên nhãn</label>
+                        <input type="text" class="form-control" id="tagNameInput" name="name" required/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

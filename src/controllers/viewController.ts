@@ -11,6 +11,7 @@ import { fetchTopCategories } from "./categoryController";
 import mongoose from "mongoose";
 import Category from "../models/category";
 import tag from "../models/tag";
+import Comment from "../models/comment";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -88,14 +89,20 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
     }
 
-    // Check if article exists
+    // Check if id is valid
+    if (!mongoose.Types.ObjectId.isValid(articleId)) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
+    }
+
+    // Convert id to ObjectId
+    const articleObjectId = new mongoose.Types.ObjectId(articleId);
+    // Get an article
     const article = await Article.findById(articleId);
+
+    // Check if article exists
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
-
-    // Convert article id to object id
-    const articleObjectId = new mongoose.Types.ObjectId(articleId);
 
     // Increment view count
     await Article.incrementViewCount(articleObjectId);
@@ -126,6 +133,25 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         tags.push("No tags");
     }
 
+    // Get comments for the article
+    const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
+
+    // Get all articles
+    const allArticles = await Article.find().populate("category_id").populate("author_id");
+    console.log(allArticles);
+
+    // Get related articles (5 articles in the same category)
+    const relatedArticles = await Article.find({
+        category_id: updatedArticle.category_id, // Lọc theo danh mục
+        _id: { $ne: updatedArticle._id },       // Loại bỏ bài viết hiện tại
+    })
+        .limit(5)                               // Lấy tối đa 5 bài viết
+        .sort({ created_at: -1 })               // Sắp xếp bài viết theo ngày tạo mới nhất
+        .select("title publish_date thumbnail") // Chỉ chọn các trường cần thiết
+        .exec();                                // Thực thi truy vấn
+    
+
+
     // Render article page
     res.status(StatusCodes.OK).render("pages/detail_article", { user,
         article: {
@@ -133,6 +159,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             categoryName,
             authorName,
             tags,
+            comments,
+            relatedArticles,
             publish_date: formattedPublishDate,
         },
     });

@@ -10,7 +10,7 @@
   object-fit: cover; /* Ensures the image scales nicely */
 }
 
-.card-body {
+.card-category {
   display: flex;
   flex-direction: column;
   justify-content: space-around;

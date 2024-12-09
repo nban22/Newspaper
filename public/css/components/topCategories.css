@@ -9,3 +9,9 @@
   height: 200px; /* Adjust as needed */
   object-fit: cover; /* Ensures the image scales nicely */
 }
+
+.card-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}

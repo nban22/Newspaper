@@ -7,6 +7,11 @@ import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
 import moment from "moment";
+import { fetchTopCategories } from "./categoryController";
+import mongoose from "mongoose";
+import Category from "../models/category";
+import tag from "../models/tag";
+import Comment from "../models/comment";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -25,12 +30,20 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
     }));
 
-    
+    const topCategories = (await fetchTopCategories()).map(category => ({
+        ...category,
+        publishDate: moment(category.publishDate).format('DD-MM-YYYY'),
+        }));
+
+
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,
         popularArticle: popularArticles,
+        featuredArticles: featuredArticles,
+        topCategories: topCategories,
         featuredArticles: featuredArticles
+
     });
 });
 
@@ -66,6 +79,29 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
+    res.status(200).render("pages/create_article", {user: user});
+}   
+
+export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const articleId = req.params.id;
+    const user = req.body.user;
+
+    // Check if id is provided
+    if (!articleId) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
+    }
+
+    // Check if id is valid
+    if (!mongoose.Types.ObjectId.isValid(articleId)) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
+    }
+
+    // Convert id to ObjectId
+    const articleObjectId = new mongoose.Types.ObjectId(articleId);
+    // Get an article
+    const article = await Article.findById(articleId);
+
+    // Check if article exists
     
     res.status(200).render("pages/create_article", {user: user, article: null});
 }   
@@ -86,6 +122,68 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
+
+    // Increment view count
+    await Article.incrementViewCount(articleObjectId);
+
+    // Re-fetch the article to ensure updated data is sent
+    const updatedArticle = await Article.findById(articleId);
+
+    // Ensure updatedArticle is not null
+    if (!updatedArticle) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Updated article not found!"));
+    }
+
+    // Format publish date
+    const formattedPublishDate = moment(updatedArticle.publish_date).format("DD-MM-YYYY");
+
+    // Get category's name 
+    const category = await Category.findById(updatedArticle.category_id);
+    const categoryName = category ? category.name : "Unknown";
+
+    // Get article's author
+    const author = await WriterProfile.findOne({user_id: updatedArticle.author_id});
+    const authorName = author ? author.full_name : "Khuyết danh";
+
+    // Get tags for the article
+    const tagsList = await tag.find({article_id: articleObjectId}).populate("tag_id");
+    const tags = tagsList.map(tag => tag.name);
+    if (tags.length === 0) {
+        tags.push("No tags");
+    }
+
+    // Get comments for the article
+    const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
+
+    // Get all articles
+    const allArticles = await Article.find().populate("category_id").populate("author_id");
+    console.log(allArticles);
+
+    // Get related articles (5 articles in the same category)
+    const relatedArticles = await Article.find({
+        category_id: updatedArticle.category_id, // Lọc theo danh mục
+        _id: { $ne: updatedArticle._id },       // Loại bỏ bài viết hiện tại
+    })
+        .limit(5)                               // Lấy tối đa 5 bài viết
+        .sort({ created_at: -1 })               // Sắp xếp bài viết theo ngày tạo mới nhất
+        .select("title publish_date thumbnail") // Chỉ chọn các trường cần thiết
+        .exec();                                // Thực thi truy vấn
+    
+
+
+    // Render article page
+    res.status(StatusCodes.OK).render("pages/detail_article", { user,
+        article: {
+            ...updatedArticle.toObject(),
+            categoryName,
+            authorName,
+            tags,
+            comments,
+            relatedArticles,
+            publish_date: formattedPublishDate,
+        },
+    });
+});
 
     if (article.author_id.toString() !== writer._id?.toString()) {   
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));

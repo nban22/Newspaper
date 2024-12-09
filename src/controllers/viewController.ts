@@ -46,15 +46,15 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 });
 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("pages/login");
+    res.status(StatusCodes.OK).render("pages/login");
 };
 
 export const getSignupPage = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).render("pages/signup");
+    res.status(StatusCodes.OK).render("pages/signup");
 }
 
 export const getCreateUserPage = (req: Request, res: Response, next: NextFunction) => { 
-    res.status(200).render("create_user");
+    res.status(StatusCodes.OK).render("create_user");
 }
 
 export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -72,34 +72,36 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
-    res.status(200).render("pages/update_profile", {user: user, profile: profileOwner});
+    res.status(StatusCodes.OK).render("pages/update_profile", {user: user, profile: profileOwner});
 });
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(200).render("pages/create_article", {user: user});
+    res.status(StatusCodes.OK).render("pages/create_article", {user: user});
 }   
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const articleId = req.params.articleId;
-
+    const articleId = req.params.id;
     const user = req.body.user;
 
-    const writer = await WriterProfile.findOne({ user_id: user._id })
-    if (!writer) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+    // Check if id is provided
+    if (!articleId) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
     }
 
-    // status draft or rejected
-    const article = await Article.findOne({_id: articleId, status: { $in: ["draft", "rejected"] }}).
-                                    populate("category_id")
+    // Check if article exists
+    // Check if id is valid
+    if (!mongoose.Types.ObjectId.isValid(articleId)) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
+    }
+    // Convert id to ObjectId
+    const articleObjectId = new mongoose.Types.ObjectId(articleId);
+    // Get an article
+    const article = await Article.findById(articleId);
+    // Check if article exists
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
-
-    const articleObjectId = new mongoose.Types.ObjectId(articleId);
-
-
     // Increment view count
     await Article.incrementViewCount(articleObjectId);
 
@@ -131,11 +133,9 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
     // Get comments for the article
     const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
-
     // Get all articles
     const allArticles = await Article.find().populate("category_id").populate("author_id");
     console.log(allArticles);
-
     // Get related articles (5 articles in the same category)
     const relatedArticles = await Article.find({
         category_id: updatedArticle.category_id, // Lọc theo danh mục
@@ -146,7 +146,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         .select("title publish_date thumbnail") // Chỉ chọn các trường cần thiết
         .exec();                                // Thực thi truy vấn
     
-
     // Render article page
     res.status(StatusCodes.OK).render("pages/detail_article", { user,
         article: {
@@ -159,7 +158,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             publish_date: formattedPublishDate,
         },
     });
-});
+})
 
 export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.articleId;
@@ -182,5 +181,5 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
     }
     
-    res.status(200).render("pages/edit_article", {user: user, article: article});
+    res.status(StatusCodes.OK).render("pages/edit_article", {user: user, article: article});
 });

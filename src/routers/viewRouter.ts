@@ -14,5 +14,7 @@ viewRouter.get("/update_profile", authenticateJWT, viewController.getUpdateUserP
 viewRouter.get("/create_article", viewController.getCreateArticlePage);
 viewRouter.get("/article/:id", authenticateJWT, viewController.getArticlePage);
 
+viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
+
 
 export default viewRouter;

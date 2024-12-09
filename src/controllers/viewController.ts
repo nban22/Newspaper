@@ -42,6 +42,8 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         popularArticle: popularArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
+        featuredArticles: featuredArticles
+
     });
 });
 
@@ -100,6 +102,23 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const article = await Article.findById(articleId);
 
     // Check if article exists
+    
+    res.status(200).render("pages/create_article", {user: user, article: null});
+}   
+
+export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const articleId = req.params.articleId;
+
+    const user = req.body.user;
+
+    const writer = await WriterProfile.findOne({ user_id: user._id })
+    if (!writer) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+    }
+
+    // status draft or rejected
+    const article = await Article.findOne({_id: articleId, status: { $in: ["draft", "rejected"] }}).
+                                    populate("category_id")
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
@@ -166,3 +185,9 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     });
 });
 
+    if (article.author_id.toString() !== writer._id?.toString()) {   
+        return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
+    }
+    
+    res.status(200).render("pages/edit_article", {user: user, article: article});
+});

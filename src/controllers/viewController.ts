@@ -42,8 +42,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         popularArticle: popularArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
-        featuredArticles: featuredArticles
-
     });
 });
 
@@ -83,30 +81,6 @@ export const getCreateArticlePage = (req: Request, res: Response, next: NextFunc
 }   
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const articleId = req.params.id;
-    const user = req.body.user;
-
-    // Check if id is provided
-    if (!articleId) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
-    }
-
-    // Check if id is valid
-    if (!mongoose.Types.ObjectId.isValid(articleId)) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
-    }
-
-    // Convert id to ObjectId
-    const articleObjectId = new mongoose.Types.ObjectId(articleId);
-    // Get an article
-    const article = await Article.findById(articleId);
-
-    // Check if article exists
-    
-    res.status(200).render("pages/create_article", {user: user, article: null});
-}   
-
-export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.articleId;
 
     const user = req.body.user;
@@ -122,6 +96,9 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
+
+    const articleObjectId = new mongoose.Types.ObjectId(articleId);
+
 
     // Increment view count
     await Article.incrementViewCount(articleObjectId);
@@ -170,7 +147,6 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         .exec();                                // Thực thi truy vấn
     
 
-
     // Render article page
     res.status(StatusCodes.OK).render("pages/detail_article", { user,
         article: {
@@ -184,6 +160,23 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         },
     });
 });
+
+export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const articleId = req.params.articleId;
+
+    const user = req.body.user;
+
+    const writer = await WriterProfile.findOne({ user_id: user._id })
+    if (!writer) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+    }
+
+    // status draft or rejected
+    const article = await Article.findOne({_id: articleId, status: { $in: ["draft", "rejected"] }}).
+                                    populate("category_id")
+    if (!article) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
+    }
 
     if (article.author_id.toString() !== writer._id?.toString()) {   
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));

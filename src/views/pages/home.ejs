@@ -229,14 +229,24 @@
               <%= category.name || "Danh mục không xác định" %>
             </h5>
             <div class="card">
-              <img
-                src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
-                class="card-img-top"
-                alt="<%= category.name || 'Danh mục không xác định' %>"
-              />
+              <a href="http://localhost:3000/article/<%= category.articleId %>">
+                <img
+                  src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
+                  class="card-img-top img"
+                  alt="<%= category.name || 'Danh mục không xác định' %>"
+                />
+              </a>
               <div class="card-body card-category">
                 <% if (category.articleTitle) { %>
-                <h6 class="card-title"><%= category.articleTitle %></h6>
+                <a
+                  href="/article/<%= category.articleId %>"
+                  class="text-decoration-none"
+                >
+                  <h6 class="card-title article-title">
+                    <%= category.articleTitle %>
+                  </h6>
+                </a>
+
                 <p class="card-text">
                   Ngày xuất bản: <%= category.publishDate || "Không có ngày" %>
                 </p>

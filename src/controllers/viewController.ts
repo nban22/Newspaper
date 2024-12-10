@@ -77,7 +77,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(StatusCodes.OK).render("pages/create_article", {user: user});
+    res.status(StatusCodes.OK).render("pages/create_article", {user: user, article: null});
 }   
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

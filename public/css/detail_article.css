@@ -103,16 +103,18 @@ h1 {
 .comment-input > input {
   background-color: transparent;
   border: none;
-  padding: 1em;
+  padding: 1em; /* Ensure padding matches the placeholder */
   width: 100%; /* Ensure it takes full width */
+  line-height: 1.5;
+  font-size: 1.2em;
 }
 
 /* Style placeholder */
 .comment-input > input::placeholder {
-  padding: 1em;
+  padding: 0;
+  line-height: 1.5;
   font-size: 1.2em;
 }
-
 .comment-input {
   height: 200px;
 }
@@ -135,6 +137,12 @@ h1 {
   margin-left: 1em;
   border-radius: 0.5em;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-submit > button:hover {
+  /* greenish the background color on hover */
+  background-color: #28a745;
 }
 
 .author {

@@ -9,7 +9,9 @@ import { accessToken, createSendToken, refreshToken } from "../utils/tokenServic
 import SubscriberProfile from "../models/subscriberProfile";
 import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
-
+import { isRequired } from "../utils/validation";
+import Email from "../utils/Email";
+import crypto from "crypto";
 
 export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, role } = req.body;
@@ -83,7 +85,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
         if (!subscriberProfile) {
             return next(new AppError(StatusCodes.NOT_FOUND, "No subscriber profile found!"));
         }
-        
+
         if (new Date() > subscriberProfile.expiryDate) {
             subscriberProfile.subscription_status = "expired";
             await subscriberProfile.save();
@@ -118,4 +120,92 @@ export const logout = catchAsync(async (req: Request, res: Response, next: NextF
         path: "/",
     });
     res.redirect("/");
+});
+
+export const forgotPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const { email } = req.body;
+        isRequired(email, "email");
+
+        if (!validator.isEmail(email)) {
+            return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
+        }
+
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return next(new AppError(StatusCodes.NOT_FOUND, `No user found with email: ${email}`));
+        }
+
+        const resetCode = user.getPasswordResetCode();
+        await new Email(email).sendPasswordResetCode(resetCode);
+
+        res.status(StatusCodes.OK).json({
+            status: "success",
+            data: null,
+            message: "Password reset code has been sent to your email",
+        });
+    }
+);
+
+export const verifyResetCode = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const { email, resetCode } = req.body;
+        isRequired(email, "email");
+        isRequired(resetCode, "resetCode");
+
+        if (!validator.isEmail(email)) {
+            return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
+        }
+
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return next(new AppError(StatusCodes.NOT_FOUND, `No user found with email: ${email}`));
+        }
+
+        if (user.getPasswordResetCode() !== resetCode) {
+            return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid reset code"));
+        }
+
+        const resetToken = user.createPasswordResetToken();
+        await user.save();
+
+        res.status(StatusCodes.SEE_OTHER).json({
+            status: "success",
+            data: {
+                redirectUrl: `/reset_password?resetToken=${resetToken}&email=${email}`,
+            }
+        });
+    }
+);
+
+export const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { resetToken, password, email } = req.body;
+
+    isRequired(email, "email");
+    isRequired(resetToken, "resetToken");
+    isRequired(password, "password");
+
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+
+    const user = await User.findOne({
+        email: email,
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "User not found or reset token has expired"));
+    }
+
+    user.password = password;
+    user.passwordResetCode = undefined;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    res.status(StatusCodes.OK).json({
+        status: "success",
+        data: null,
+        message: "Password has been reset successfully",
+    });
 });

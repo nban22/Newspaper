@@ -49,6 +49,15 @@ export const getLoginPage = (req: Request, res: Response, next: NextFunction) =>
     res.status(StatusCodes.OK).render("pages/login");
 };
 
+export const getForgotPasswordPage = (req: Request, res: Response, next: NextFunction) => {
+    const { enterCode, email } = req.query;
+    res.status(StatusCodes.OK).render("pages/forgot_password", { enterCode, email });
+};
+
+export const getResetPasswordPage = (req: Request, res: Response, next: NextFunction) => {
+    res.status(StatusCodes.OK).render("pages/reset_password");
+}
+
 export const getSignupPage = (req: Request, res: Response, next: NextFunction) => {
     res.status(StatusCodes.OK).render("pages/signup");
 }

@@ -1,15 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import app from './app';
-import browserSync from 'browser-sync';
 import mongooseConnection from "./config/database";
-
-browserSync.init({
-  proxy: "http://localhost:3002", 
-  files: ["src/views/**/*.ejs", "src/views/*", "public/**/*.*", "src/*"], // Theo dõi thay đổi file
-  reloadDelay: 500, 
-    open: false
-});
 
 mongooseConnection();
 

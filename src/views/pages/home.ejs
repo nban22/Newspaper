@@ -204,35 +204,49 @@
                 </div>
             </div>
 
-            <!-- Top Categories Section -->
-            <div class="my-5 container">
-                <h3 class="mb-4">10 Danh Mục Hàng Đầu</h3>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-                    <% if (topCategories && topCategories.length > 0) { %> <% topCategories.forEach((category) => { %>
-                    <div class="col">
-                        <h5 class="text-primary"><%= category.name || "Danh mục không xác định" %></h5>
-                        <div class="card">
-                            <img
-                                src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
-                                class="card-img-top"
-                                alt="<%= category.name || 'Danh mục không xác định' %>"
-                            />
-                            <div class="card-body card-category">
-                                <% if (category.articleTitle) { %>
-                                <h6 class="card-title"><%= category.articleTitle %></h6>
-                                <p class="card-text">Ngày xuất bản: <%= category.publishDate || "Không có ngày" %></p>
-                                <% } else { %>
-                                <p class="card-text">Không có bài viết mới nhất</p>
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                    <% }); %> <% } else { %>
-                    <p>Không có danh mục hàng đầu nào để hiển thị.</p>
-                    <% } %>
-                </div>
+      <!-- Top Categories Section -->
+      <div class="my-5 container">
+        <h3 class="mb-4">10 Danh Mục Hàng Đầu</h3>
+        <div
+          class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4"
+        >
+          <% if (topCategories && topCategories.length > 0) { %> <%
+          topCategories.forEach((category) => { %>
+          <div class="col">
+            <h5 class="text-primary">
+              <%= category.name || "Danh mục không xác định" %>
+            </h5>
+            <div class="card">
+              <a href="http://localhost:3000/article/<%= category.articleId %>">
+                <img
+                  src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
+                  class="card-img-top img"
+                  alt="<%= category.name || 'Danh mục không xác định' %>"
+                />
+              </a>
+              <div class="card-body card-category">
+                <% if (category.articleTitle) { %>
+                <a href="/article/<%= category.articleId %>">
+                  <h6 class="card-title article-title">
+                    <%= category.articleTitle %>
+                  </h6>
+                </a>
+
+                <p class="card-text">
+                  Ngày xuất bản: <%= category.publishDate || "Không có ngày" %>
+                </p>
+                <% } else { %>
+                <p class="card-text">Không có bài viết mới nhất</p>
+                <% } %>
+              </div>
             </div>
-        </main>
+          </div>
+          <% }); %> <% } else { %>
+          <p>Không có danh mục hàng đầu nào để hiển thị.</p>
+          <% } %>
+        </div>
+      </div>
+    </main>
 
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

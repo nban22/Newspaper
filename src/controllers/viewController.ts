@@ -86,7 +86,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(StatusCodes.OK).render("pages/create_article", {user: user});
+    res.status(StatusCodes.OK).render("pages/create_article", {user: user, article: null});
 }   
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -143,9 +143,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     // Get comments for the article
     const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
     // Get all articles
-    const allArticles = await Article.find().populate("category_id").populate("author_id");
-    console.log(allArticles);
-    // Get related articles (5 articles in the same category)
     const relatedArticles = await Article.find({
         category_id: updatedArticle.category_id, // Lọc theo danh mục
         _id: { $ne: updatedArticle._id },       // Loại bỏ bài viết hiện tại

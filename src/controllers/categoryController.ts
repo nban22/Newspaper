@@ -8,9 +8,7 @@ import mongoose from "mongoose";
 
 export const getAllCategories = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-       
-            const categories = await Category.find();
-
+        const categories = await Category.find();
         return res.status(StatusCodes.OK).json({
             status: "success",
             data: {
@@ -37,9 +35,11 @@ export const fetchTopCategories = async () => {
                 .sort({ publish_date: -1 })
                 .select("title publish_date thumbnail");
 
+
             return {
                 name: category?.name,
                 articleTitle: article?.title,
+                articleId: article?._id,
                 publishDate: article?.publish_date,
                 thumbnail: article?.thumbnail,
             };

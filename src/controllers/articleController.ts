@@ -11,6 +11,10 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
 
     const author_id = await WriterProfile.findOne({ user_id: userId });
 
+    if (!author_id) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Writer profile not found"));
+    }
+
     // Validate required fields
     if (!title && !summary && !content && !category_id) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide title, description, content, and category_id"));

@@ -1,16 +1,20 @@
 import { Router } from "express";
 
 import * as viewController from "../controllers/viewController";
-import { attachUserId, authorizeRole } from "../middlewares/authMiddlewares";
+import { attachUserId, authenticateJWT, authorizeRole } from "../middlewares/authMiddlewares";
 
 const viewRouter = Router();
 
-viewRouter.get("/", viewController.getHomePage);
+viewRouter.get("/", authenticateJWT, viewController.getHomePage);
 viewRouter.get("/login", viewController.getLoginPage);
 viewRouter.get("/signup", viewController.getSignupPage);
 viewRouter.get("/create_user", viewController.getCreateUserPage);
 
-viewRouter.use(attachUserId);
-viewRouter.get("/update_user_profile", viewController.getUpdateUserProfilePage);
+viewRouter.get("/update_profile", authenticateJWT, viewController.getUpdateUserProfilePage);
+viewRouter.get("/create_article", viewController.getCreateArticlePage);
+viewRouter.get("/article/:id", authenticateJWT, viewController.getArticlePage);
+
+viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
+
 
 export default viewRouter;

@@ -1,0 +1,109 @@
+body {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;  
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control, .form-select, .quill-editor {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quill-editor {
+  min-height: 150px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.mb-3 {
+  margin-bottom: 20px !important;
+}
+
+#editor-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+/* Tag Selection Styles */
+.tag-selection-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.selected-tags .badge {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.selected-tags .badge:hover {
+  background-color: #0056b3;
+}
+
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tags-grid .tag-item {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: #f8f9fa;
+}
+
+.tags-grid .tag-item.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}

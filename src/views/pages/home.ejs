@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Trang chủ</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -16,49 +16,35 @@
     <link rel="stylesheet" href="/css/components/topCategories.css" />
     <!-- <link rel="stylesheet" href="/css/components/slideshow.css" /> -->
   </head>
+
   <body>
-    <%- include('../components/header') %>
+    <%- include('../components/home/header', {user: user}) %>
 
-    <!-- <%- include('../components/slideshow') %> -->
-
-    <div class="container my-5">
+    <main class="container">
       <!-- Carousel -->
-      <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div
+        id="featuredCarousel"
+        class="carousel slide p-2 p-lg-5 mt-4"
+        data-bs-ride="carousel"
+      >
         <div class="carousel-inner">
-          <div class="carousel-item active">
+          <% if (featuredArticles && featuredArticles.length > 0) { %> <%
+          featuredArticles.forEach((article, index) => { %>
+          <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
             <img
-              src="https://via.placeholder.com/800x400"
+              src="<%= article.thumbnail || 'https://via.placeholder.com/800x400' %>"
               class="d-block w-100"
-              alt="Featured Article 1"
+              alt="<%= article.title || 'Featured Article' %>"
             />
             <div class="carousel-caption d-none d-md-block">
-              <h5>Bài viết nổi bật 1</h5>
-              <p>Mô tả ngắn về bài viết nổi bật 1</p>
+              <h5><%= article.title || 'No Title' %></h5>
             </div>
           </div>
-          <div class="carousel-item">
-            <img
-              src="https://via.placeholder.com/800x400"
-              class="d-block w-100"
-              alt="Featured Article 2"
-            />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Bài viết nổi bật 2</h5>
-              <p>Mô tả ngắn về bài viết nổi bật 2</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="https://via.placeholder.com/800x400"
-              class="d-block w-100"
-              alt="Featured Article 3"
-            />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Bài viết nổi bật 3</h5>
-              <p>Mô tả ngắn về bài viết nổi bật 3</p>
-            </div>
-          </div>
+          <% }); %> <% } else { %>
+          <p>No featured articles available.</p>
+          <% } %>
         </div>
+
         <button
           class="carousel-control-prev"
           type="button"
@@ -80,52 +66,192 @@
       </div>
 
       <!-- Nổi bật trong tuần -->
-      <div class="my-5">
-        <h3 class="mb-4">Nổi bật trong tuần</h3>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-          <div class="col">
-            <div class="card">
+      <div class="my-5 mx-3">
+        <div class="d-flex">
+          <div class="rect"></div>
+          <h3 class="mb-4">Nổi bật trong tuần</h3>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+          <% popularArticle.forEach(article => { %>
+          <div class="col" style="padding: 5px">
+            <div class="card h-100">
               <img
-                src="https://via.placeholder.com/300x200"
+                src="<%= article.thumbnail %>"
                 class="card-img-top"
-                alt="Article 1"
+                alt="<%= article.title %>"
               />
               <div class="card-body">
-                <h5 class="card-title">Bài viết nổi bật 1</h5>
-                <p class="card-text">Mô tả ngắn về bài viết.</p>
+                <h5 class="card-title"><%= article.title %></h5>
+                <p class="card-text"><%= article.summary %></p>
               </div>
             </div>
           </div>
-          <!-- Thêm bài viết nổi bật -->
+          <% }) %> <% if (featuredArticles && featuredArticles.length > 0) { %>
+          <% featuredArticles.forEach((article) => { %>
+          <div class="col" style="padding: 5px">
+            <div class="card">
+              <img
+                src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
+                class="card-img-top"
+                alt="<%= article.title || 'Featured Article' %>"
+              />
+              <div class="card-body">
+                <h5 class="card-title"><%= article.title || 'No Title' %></h5>
+                <p class="card-text">
+                  <%= article.category_id.parent_id?.name ?
+                  `${article.category_id.parent_id.name} >
+                  ${article.category_id.name}` : article.category_id.name %>
+                </p>
+                <p class="card-text">Ngày đăng: <%= article.publish_date %></p>
+              </div>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>No featured articles available.</p>
+          <% } %>
+        </div>
+      </div>
+      <!-- Thêm bài viết nổi bật -->
+
+      <!-- Mới nhất & Trending -->
+      <div class="container my-5">
+        <div class="d-flex align-items-center mb-4">
+          <div class="rect"></div>
+          <a href="/latest_article" class="text-decoration-none text-dark">
+            <h3 class="mb-0">Mới nhất</h3>
+          </a>
+        </div>
+
+        <div class="row">
+          <!-- List of latest articles -->
+          <ul class="col-md-8 list-group">
+            <% latestArticle.forEach(article => { %>
+            <li class="list-group-item d-flex align-items-start">
+              <div class="image-container">
+                <img
+                  src="<%= article.thumbnail %>"
+                  alt="<%= article.title %>"
+                />
+              </div>
+              <div class="group-item-body ms-3 mt-3">
+                <h5 class="group-item-title"><%= article.title %></h5>
+                <p class="group-item-text"><%= article.summary %></p>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+
+          <!-- Trending section -->
+          <div class="col-md-4 border p-3">
+            <h3 class="mb-4">Top trending</h3>
+            <ul class="trending list-unstyled list-group">
+              <li class="mb-3">
+                <a
+                  href="#"
+                  class="list-group-item list-group-item-action d-flex gap-3 py-3"
+                  aria-current="true"
+                >
+                  <img
+                    src="https://github.com/twbs.png"
+                    alt="twbs"
+                    width="32"
+                    height="32"
+                    class="rounded-circle flex-shrink-0"
+                  />
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>
+                      <h6 class="mb-0">Bài viết mới nhất 1</h6>
+                      <p class="mb-0 opacity-75">Mô tả ngắn về bài viết.</p>
+                    </div>
+                    <small class="opacity-50 text-nowrap">now</small>
+                  </div>
+                </a>
+              </li>
+              <li class="mb-3">
+                <a
+                  href="#"
+                  class="list-group-item list-group-item-action d-flex gap-3 py-3"
+                  aria-current="true"
+                >
+                  <img
+                    src="https://github.com/twbs.png"
+                    alt="twbs"
+                    width="32"
+                    height="32"
+                    class="rounded-circle flex-shrink-0"
+                  />
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>
+                      <h6 class="mb-0">Bài viết mới nhất 2</h6>
+                      <p class="mb-0 opacity-75">Mô tả ngắn về bài viết.</p>
+                    </div>
+                    <small class="opacity-50 text-nowrap">now</small>
+                  </div>
+                </a>
+              </li>
+              <li class="mb-3">
+                <a
+                  href="#"
+                  class="list-group-item list-group-item-action d-flex gap-3 py-3"
+                  aria-current="true"
+                >
+                  <img
+                    src="https://github.com/twbs.png"
+                    alt="twbs"
+                    width="32"
+                    height="32"
+                    class="rounded-circle flex-shrink-0"
+                  />
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>
+                      <h6 class="mb-0">Bài viết mới nhất 3</h6>
+                      <p class="mb-0 opacity-75">Mô tả ngắn về bài viết.</p>
+                    </div>
+                    <small class="opacity-50 text-nowrap">now</small>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <!-- Được xem nhiều nhất -->
-      <div class="my-5">
-        <h3 class="mb-4">Được xem nhiều nhất</h3>
-        <ul class="list-group">
-          <li class="list-group-item">Bài viết 1</li>
-          <li class="list-group-item">Bài viết 2</li>
-          <li class="list-group-item">Bài viết 3</li>
-          <!-- Thêm bài viết -->
-        </ul>
+      <!-- Top Categories Section -->
+      <div class="my-5 container">
+        <h3 class="mb-4">10 Danh Mục Hàng Đầu</h3>
+        <div
+          class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4"
+        >
+          <% if (topCategories && topCategories.length > 0) { %> <%
+          topCategories.forEach((category) => { %>
+          <div class="col">
+            <h5 class="text-primary">
+              <%= category.name || "Danh mục không xác định" %>
+            </h5>
+            <div class="card">
+              <img
+                src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
+                class="card-img-top"
+                alt="<%= category.name || 'Danh mục không xác định' %>"
+              />
+              <div class="card-body card-category">
+                <% if (category.articleTitle) { %>
+                <h6 class="card-title"><%= category.articleTitle %></h6>
+                <p class="card-text">
+                  Ngày xuất bản: <%= category.publishDate || "Không có ngày" %>
+                </p>
+                <% } else { %>
+                <p class="card-text">Không có bài viết mới nhất</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>Không có danh mục hàng đầu nào để hiển thị.</p>
+          <% } %>
+        </div>
       </div>
-
-      <!-- Mới nhất -->
-      <div class="my-5">
-        <h3 class="mb-4">Mới nhất</h3>
-        <ul class="list-group">
-          <li class="list-group-item">Bài viết mới nhất 1</li>
-          <li class="list-group-item">Bài viết mới nhất 2</li>
-          <li class="list-group-item">Bài viết mới nhất 3</li>
-          <!-- Thêm bài viết -->
-        </ul>
-      </div>
-
-      <!-- Top chuyên mục -->
-      <%- include('../components/topCategories') %>
-      <!-- Include topCategories.ejs -->
-    </div>
+    </main>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -136,6 +262,7 @@
       src="https://kit.fontawesome.com/65d6f9b274.js"
       crossorigin="anonymous"
     ></script>
-    <script src="js/home.js"></script>
+    <script src="/js/pages/home.js"></script>
+    <script src="/js/header.js"></script>
   </body>
 </html>

@@ -15,3 +15,13 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.img {
+  cursor: pointer;
+}
+
+.article-title:hover {
+  text-decoration: underline;
+  color: rgb(59 130 246);
+  cursor: pointer;
+}

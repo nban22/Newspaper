@@ -37,9 +37,11 @@ export const fetchTopCategories = async () => {
                 .sort({ publish_date: -1 })
                 .select("title publish_date thumbnail");
 
+
             return {
                 name: category?.name,
                 articleTitle: article?.title,
+                articleId: article?._id,
                 publishDate: article?.publish_date,
                 thumbnail: article?.thumbnail,
             };

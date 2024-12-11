@@ -4,6 +4,7 @@ import catchAsync from '../utils/catchAsync';
 import { StatusCodes } from 'http-status-codes';
 import ArticleTag from '../models/article_tag';
 import AppError from '../utils/AppError';
+import Article from '../models/article';
 
 export const getTagsByAriticleId = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.articleId;
@@ -84,3 +85,29 @@ export const deleteTag = catchAsync(
         res.status(StatusCodes.OK).redirect("/admin/tags");
     }
 );
+
+export const getTagArticleList = async (tagName: string) => {
+    if (!tagName) {
+        throw new AppError(StatusCodes.BAD_REQUEST, "Please provide a tag!");
+    }
+
+    const tag = await Tag.findOne({ name: tagName });
+    if (!tag) {
+        throw new AppError(StatusCodes.NOT_FOUND, "Tag not found");
+    }
+
+    const article_tag = await ArticleTag.find({ tag_id: tag._id }).populate("article_id");
+    const articleIds = article_tag.map(article_tag => article_tag.article_id);
+    const articles = await Article.find({ _id: { $in: articleIds } })
+                                .populate("category_id")
+                                .populate("writer_id")
+                                .sort({ is_premium: -1, created_at: -1 });;
+
+    return {
+        message: "Successfully got tag article list",
+        data: {
+            tag: tagName,
+            articles: articles
+        }
+    };
+};

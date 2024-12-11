@@ -14,60 +14,32 @@
 </head>
 
 <body>
-  <%- include('../components/header') %>
-
-    <!-- <%- include('../components/slideshow') %> -->
-
-
+  <%- include('../components/home/header', {user: user}) %>
     <div class="latest_articles my-5 mx-5">
-      <h2>Khám phá những tin tức thuộc nhãn <%= tag %></h2>
-      <ul class="list-group">
-        <% articles.forEach(article => { %>
-            <li class="list-group-item d-flex align-items-start">
+      <% if (articles.length===0) { %>
+        <h2>Hiện chưa có bài viết thuộc nhãn <%= tag %>. Chúng tôi sẽ sớm cập nhật các bài viết mới, mong bạn
+            hãy đón chờ!</h2>
+        <% } else { %>
+          <h2>Khám phá những tin tức thuộc nhãn <%= tag %>
+          </h2>
+          <ul class="list-group">
+            <% articles.forEach(article=> { %>
+              <li class="list-group-item d-flex align-items-start">
                 <div class="image-container">
-                    <img src="<%= article.profile_picture %>" class="item-img" alt="<%= article.title %>"/>
+                  <img src="<%= article.thumbnail %>" class="item-img" alt="<%= article.title %>" />
                 </div>
                 <div class="group-item-body ms-3 mt-3">
-                    <h5 class="group-item-title">
-                        <%= article.title %>
-                    </h5>
-                    <p class="group-item-text">
-                        <%= article.summary %>
-                    </p>
+                  <h5 class="group-item-title">
+                    <%= article.title %>
+                  </h5>
+                  <p class="group-item-text">
+                    <%= article.summary %>
+                  </p>
                 </div>
-            </li>
-        <% }) %>
-        <li class="list-group-item">
-          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
-          <div class="group-item-body">
-            <h5 class="group-item-title">Bài viết mới nhất 1</h5>
-            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
-          <div class="group-item-body">
-            <h5 class="group-item-title">Bài viết mới nhất 2</h5>
-            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
-          <div class="group-item-body">
-            <h5 class="group-item-title">Bài viết mới nhất 3</h5>
-            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
-          </div>
-        </li>
-        <li class="list-group-item">
-          <img src="https://via.placeholder.com/300x200" class="item-img" alt="Article 1">
-          <div class="group-item-body">
-            <h5 class="group-item-title">Bài viết mới nhất 4</h5>
-            <p class="group-item-text">Mô tả ngắn về bài viết.</p>
-          </div>
-        </li>
-      </ul>
-
-
+              </li>
+              <% }) %>
+          </ul>
+        <% } %>
     </div>
 
 
@@ -75,7 +47,6 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
-    <script src="js/home.js"></script>
 </body>
 
 </html>

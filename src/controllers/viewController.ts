@@ -13,6 +13,7 @@ import Category from "../models/category";
 import tag from "../models/tag";
 import Comment from "../models/comment";
 import * as categoryController from "./categoryController";
+import * as tagController from "./tagController";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -203,6 +204,24 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
     res.status(StatusCodes.OK).render("pages/category_articles", {
         user: user,
         category: article.data.category,
+        articles: article.data.articles
+    })
+})
+
+export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+
+    const tag = req.params.tagName.replace('-', ' ').charAt(0).toUpperCase()
+                    + req.params.tagName.replace('-', ' ').slice(1);
+    if (!tag) {
+        throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide tag name"));
+    }
+
+    const article = await tagController.getTagArticleList(tag);
+
+    res.status(StatusCodes.OK).render("pages/tag_articles", {
+        user: user,
+        tag: article.data.tag,
         articles: article.data.articles
     })
 })

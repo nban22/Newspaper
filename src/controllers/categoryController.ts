@@ -124,17 +124,17 @@ export const deleteCategory = catchAsync(
     }
 );
 
-export const getCategoryArticleList = async (category: string) => {
-    if (!category) {
+export const getCategoryArticleList = async (categoryName: string) => {
+    if (!categoryName) {
         throw new AppError(StatusCodes.BAD_REQUEST, "Please provide a category!");
     }
 
-    const categoryId = await Category.findOne({ name: category });
-    if (!categoryId) {
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
         throw new AppError(StatusCodes.NOT_FOUND, "Category not found");
     }
 
-    const articles = await Article.find({ category_id: categoryId })
+    const articles = await Article.find({ category_id: category._id })
                                 .populate("category_id")
                                 .populate("writer_id")
                                 .sort({ is_premium: -1, created_at: -1 });
@@ -142,7 +142,7 @@ export const getCategoryArticleList = async (category: string) => {
     return {
         message: "Successfully got category article list",
         data: {
-            category: category,
+            category: categoryName,
             articles: articles
         }
     };

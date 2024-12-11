@@ -18,6 +18,7 @@ viewRouter.get("/article/:id", authenticateJWT, viewController.getArticlePage);
 
 viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
 
-viewRouter.get("/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
+viewRouter.get("/chuyen-muc/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
+viewRouter.get("/nhan/:tagName", authenticateJWT, viewController.getTagArticleList);
 
 export default viewRouter;

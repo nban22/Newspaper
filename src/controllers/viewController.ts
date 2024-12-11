@@ -12,16 +12,15 @@ import mongoose from "mongoose";
 import Category from "../models/category";
 import tag from "../models/tag";
 import Comment from "../models/comment";
+import * as categoryController from "./categoryController";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
 
     const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("author_id")
+        Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id")
     ]);
 
-    // console.log(latestArticles);
-    
     const [popularArticles] = await Promise.all([
         Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
     ]);
@@ -34,7 +33,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format('DD-MM-YYYY'),
         }));
-
 
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
@@ -130,8 +128,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const categoryName = category ? category.name : "Unknown";
 
     // Get article's author
-    const author = await WriterProfile.findOne({user_id: updatedArticle.author_id});
-    const authorName = author ? author.full_name : "Khuyết danh";
+    const writer = await WriterProfile.findOne({user_id: updatedArticle.writer_id});
+    const writerName = writer ? writer.full_name : "Khuyết danh";
 
     // Get tags for the article
     const tagsList = await tag.find({article_id: articleObjectId}).populate("tag_id");
@@ -157,7 +155,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         article: {
             ...updatedArticle.toObject(),
             categoryName,
-            authorName,
+            writerName,
             tags,
             comments,
             relatedArticles,
@@ -183,9 +181,27 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    if (article.author_id.toString() !== writer._id?.toString()) {   
+    if (article.writer_id.toString() !== writer._id?.toString()) {   
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
     }
     
     res.status(StatusCodes.OK).render("pages/edit_article", {user: user, article: article});
 });
+
+export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+
+    const category = req.params.categoryName.replace('-', ' ').charAt(0).toUpperCase()
+                    + req.params.categoryName.replace('-', ' ').slice(1);
+    if (!category) {
+        throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide category name"));
+    }
+
+    const article = await categoryController.getCategoryArticleList(category);
+
+    res.status(StatusCodes.OK).render("pages/category_articles", {
+        user: user,
+        category: article.data.category,
+        articles: article.data.articles
+    })
+})

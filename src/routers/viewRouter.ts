@@ -18,7 +18,6 @@ viewRouter.get("/article/:id", authenticateJWT, viewController.getArticlePage);
 
 viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
 
-
-
+viewRouter.get("/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
 
 export default viewRouter;

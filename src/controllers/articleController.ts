@@ -74,3 +74,14 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
         message: "Article updated successfully",
     });
 });
+
+export const getLatestArticles = async () => {
+    const latestArticles = await Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id");
+
+    return {
+        message: "Successfully got latest article list",
+        data: {
+            articles: latestArticles
+        }
+    };
+};

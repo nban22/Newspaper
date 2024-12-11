@@ -7,15 +7,12 @@ import EditorProfile from "../models/editorProfile";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
 import moment from "moment";
+import * as articleController from "./articleController";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
 
-    const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("writer_id")
-    ]);
-
-    // console.log(latestArticles);
+    const latestArticles = (await articleController.getLatestArticles()).data.articles;
     
     const [popularArticles] = await Promise.all([
         Article.find().sort({content: -1}).limit(4).populate("category_id").populate("writer_id")

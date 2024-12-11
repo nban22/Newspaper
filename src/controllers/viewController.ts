@@ -14,14 +14,13 @@ import tag from "../models/tag";
 import Comment from "../models/comment";
 import * as categoryController from "./categoryController";
 import * as tagController from "./tagController";
+import * as articleController from "./articleController";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
 
-    const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id")
-    ]);
-
+    const latestArticles = (await articleController.getLatestArticles()).data.articles;
+    
     const [popularArticles] = await Promise.all([
         Article.find().sort({content: -1}).limit(4).populate("category_id").populate("writer_id")
     ]);

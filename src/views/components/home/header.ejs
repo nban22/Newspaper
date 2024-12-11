@@ -6,7 +6,7 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-dark">Trang chủ</a></li>
+                <li><a href="/" class="nav-link px-2 text-dark">Trang chủ</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
                 <% if (user && user.role === 'admin') {%>
@@ -65,47 +65,48 @@
                     <li class="has-down">
                         <a href="" id="22dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">Xã hội</a>
                         <ul class="dropdown-menu" aria-labelledby="22dropdownMenuButton2">
-                            <li><a class="dropdown-item" href="category.html">Thời sự</a></li>
-                            <li><a class="dropdown-item" href="category.html">Giao thông</a></li>
-                            <li><a class="dropdown-item" href="category.html">Môi trường - khí hậu</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/thời-sự">Thời sự</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/giao-thông">Giao thông</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/môi-trường-khí-hậu">Môi trường - khí hậu</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
 
-                    <li><a href="category.html">Thế giới</a></li>
+                    <li><a href="/chuyen-muc/thế-giới">Thế giới</a></li>
+                    <li><a href="/chuyen-muc/công-nghệ">Công nghệ</a></li>
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Văn hóa</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Nghệ Thuật</a></li>
-                            <li><a class="dropdown-item" href="category.html">Ẩm thực</a></li>
-                            <li><a class="dropdown-item" href="category.html">Du lịch</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/nghệ-thuật">Nghệ Thuật</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/ẩm-thực">Ẩm thực</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/du-lịch">Du lịch</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Kinh Tế</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Kinh Doanh</a></li>
-                            <li><a class="dropdown-item" href="category.html">Tài Chính</a></li>
-                            <li><a class="dropdown-item" href="category.html">Lao Động Việc Làm</a></li>
-                            <li><a class="dropdown-item" href="category.html">Chứng Khoáng</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/kinh-doanh">Kinh Doanh</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/tài-chính">Tài Chính</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/lao-động">Lao Động Việc Làm</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/chứng-khoán">Chứng Khoán</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Giáo dục</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Học Bổng - Du lịch</a></li>
-                            <li><a class="dropdown-item" href="category.html">Đào Tạo - Thi Cử</a></li>
+                            <li><a class="dropdown-item" href="/học-bổng">Học Bổng - Du lịch</a></li>
+                            <li><a class="dropdown-item" href="/đào-tạo">Đào Tạo - Thi Cử</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Thể Thao</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Bóng Đá Quốc Tế</a></li>
-                            <li><a class="dropdown-item" href="category.html">Bóng Đá Việt Nam</a></li>
-                            <li><a class="dropdown-item" href="category.html">Quần Vợt</a></li>
+                            <li><a class="dropdown-item" href="/bóng-đá-quốc-tế">Bóng Đá Quốc Tế</a></li>
+                            <li><a class="dropdown-item" href="categories/bong-da-vn">Bóng Đá Việt Nam</a></li>
+                            <li><a class="dropdown-item" href="categories/quan-vot">Quần Vợt</a></li>
                         </ul>
 
                         <span class="dd-trigger"></span>
@@ -113,21 +114,21 @@
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Giải Trí</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Âm Nhạc</a></li>
-                            <li><a class="dropdown-item" href="category.html">Thời Trang</a></li>
-                            <li><a class="dropdown-item" href="category.html">Điện Ảnh- Truyền Hình</a></li>
+                            <li><a class="dropdown-item" href="categories/am-nhac">Âm Nhạc</a></li>
+                            <li><a class="dropdown-item" href="categories/thoi-trang">Thời Trang</a></li>
+                            <li><a class="dropdown-item" href="categories/dien-anh">Điện Ảnh- Truyền Hình</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
                     <li class="cn-dropdown-item has-down">
                         <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Pháp Luật</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="category.html">Hình Sự - Dân Sự</a></li>
-                            <li><a class="dropdown-item" href="category.html">An Ninh - Trật Tự</a></li>
+                            <li><a class="dropdown-item" href="categories/hinh-su">Hình Sự - Dân Sự</a></li>
+                            <li><a class="dropdown-item" href="categories/antt">An Ninh - Trật Tự</a></li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>
-                    <li><a href="category.html">Đời Sống</a></li>
+                    <li><a href="categories/doi-song">Đời Sống</a></li>
                 </ul>
             </div>
         </div>

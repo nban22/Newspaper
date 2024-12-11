@@ -19,6 +19,7 @@ interface IArticle extends Document {
 // Interface for Article Model (includes static methods)
 export interface ArticleModel extends Model<IArticle> {
     getFeaturedArticles(): Promise<IArticle[]>;
+    incrementViewCount(articleId: mongoose.Types.ObjectId): Promise<void>;
 }
 
 const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
@@ -39,6 +40,7 @@ const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
 ArticleSchema.statics.incrementViewCount = async function (articleId: mongoose.Types.ObjectId): Promise<void> {
     await this.findByIdAndUpdate(articleId, { $inc: { view_count: 1 } });
 };
+
 
 ArticleSchema.statics.getFeaturedArticles = async function (): Promise<IArticle[]> {
     return this.find({ status: "published" }) // Only fetch published articles

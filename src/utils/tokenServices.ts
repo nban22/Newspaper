@@ -8,7 +8,7 @@ export const accessToken = (user: IUser) => {
     if (!process.env.JWT_ACCESS_SECRET) {
         throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "JWT_ACCESS_SECRET not defined");
     }
-    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_ACCESS_SECRET, {
+    return jwt.sign({ id: user._id }, process.env.JWT_ACCESS_SECRET, {
         expiresIn: "1d",
     });
 };
@@ -17,7 +17,7 @@ export const refreshToken = (user: IUser) => {
     if (!process.env.JWT_REFRESH_SECRET) {
         throw new AppError(StatusCodes.INTERNAL_SERVER_ERROR, "JWT_REFRESH_SECRET not defined");
     }
-    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_REFRESH_SECRET, {
+    return jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, {
         expiresIn: "7d",
     });
 };

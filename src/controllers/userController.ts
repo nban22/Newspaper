@@ -226,9 +226,9 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
         req.body.avatar = `/uploads/${req.file.filename}`;
     }
 
-    const { userId, ...updateData } = req.body;
-    
-    const user = await User.findById(userId);
+    const { user_id, ...updateData } = req.body;
+
+    const user = await User.findOne({ _id: user_id });
 
     if (!user) {
         return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
@@ -237,11 +237,11 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
     let profile: any;
 
     if (user.role === "writer") {
-        profile = await WriterProfile.findOne({ user_id: userId });
+        profile = await WriterProfile.findOne({ user_id: user_id });
     } else if (user.role === "editor") {
-        profile = await EditorProfile.findOne({ user_id: userId });
+        profile = await EditorProfile.findOne({ user_id: user_id });
     } else if (user.role === "subscriber") {
-        profile = await SubscriberProfile.findOne({ user_id: userId });
+        profile = await SubscriberProfile.findOne({ user_id: user_id });
     }
 
     if (!profile) {
@@ -253,11 +253,11 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
         
         let updatedProfile: any;
         if (user.role === "writer") {
-            updatedProfile = await WriterProfile.findOne({ user_id: userId });
+            updatedProfile = await WriterProfile.findOne({ user_id: user_id });
         } else if (user.role === "editor") {
-            updatedProfile = await EditorProfile.findOne({ user_id: userId });
+            updatedProfile = await EditorProfile.findOne({ user_id: user_id });
         } else if (user.role === "subscriber") {
-            updatedProfile = await SubscriberProfile.findOne({ user_id: userId });
+            updatedProfile = await SubscriberProfile.findOne({ user_id: user_id });
         }
 
         res.status(StatusCodes.OK).json({

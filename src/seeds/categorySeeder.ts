@@ -1,5 +1,6 @@
 import Category from "../models/category";
 
+
 const categoryList = [
     {
         name: "Xã hội",
@@ -108,23 +109,30 @@ const categoryList = [
     {
         name: "Đời sống",
     },
+    {
+        name: "Sức khỏe",
+    },
+    {
+        name: "Công nghệ",
+    },
+    {
+        name: "Kinh doanh",
+    }
 ];
 
-
 const seedCategory = async () => {
-    categoryList.forEach(async (category) => {
-        if (category.parent_name) {
-            const categoryParent = await Category.findOne({ name: category.parent_name });
-            if (categoryParent) {
-                await Category.create({ name: category.name, parent_id: categoryParent._id });
-            } else {
-                throw new Error("Parent category not found");
-            }
-        } else {
-            console.log("Creating category: ", category.name);
+
+    for (let index = 0; index < categoryList.length; index++) {
+        const category = categoryList[index];
+        const categoryParent = await Category.findOne({ name: category.parent_name });
+        if (!categoryParent) {
+            console.log(`category ${category.name} created!`);
             await Category.create({ name: category.name });
+        } else {
+            console.log(`Parent category ${category.parent_name} found!`);
+            await Category.create({ name: category.name, parent_id: categoryParent._id });
         }
-    })
+    }
 }
 
 export default seedCategory;

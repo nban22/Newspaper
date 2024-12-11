@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Newspaper | Đăng ký</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.js"
+            integrity="sha512-MnKz2SbnWiXJ/e0lSfSzjaz9JjJXQNb2iykcZkEY2WOzgJIWVqJBFIIPidlCjak0iTH2bt2u1fHQ4pvKvBYy6Q=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <style>
+            body {
+                background: #E9EBEE;
+                background: linear-gradient(to right, #E9EBEE, #e1e4ea);
+            }
+
+            .btn-login {
+                font-size: 0.9rem;
+                letter-spacing: 0.05rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .btn-google {
+                color: white !important;
+                background-color: #ea4335;
+            }
+
+            .btn-facebook {
+                color: white !important;
+                background-color: #3b5998;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-md-7 col-lg-6 mx-auto mt-1">
+                    <div class="card border-0 shadow rounded-3 my-auto">
+                        <div class="card-body p-4 p-sm-5">
+                            <h5 class="card-title text-center mb-5 fw-light fs-5 fw-bold">Đăng ký</h5>
+                            <form id="signup-form">
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        id="email"
+                                        placeholder="name@example.com"
+                                        name="email"
+                                        required
+                                    />
+                                    <label for="email">Nhập email</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="password"
+                                        class="form-control"
+                                        id="password"
+                                        placeholder="Password"
+                                        name="password"
+                                        required
+                                    />
+                                    <label for="password">Nhập mật khẩu</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input
+                                        type="password"
+                                        class="form-control"
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        placeholder="Password"
+                                        required
+                                    />
+                                    <label for="confirmPassword">Nhập lại mật khẩu</label>
+                                </div>
+
+                                <select
+                                    name="role"
+                                    id="role"
+                                    class="form-select mb-3"
+                                    aria-label=".form-select-lg example"
+                                    required
+                                >
+                                    <option selected disabled>---Vai trò---</option>
+                                    <option value="writer">writer</option>
+                                    <option value="subscriber">subscriber</option>
+                                    <option value="editor">editor</option>
+                                </select>
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">
+                                        Đăng ký
+                                    </button>
+                                </div>
+                                <div class="text-bg-info mt-3">Bạn đã có tài khoản? <a href="/login">Đăng nhập</a></div>
+                            </form>
+                            <hr class="my-4" />
+                            <div class="d-grid mb-2">
+                                <a href="/auth/google" class="d-grid text-decoration-none">
+                                    <button
+                                        class="btn btn-google btn-login text-uppercase fw-bold text-white"
+                                        type="submit"
+                                    >
+                                        <i class="fab fa-google me-2"></i> Đăng nhập với Google
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="d-grid">
+                                <a href="/auth/facebook" class="d-grid text-decoration-none">
+                                    <button
+                                        type="submit"
+                                        class="btn-facebook text-uppercase fw-bold btn text-white btn-login"
+                                    >
+                                        <i class="fab fa-facebook-f me-2"></i> Đăng nhập với Facebook
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+        ></script>
+        <script src="\js\pages\signup.js"></script>
+    </body>
+</html>

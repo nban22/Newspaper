@@ -24,3 +24,14 @@
     left: 50%; /* Center the image horizontally */
     transform: translate(-50%, -50%); /* Adjust position to center */
 }
+
+.card img {
+    object-fit: contain;
+}
+
+.carousel-inner img {
+    width: 800px;
+    height: 400px;
+    object-fit: cover; /* Ensures the image fills the dimensions without distortion */
+    margin: 0 auto;    /* Centers the image horizontally */
+}

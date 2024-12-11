@@ -11,8 +11,6 @@ categoryRouter.put("/update/:id", categoryController.updateCategory);
 categoryRouter.delete("/delete/:id", categoryController.deleteCategory);
 categoryRouter.post("/create-category", categoryController.createCategory);
 categoryRouter.get("/", categoryController.getAllCategories);
-categoryRouter.get("/:categoryName", categoryController.getCategoryArticleList);
-
 
 export default categoryRouter;
 

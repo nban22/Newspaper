@@ -13,5 +13,6 @@ viewRouter.get("/create_user", viewController.getCreateUserPage);
 viewRouter.get("/update_profile", authenticateJWT, viewController.getUpdateUserProfilePage);
 viewRouter.get("/create_article", viewController.getCreateArticlePage);
 viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
+viewRouter.get("/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
 
 export default viewRouter;

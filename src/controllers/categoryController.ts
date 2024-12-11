@@ -41,7 +41,7 @@ export const getTopCategories = catchAsync(
         const categoriesWithArticles = await Promise.all(
             topCategories.map(async (category) => {
                 const articles = await Article.find({ category_id: category._id })
-                    .populate("author_id", "fullname pen_name") // Populate author info
+                    .populate("writer_id", "fullname pen_name") // Populate writer info
                     .populate("category_id", "name") // Populate category info
                     .limit(3); // Limit to 3 articles per category
                 return { category, articles };
@@ -123,15 +123,26 @@ export const deleteCategory = catchAsync(
     }
 );
 
-export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const category = req.params.categoryName;
+export const getCategoryArticleList = async (category: string) => {
     if (!category) {
-        return new AppError(StatusCodes.BAD_REQUEST, "Please provide a category!");
+        throw new AppError(StatusCodes.BAD_REQUEST, "Please provide a category!");
     }
-    
-    const articles = await Article.find({name: category}).populate("category_id").populate("author_id").sort({createdAt: -1});
-    res.status(StatusCodes.OK).render("pages/category_articles", {
-        category: category,
-        articles: articles
-    })
-})
+
+    const categoryId = await Category.findOne({ name: category });
+    if (!categoryId) {
+        throw new AppError(StatusCodes.NOT_FOUND, "Category not found");
+    }
+
+    const articles = await Article.find({ category_id: categoryId })
+                                .populate("category_id")
+                                .populate("writer_id")
+                                .sort({ is_premium: -1, created_at: -1 });
+
+    return {
+        message: "Successfully got category article list",
+        data: {
+            category: category,
+            articles: articles
+        }
+    };
+};

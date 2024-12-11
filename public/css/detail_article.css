@@ -1,0 +1,198 @@
+h1 {
+  font-size: 2.5em;
+  margin-top: 1em;
+  margin-bottom: 0, 5em;
+}
+
+.comments {
+  margin-top: 1em;
+}
+.section1 {
+  display: flex;
+  font-size: 1.5em;
+  gap: 2em;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.btn.download-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.btn.download-btn a {
+  text-decoration: none;
+  color: inherit; /* Inherit the button color */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.btn.download-btn i {
+  font-size: 18px; /* Icon size */
+}
+
+.btn.download-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight upward movement */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+}
+
+.btn.download-btn:active {
+  background-color: #004080; /* Even darker blue on active */
+  transform: translateY(0); /* Reset movement */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow on click */
+}
+
+.btn.download-btn:focus {
+  outline: 2px solid #007bff; /* Blue focus outline */
+  outline-offset: 4px; /* Larger outline */
+}
+
+.summary,
+.content,
+.tags,
+.author {
+  font-size: 1.2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.thumbnail {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.thumbnail img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.comments {
+  margin-top: 1em;
+}
+
+.comment-title,
+.category-title {
+  margin-top: 1em;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.category-title {
+  font-size: 2em;
+}
+
+/* Remove blue border on focus */
+.comment-input > input:focus {
+  box-shadow: none;
+  outline: none;
+  background: inherit;
+}
+
+/* Style input field */
+.comment-input > input {
+  background-color: transparent;
+  border: none;
+  padding: 1em;
+  width: 100%; /* Ensure it takes full width */
+}
+
+/* Style placeholder */
+.comment-input > input::placeholder {
+  padding: 1em;
+  font-size: 1.2em;
+}
+
+.comment-input {
+  height: 200px;
+}
+
+.comment-submit {
+  bottom: 3em;
+  right: 8em;
+}
+.comment-submit .btn {
+  position: absolute;
+  height: 2em;
+  width: 5em;
+}
+
+.comment-submit > button {
+  color: white;
+  font-size: 1em;
+  border: none;
+  padding: 0 1em;
+  margin-left: 1em;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.tags > span {
+  font-size: 1.5em;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.comment {
+  display: flex;
+}
+
+.no-comment {
+  text-align: center;
+  font-style: italic;
+}
+
+.comment-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1em;
+}
+
+.comment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.comment-info {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+}
+
+.comment-date {
+  font-size: 1em;
+  color: grey;
+}
+
+.comment-text {
+  font-size: 1em;
+  text-align: justify;
+}

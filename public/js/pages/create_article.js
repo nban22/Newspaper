@@ -95,8 +95,7 @@ document.querySelector('#editor-form').onsubmit = event => {
     tags: JSON.parse(document.getElementById('selected-tags').value), // Retrieve selected tag IDs
   };
 
-  console.log("Form data:", formData);
-
+  // Retrieve access token from local storage
   const accessToken = localStorage.getItem('accessToken');
 
   // Send form data to the server

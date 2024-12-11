@@ -133,7 +133,7 @@ const articlesList = [
         "content": "Công nghệ VAR (Video Assistant Referee) mang đến sự chính xác và minh bạch hơn trong việc ra quyết định trên sân. Mặc dù còn gây tranh cãi, nhưng đây được xem là công cụ quan trọng giúp giảm sai sót của trọng tài.",
         "thumbnail": "https://robohash.org/10",
         "category_name": "Bóng đá Quốc tế",
-        "writer_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
         "publish_date": new Date(),
         "status": "published"
     },
@@ -143,7 +143,7 @@ const articlesList = [
         "content": "Trong khi các bộ phim như Marvel và DC từng làm mưa làm gió, gần đây nhiều người cho rằng thể loại này đang mất dần sức hút. Các nhà sản xuất cần đổi mới để duy trì sự quan tâm của khán giả.",
         "thumbnail": "https://robohash.org/20",
         "category_name": "Phim ảnh",
-        "writer_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
         "publish_date": new Date(),
         "status": "published"
     },
@@ -153,7 +153,7 @@ const articlesList = [
         "content": "Các ca khúc từ những nghệ sĩ như Billie Eilish hay Olivia Rodrigo đã trở thành hiện tượng toàn cầu, mang đến làn gió mới cho làng nhạc quốc tế. Những câu chuyện đằng sau mỗi bài hát cũng là điểm nhấn thú vị.",
         "thumbnail": "https://robohash.org/30",
         "category_name": "Âm nhạc",
-        "writer_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
         "publish_date": new Date(),
         "status": "published"
     },
@@ -163,7 +163,7 @@ const articlesList = [
         "content": "Với việc ngày càng nhiều người tiêu dùng quan tâm đến môi trường, các thương hiệu thời trang lớn đang đầu tư mạnh vào việc phát triển sản phẩm thân thiện với thiên nhiên và quy trình sản xuất bền vững.",
         "thumbnail": "https://robohash.org/40",
         "category_name": "Thời trang",
-        "writer_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
         "publish_date": new Date(),
         "status": "published"
     },
@@ -173,7 +173,7 @@ const articlesList = [
         "content": "Yoga đã được chứng minh giúp giảm căng thẳng, cải thiện giấc ngủ và tăng cường sức khỏe tinh thần. Đây là bộ môn phù hợp cho mọi lứa tuổi, đặc biệt trong nhịp sống hiện đại đầy áp lực.",
         "thumbnail": "https://robohash.org/50",
         "category_name": "Sức khỏe",
-        "writer_id": "60a6b3a0c7f8f4b0f4c3f4e7",
+        "author_id": "60a6b3a0c7f8f4b0f4c3f4e7",
         "publish_date": new Date(),
         "status": "published"
     },   

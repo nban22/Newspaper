@@ -9,9 +9,9 @@ import ArticleTag from "../models/article_tag";
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags } = req.body;
 
-    const author_id = await WriterProfile.findOne({ user_id: userId });
+    const writer_id = await WriterProfile.findOne({ user_id: userId });
 
-    if (!author_id) {
+    if (!writer_id) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Writer profile not found"));
     }
 
@@ -26,7 +26,7 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
         summary,
         thumbnail,
         content,
-        author_id,
+        writer_id,
         category_id,
         createdAt: new Date(),
     });

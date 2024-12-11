@@ -16,7 +16,6 @@ import googleRouter from "./routers/googleRouter";
 import facebookPassport from "./config/facebookPassport";
 import cors from "cors";
 
-
 import googlePassport from "./config/googlePassport";
 
 const app = express();

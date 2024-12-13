@@ -35,7 +35,12 @@
                         <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="50" height="50" class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                        <% if (user && user.role === "editor") {%>
+                            <li><a class="dropdown-item" href="/articles">Danh sách bài viết</a></li>
+                        <% } else {%>
+                            <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                        <% } %>
+                        
                         <li><a class="dropdown-item" href="#">Cài đặt</a></li>
                         <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
                         <li><hr class="dropdown-divider" /></li>

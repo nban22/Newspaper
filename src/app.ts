@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import userRouter from "./routers/userRouter";
 import viewRouter from "./routers/viewRouter";
+import articleHandlingRouter from "./routers/articleHandlingRouter";
 import adminRouter from "./routers/adminRouter";
 import categoriesRouter from "./routers/categoriesRouter";
 import tagRouter from "./routers/tagRouter";
@@ -53,6 +54,7 @@ app.use("/auth/facebook", facebookRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/v1", authRouter);
 app.use("/", viewRouter);
+app.use("/articles", articleHandlingRouter);
 app.use("/admin", adminRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter);

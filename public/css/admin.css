@@ -1,0 +1,16 @@
+h1 {
+    font-weight: bold;
+}
+
+@media screen and (max-width: 800px) {
+    .title-container {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+
+    .container {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 800px;
+    }
+}

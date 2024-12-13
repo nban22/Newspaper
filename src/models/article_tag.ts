@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
+import {ITag} from "./tag";
 
 interface IArticleTag extends Document {
     article_id: mongoose.Types.ObjectId; 
-    tag_id: mongoose.Types.ObjectId;     
+    tag_id: ITag | mongoose.Types.ObjectId;     
 }
 
 const ArticleTagSchema: Schema<IArticleTag> = new mongoose.Schema({

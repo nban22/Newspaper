@@ -1,0 +1,30 @@
+<div class="modal fade" id="approveArticleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered h-auto">
+        <div class="modal-content">
+            <form id="approveArticleForm" method="POST">    
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Phê duyệt bài viết</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Điều chỉnh danh mục</label>
+                        <select class="form-select" id="category" name="category">
+                            <% categories.forEach((category, index) => { %>
+                                <option value="<%= category.name %>"><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="publishDate" class="form-label">Thời gian xuất bản</label>
+                        <input type="datetime-local" class="form-control" id="publishDate" name="publishDate" required/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Duyệt</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

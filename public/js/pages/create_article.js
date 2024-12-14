@@ -95,6 +95,14 @@ document.querySelector('#editor-form').onsubmit = event => {
     tags: JSON.parse(document.getElementById('selected-tags').value), // Retrieve selected tag IDs
   };
 
+  // Convert formData to a JSON string
+  const formDataJson = JSON.stringify(formData);
+
+  // Calculate size of formData in bytes
+  const formDataSize = new Blob([formDataJson]).size;
+  console.log(`Form size: ${formDataSize} bytes`);
+
+
   // Retrieve access token from local storage
   const accessToken = localStorage.getItem('accessToken');
 

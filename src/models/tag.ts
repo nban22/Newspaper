@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface ITag extends Document {
+export interface ITag extends Document {
     name: string;
     created_at: Date;
     updated_at: Date;

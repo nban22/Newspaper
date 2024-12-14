@@ -6,10 +6,16 @@
     margin-right: 8px;
 }
 
+.list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
 .image-container {
     flex-shrink: 0;
-    width: 300px; /* Set the width of the container */
-    height: 200px; /* Set the height of the container */
+    width: 100%; /* Change to 100% for mobile responsiveness */
+    max-width: 200px; /* Set a max-width for larger screens */
+    height: 100%; /* Change height to auto for better aspect ratio on mobile */
     overflow: hidden; /* Hide any overflow */
     position: relative; /* Positioning context for absolute children */
     margin-right: 20px;
@@ -17,8 +23,8 @@
 
 .image-container img {
     width: 100%; /* Make the image take the full width of the container */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover;
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: contain;
     position: absolute; /* Position the image absolutely */
     top: 50%; /* Center the image vertically */
     left: 50%; /* Center the image horizontally */
@@ -30,8 +36,29 @@
 }
 
 .carousel-inner img {
-    width: 800px;
-    height: 400px;
-    object-fit: cover; /* Ensures the image fills the dimensions without distortion */
-    margin: 0 auto;    /* Centers the image horizontally */
+    width: 100%; /* Change to 100% for mobile responsiveness */
+    max-width: 800px;
+    height: auto; /* Change height to auto for better aspect ratio on mobile */
+    max-height: 400px;
+    object-fit: contain; /* Ensures the image fills the dimensions without distortion */
+    margin: 0 auto; /* Centers the image horizontally */
+}
+
+/* Media Queries for Mobile Devices */
+@media (max-width: 768px) {
+    .image-container {
+        width: 100%; /* Full width on mobile */
+        height: auto; /* Adjust height for mobile */
+        margin-right: 0; /* Remove margin on mobile */
+    }
+
+    .carousel-inner img {
+        width: 100%; /* Full width on mobile */
+        height: auto; /* Adjust height for mobile */
+    }
+
+    .rect {
+        width: 6px; /* Adjust rectangle size for mobile */
+        height: 20px; /* Adjust rectangle size for mobile */
+    }
 }

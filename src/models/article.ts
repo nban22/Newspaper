@@ -1,17 +1,18 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 
-interface IArticle extends Document {
+export interface IArticle extends Document {
     title: string;
     is_premium: boolean;
     summary?: string;
     content: string;
     thumbnail?: string;
     category_id: mongoose.Types.ObjectId; 
-    author_id: mongoose.Types.ObjectId; 
+    writer_id: mongoose.Types.ObjectId; 
     publish_date?: Date;
     view_count: number;
-    status: "draft" | "published" | "archived"; 
+    status: "draft" | "published" | "archived" | "rejected" | "pending"; 
+    rejection_reason: string;
     created_at: Date;
     updated_at: Date;
 }
@@ -29,10 +30,11 @@ const ArticleSchema: Schema<IArticle> = new mongoose.Schema({
     content: { type: String, required: true },
     thumbnail: { type: String },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    author_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
+    writer_id: { type: Schema.Types.ObjectId, ref: "WriterProfile", required: true },
     publish_date: { type: Date },
     view_count: { type: Number, default: 0 },
-    status: { type: String, enum: ["draft", "published", "archived"], default: "draft", required: true },
+    status: { type: String, enum: ["draft", "published", "archived", "rejected", "pending"], default: "draft", required: true },
+    rejection_reason: { type: String, default: "" },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });

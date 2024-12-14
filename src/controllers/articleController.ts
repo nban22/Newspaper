@@ -89,3 +89,19 @@ export const getLatestArticles = async () => {
         }
     };
 };
+
+export const uploadImage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {   
+    if (!req.file) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please upload an image"));
+    }
+
+    // remove the 'public' from the path
+    req.file.path = req.file.path.replace("public", "");
+
+    return res.status(StatusCodes.OK).json({
+        status: "success",
+        data: {
+            imageUrl: req.file.path,
+        },
+    });
+});

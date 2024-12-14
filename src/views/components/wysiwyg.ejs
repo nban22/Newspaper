@@ -86,6 +86,56 @@
 
 <!-- Quill Initialization -->
 <script>
+
+  const accessToken = localStorage.getItem('accessToken');
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/v1/articles/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Image upload failed');
+    }
+
+    const data = await response.json();
+
+
+    return data.data.imageUrl;
+  };
+
+  const customImageHandler = (quill) => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (file) {
+        try {
+          const url = await uploadImage(file);
+
+          // Insert image into Quill
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', url);
+
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('Failed to upload image.');
+        }
+      }
+    };
+  };
+
+
   // Initialize Quill editors
   const summaryEditor = new Quill('#summary-editor', {
     theme: 'snow',
@@ -99,7 +149,6 @@
         [{ 'script': 'sub' }, { 'script': 'super' }],    // Subscript/Superscript
         [{ 'align': [] }],                              // Text Alignment
         [{ 'color': [] }, { 'background': [] }],        // Text/Background color
-        ['link', 'image', 'video']                      // Links, Images, Videos
       ],
     },
     placeholder: 'Compose the summary content...',
@@ -123,8 +172,54 @@
     placeholder: 'Compose the main content...',
   });
 
+  contentEditor.getModule('toolbar').addHandler('image', () => customImageHandler(contentEditor));
   const summaryContent = document.querySelector('#summary-editor').getAttribute('data-content');
   const contentContent = document.querySelector('#content-editor').getAttribute('data-content');
+
+  contentEditor.on('text-change', async (delta, oldDelta, source) => {
+    if (source === 'user') {
+      // Get the editor's content as HTML
+      const htmlContent = contentEditor.root.innerHTML;
+
+      // Use a regex to find base64 image strings
+      const base64ImageRegex = /<img src="data:image\/[a-zA-Z]+;base64,[^"]+"[^>]*>/g;
+      const matches = htmlContent.match(base64ImageRegex);
+
+      if (matches) {
+        for (const match of matches) {
+          // Extract the base64 string
+          const base64String = match.match(/src="([^"]+)"/)[1];
+
+          // Convert base64 to a Blob
+          const blob = base64ToBlob(base64String);
+
+          try {
+            // Upload the Blob
+            const url = await uploadImage(blob);
+
+            // Replace base64 image with the uploaded URL
+            const newHtmlContent = htmlContent.replace(base64String, url);
+            contentEditor.root.innerHTML = newHtmlContent;
+          } catch (error) {
+            console.error('Error uploading pasted image:', error);
+          }
+        }
+      }
+    }
+  });
+
+  // Helper function: Convert base64 string to Blob
+  function base64ToBlob(base64) {
+    const byteString = atob(base64.split(',')[1]);
+    const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+    const buffer = new Uint8Array(byteString.length);
+
+    for (let i = 0; i < byteString.length; i++) {
+      buffer[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([buffer], { type: mimeString });
+  }
 
   if (summaryContent) {
     summaryEditor.clipboard.dangerouslyPasteHTML(summaryContent);

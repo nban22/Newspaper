@@ -5,7 +5,7 @@ import { attachUserId, authorizeRole } from "../middlewares/authMiddlewares";
 import multer from "multer";
 
 const userRouter = Router();
-const upload = multer({ dest: 'public/uploads/' }); 
+const upload = multer({ dest: 'public/uploads/user_profile' }); 
 
 userRouter.use(attachUserId);
 

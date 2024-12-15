@@ -12,19 +12,19 @@ import mongoose from "mongoose";
 import Category from "../models/category";
 import tag from "../models/tag";
 import Comment from "../models/comment";
+import * as categoryController from "./categoryController";
+import * as tagController from "./tagController";
+import * as articleController from "./articleController";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
 
-    const [latestArticles] = await Promise.all([
-        Article.find().sort({created_at: -1}).limit(5).populate("category_id").populate("author_id")
-    ]);
-
-    // console.log(latestArticles);
+    const latestArticles = (await articleController.getLatestArticles()).data.articles;
     
     const [popularArticles] = await Promise.all([
-        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("author_id")
+        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("writer_id")
     ]);
+
     const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
         ...article.toObject(),
         publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
@@ -34,8 +34,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format('DD-MM-YYYY'),
         }));
-
-
+    
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,
@@ -48,6 +47,15 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {
     res.status(StatusCodes.OK).render("pages/login");
 };
+
+export const getForgotPasswordPage = (req: Request, res: Response, next: NextFunction) => {
+    const { enterCode, email } = req.query;
+    res.status(StatusCodes.OK).render("pages/forgot_password", { enterCode, email });
+};
+
+export const getResetPasswordPage = (req: Request, res: Response, next: NextFunction) => {
+    res.status(StatusCodes.OK).render("pages/reset_password");
+}
 
 export const getSignupPage = (req: Request, res: Response, next: NextFunction) => {
     res.status(StatusCodes.OK).render("pages/signup");
@@ -77,7 +85,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(StatusCodes.OK).render("pages/create_article", {user: user});
+    res.status(StatusCodes.OK).render("pages/create_article", {user: user, article: null});
 }   
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -121,8 +129,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const categoryName = category ? category.name : "Unknown";
 
     // Get article's author
-    const author = await WriterProfile.findOne({user_id: updatedArticle.author_id});
-    const authorName = author ? author.full_name : "Khuyết danh";
+    const writer = await WriterProfile.findOne({user_id: updatedArticle.writer_id});
+    const writerName = writer ? writer.full_name : "Khuyết danh";
 
     // Get tags for the article
     const tagsList = await tag.find({article_id: articleObjectId}).populate("tag_id");
@@ -134,9 +142,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     // Get comments for the article
     const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
     // Get all articles
-    const allArticles = await Article.find().populate("category_id").populate("author_id");
-    console.log(allArticles);
-    // Get related articles (5 articles in the same category)
     const relatedArticles = await Article.find({
         category_id: updatedArticle.category_id, // Lọc theo danh mục
         _id: { $ne: updatedArticle._id },       // Loại bỏ bài viết hiện tại
@@ -151,7 +156,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         article: {
             ...updatedArticle.toObject(),
             categoryName,
-            authorName,
+            writerName,
             tags,
             comments,
             relatedArticles,
@@ -177,9 +182,45 @@ export const getEditArticlePage = catchAsync(async (req: Request, res: Response,
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    if (article.author_id.toString() !== writer._id?.toString()) {   
+    if (article.writer_id.toString() !== writer._id?.toString()) {   
         return next(new AppError(StatusCodes.FORBIDDEN, "You are not authorized to edit this article!"));
     }
     
     res.status(StatusCodes.OK).render("pages/edit_article", {user: user, article: article});
 });
+
+export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+
+    const category = req.params.categoryName.replace('-', ' ').charAt(0).toUpperCase()
+                    + req.params.categoryName.replace('-', ' ').slice(1);
+    if (!category) {
+        throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide category name"));
+    }
+
+    const article = await categoryController.getCategoryArticleList(category);
+
+    res.status(StatusCodes.OK).render("pages/category_articles", {
+        user: user,
+        category: article.data.category,
+        articles: article.data.articles
+    })
+})
+
+export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+
+    const tag = req.params.tagName.replace('-', ' ').charAt(0).toUpperCase()
+                    + req.params.tagName.replace('-', ' ').slice(1);
+    if (!tag) {
+        throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide tag name"));
+    }
+
+    const article = await tagController.getTagArticleList(tag);
+
+    res.status(StatusCodes.OK).render("pages/tag_articles", {
+        user: user,
+        tag: article.data.tag,
+        articles: article.data.articles
+    })
+})

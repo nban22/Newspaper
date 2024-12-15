@@ -8,9 +8,7 @@ import mongoose from "mongoose";
 
 export const getAllCategories = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-       
-            const categories = await Category.find();
-
+        const categories = await Category.find();
         return res.status(StatusCodes.OK).json({
             status: "success",
             data: {
@@ -37,9 +35,11 @@ export const fetchTopCategories = async () => {
                 .sort({ publish_date: -1 })
                 .select("title publish_date thumbnail");
 
+
             return {
                 name: category?.name,
                 articleTitle: article?.title,
+                articleId: article?._id,
                 publishDate: article?.publish_date,
                 thumbnail: article?.thumbnail,
             };
@@ -123,3 +123,27 @@ export const deleteCategory = catchAsync(
         res.status(StatusCodes.OK).redirect("/admin/categories");
     }
 );
+
+export const getCategoryArticleList = async (categoryName: string) => {
+    if (!categoryName) {
+        throw new AppError(StatusCodes.BAD_REQUEST, "Please provide a category!");
+    }
+
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
+        throw new AppError(StatusCodes.NOT_FOUND, "Category not found");
+    }
+
+    const articles = await Article.find({ category_id: category._id })
+                                .populate("category_id")
+                                .populate("writer_id")
+                                .sort({ is_premium: -1, created_at: -1 });
+
+    return {
+        message: "Successfully got category article list",
+        data: {
+            category: categoryName,
+            articles: articles
+        }
+    };
+};

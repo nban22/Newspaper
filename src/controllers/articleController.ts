@@ -9,7 +9,11 @@ import ArticleTag from "../models/article_tag";
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags } = req.body;
 
-    const author_id = await WriterProfile.findOne({ user_id: userId });
+    const writer_id = await WriterProfile.findOne({ user_id: userId });
+
+    if (!writer_id) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Writer profile not found"));
+    }
 
     // Validate required fields
     if (!title && !summary && !content && !category_id) {
@@ -22,7 +26,7 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
         summary,
         thumbnail,
         content,
-        author_id,
+        writer_id,
         category_id,
         createdAt: new Date(),
     });
@@ -72,5 +76,32 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
     res.status(StatusCodes.OK).json({
         status: "success",
         message: "Article updated successfully",
+    });
+});
+
+export const getLatestArticles = async () => {
+    const latestArticles = await Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id");
+
+    return {
+        message: "Successfully got latest article list",
+        data: {
+            articles: latestArticles
+        }
+    };
+};
+
+export const uploadImage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {   
+    if (!req.file) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Please upload an image"));
+    }
+
+    // remove the 'public' from the path
+    req.file.path = req.file.path.replace("public", "");
+
+    return res.status(StatusCodes.OK).json({
+        status: "success",
+        data: {
+            imageUrl: req.file.path,
+        },
     });
 });

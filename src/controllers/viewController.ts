@@ -34,7 +34,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format('DD-MM-YYYY'),
         }));
-
+    
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,

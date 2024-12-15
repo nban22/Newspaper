@@ -48,7 +48,7 @@ ArticleSchema.statics.getFeaturedArticles = async function (): Promise<IArticle[
     return this.find({ status: "published" }) // Only fetch published articles
         .sort({ view_count: -1 })             // Sort by view_count in descending order
         .limit(4)                             // Limit to 4 articles
-        .select("title publish_date thumbnail view_count summary category_id") // Select specific fields if needed
+        .select("title publish_date thumbnail view_count summary category_id is_premium") // Select specific fields if needed
         .populate({
             path: "category_id",              // Populate category_id
             select: "name parent_id",         // Select name and parent_id fields

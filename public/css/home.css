@@ -62,3 +62,17 @@
         height: 20px; /* Adjust rectangle size for mobile */
     }
 }
+
+.summary-text {
+    font-size: 0.85rem; /* Smaller font size */
+    line-height: 1.4; /* Improved line spacing for readability */
+    color: #555; /* Dark gray color for subtle appearance */
+    margin-bottom: 8px; /* Spacing below the summary */
+    overflow: hidden; /* Prevents overflow */
+    text-overflow: ellipsis; /* Adds ellipsis (...) for long text */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    line-clamp: 3; /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+  }
+  

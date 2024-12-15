@@ -77,6 +77,88 @@ h1 {
   object-fit: cover;
 }
 
+/* Content */
+
+.content {
+  font-family: "Arial", sans-serif;
+  line-height: 1.8;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.content h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.content p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.content img + p {
+  display: block;
+  text-align: center;
+  font-style: italic;
+  color: red;
+}
+
+.content a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
+.content img {
+  max-width: 100%; /* Đảm bảo hình ảnh không vượt quá khung */
+  height: auto;
+  display: block;
+  margin: 10px auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+}
+
+.content span {
+  font-size: 14px;
+  color: #555; /* Màu chữ phụ */
+}
+
+.content em {
+  font-style: italic;
+  color: #555;
+}
+
+.content .ql-align-center span {
+  color: #8f8f8f;
+  font-size: 14px;
+}
+
+.content blockquote {
+  margin: 20px 0;
+  padding: 10px 20px;
+  border-left: 4px solid #ccc;
+  background-color: #f9f9f9;
+  font-style: italic;
+  color: #555;
+}
+
+.content ul,
+.content ol {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.content ul li,
+.content ol li {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
 .comments {
   margin-top: 1em;
 }

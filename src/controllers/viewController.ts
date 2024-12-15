@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import sanitizeHtml from 'sanitize-html';
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
@@ -98,25 +99,21 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     }
 
     // Check if article exists
-    // Check if id is valid
     if (!mongoose.Types.ObjectId.isValid(articleId)) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
     }
-    // Convert id to ObjectId
+
     const articleObjectId = new mongoose.Types.ObjectId(articleId);
-    // Get an article
     const article = await Article.findById(articleId);
-    // Check if article exists
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
+
     // Increment view count
     await Article.incrementViewCount(articleObjectId);
 
     // Re-fetch the article to ensure updated data is sent
     const updatedArticle = await Article.findById(articleId);
-
-    // Ensure updatedArticle is not null
     if (!updatedArticle) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Updated article not found!"));
     }
@@ -129,32 +126,68 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const categoryName = category ? category.name : "Unknown";
 
     // Get article's author
-    const writer = await WriterProfile.findOne({user_id: updatedArticle.writer_id});
+    const writer = await WriterProfile.findOne({ user_id: updatedArticle.writer_id });
     const writerName = writer ? writer.full_name : "Khuyết danh";
 
     // Get tags for the article
-    const tagsList = await tag.find({article_id: articleObjectId}).populate("tag_id");
+    const tagsList = await tag.find({ article_id: articleObjectId }).populate("tag_id");
     const tags = tagsList.map(tag => tag.name);
     if (tags.length === 0) {
         tags.push("No tags");
     }
 
     // Get comments for the article
-    const comments = await Comment.find({article_id: articleObjectId}).populate("user_id").populate("content").populate("create_at");
-    // Get all articles
+    const comments = await Comment.find({ article_id: articleObjectId })
+        .populate("user_id")
+        .populate("content")
+        .populate("create_at");
+
+    // Get all related articles
     const relatedArticles = await Article.find({
-        category_id: updatedArticle.category_id, // Lọc theo danh mục
-        _id: { $ne: updatedArticle._id },       // Loại bỏ bài viết hiện tại
+        category_id: updatedArticle.category_id,
+        _id: { $ne: updatedArticle._id },
     })
-        .limit(5)                               // Lấy tối đa 5 bài viết
-        .sort({ created_at: -1 })               // Sắp xếp bài viết theo ngày tạo mới nhất
-        .select("title publish_date thumbnail") // Chỉ chọn các trường cần thiết
-        .exec();                                // Thực thi truy vấn
+        .limit(5)
+        .sort({ created_at: -1 })
+        .select("title publish_date thumbnail")
+        .exec();
+
+    // Sanitize the summary
+    const sanitizedSummary = sanitizeHtml(updatedArticle.summary ?? "", {
+        allowedTags: ["h2", "p", "span", "br"],
+        allowedAttributes: {
+            span: ["style"],
+        },
+    });
+
+    const rawContent = updatedArticle.content ?? "";
+    console.log("rawContent: ", rawContent);
+    const sanitizedContent = sanitizeHtml(String(rawContent), {
+        allowedTags: ["h2", "p", "br", "a", "img", "em"],
+        allowedAttributes: {
+            span: ["style"],
+            a: ["href", "rel", "target", "style"],
+            img: ["src", "alt", "width", "height"],
+            em: ["style"],
+        },
+        allowedStyles: {
+            "*": {
+                "background-color": [/^rgb\(\d+, \d+, \d+\)$/i],
+                "color": [/^rgb\(\d+, \d+, \d+\)$/i],
+            },
+        },
+    });
     
+    
+    
+
     // Render article page
-    res.status(StatusCodes.OK).render("pages/detail_article", { user,
+    res.status(StatusCodes.OK).render("pages/detail_article", {
+        user,
         article: {
             ...updatedArticle.toObject(),
+            summary: sanitizedSummary,
+            content: sanitizedContent,
             categoryName,
             writerName,
             tags,
@@ -163,7 +196,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             publish_date: formattedPublishDate,
         },
     });
-})
+});
+
 
 export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.articleId;

@@ -21,7 +21,6 @@ const WriterProfileSchema: Schema<IWriterProfile> = new mongoose.Schema({
     },
     pen_name: {
         type: String,
-        unique: true,
         trim: true,
     },
     dob: {

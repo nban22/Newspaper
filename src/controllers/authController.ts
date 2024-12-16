@@ -48,7 +48,7 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     if (role === "subscriber") {
         await SubscriberProfile.create({ user_id: newUser._id });
     } else if (role === "writer") {
-        await WriterProfile.create({ user_id: newUser._id });
+        await WriterProfile.create({ user_id: newUser._id , pen_name: "Anonymous" });
     } else if (role === "editor") {
         await EditorProfile.create({ user_id: newUser._id });
     }

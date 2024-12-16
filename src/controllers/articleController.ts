@@ -7,8 +7,7 @@ import WriterProfile from "../models/writerProfile";
 import ArticleTag from "../models/article_tag";
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
-    const { title, summary, content, thumbnail, category_id, userId, tags } = req.body;
-
+    const { title, summary, content, thumbnail, category_id, userId, tags, is_premium } = req.body;
     const writer_id = await WriterProfile.findOne({ user_id: userId });
 
     if (!writer_id) {
@@ -29,6 +28,7 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
         writer_id,
         category_id,
         createdAt: new Date(),
+        is_premium,
     });
 
     // Create article tags
@@ -51,7 +51,7 @@ export const createArticle = catchAsync(async (req: Request, res: Response, next
 
 export const updateArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    const { title, summary, content, thumbnail, category_id, userId, tags } = req.body;
+    const { title, summary, content, thumbnail, category_id, userId, tags, is_premium } = req.body;
     const { articleId } = req.params;
 
     await Article.findByIdAndUpdate(articleId, {
@@ -60,6 +60,8 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
         thumbnail,
         content,
         category_id,
+        updatedAt: new Date(),
+        is_premium,
     });
     
     // Update article tags

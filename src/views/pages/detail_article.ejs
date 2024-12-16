@@ -53,15 +53,15 @@
       <div class="author">
         <p></p>
         <p>
-          <%= article.authorName %>
+          <%= article.writerName %>
         </p>
       </div>
 
       <!-- Tags -->
       <div class="tags">
-        <span>Nhãn</span>
-        <% article.tags.forEach(tag=> { %>
-          <a href="/tag/<%= tag._id %>">#<%= tag.name %></a>
+        <p>Nhãn</p>
+        <% article.tagNames.forEach(tag=> { %>
+          <a href="/tag/<%= tag._id %>">#<%= tag %></a>
           <% }) %>
       </div>
 
@@ -152,67 +152,32 @@
 
         <hr>
 
-        <p class="category-title">Cùng chuyên mục</p>
-        <div class="row row-cols-1 row-cols-md-5 g-4">
-          <div class="col">
-            <h5 class="text-primary">Công Nghệ</h5>
-            <div class="card">
-              <img src="https://robohash.org/5" class="card-img-top" alt="Công Nghệ" />
-              <div class="card-body">
-                <h6 class="card-title">
-                  Start-up Trung Quốc muốn thay thế đầu bếp bằng robot
-                </h6>
-                <p class="card-text">Ngày xuất bản: 1/12/2024</p>
-              </div>
-            </div>
+
+        <div class="my-5 container">
+          <div class="d-flex">
+            <div class="rect"></div>
+            <h3 class="mb-4">Cùng chuyên mục</h3>
           </div>
-          <div class="col">
-            <h5 class="text-primary">Công Nghệ</h5>
-            <div class="card">
-              <img src="https://robohash.org/4" class="card-img-top" alt="Công Nghệ" />
-              <div class="card-body">
-                <h6 class="card-title">
-                  Start-up Trung Quốc muốn thay thế đầu bếp bằng robot
-                </h6>
-                <p class="card-text">Ngày xuất bản: 1/12/2024</p>
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-4">
+            <% article.relatedArticles.forEach((item)=> { %>
+              <div class="col">
+                <div class="card">
+                  <a href="/article/<%= item._id %>">
+                    <img src="<%= item.thumbnail %>" alt="<%= item.title %>" />
+                  </a>
+                  <div class="card-body card-category">
+                    <h6 class="card-title">
+                      <a href="/article/<%= item._id %>">
+                        <%= item.title %>
+                      </a>
+                    </h6>
+                    <p class="card-text">
+                      Ngày xuất bản: <%= item.publish_date %>
+                    </p>
+                  </div>
+                </div>
+                <% }) %>
               </div>
-            </div>
-          </div>
-          <div class="col">
-            <h5 class="text-primary">Công Nghệ</h5>
-            <div class="card">
-              <img src="https://robohash.org/3" class="card-img-top" alt="Công Nghệ" />
-              <div class="card-body">
-                <h6 class="card-title">
-                  Start-up Trung Quốc muốn thay thế đầu bếp bằng robot
-                </h6>
-                <p class="card-text">Ngày xuất bản: 1/12/2024</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <h5 class="text-primary">Công Nghệ</h5>
-            <div class="card">
-              <img src="https://robohash.org/2" class="card-img-top" alt="Công Nghệ" />
-              <div class="card-body">
-                <h6 class="card-title">
-                  Start-up Trung Quốc muốn thay thế đầu bếp bằng robot
-                </h6>
-                <p class="card-text">Ngày xuất bản: 1/12/2024</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <h5 class="text-primary">Công Nghệ</h5>
-            <div class="card">
-              <img src="https://robohash.org/1" class="card-img-top" alt="Công Nghệ" />
-              <div class="card-body">
-                <h6 class="card-title">
-                  Start-up Trung Quốc muốn thay thế đầu bếp bằng robot
-                </h6>
-                <p class="card-text">Ngày xuất bản: 1/12/2024</p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -224,7 +189,7 @@
     <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
     <script src="/js/pages/home.js"></script>
     <script src="/js/header.js"></script>
-    <script src="/js/pages/detail_article.js"></script>
+
 </body>
 
 </html>

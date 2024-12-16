@@ -16,6 +16,7 @@ import Comment from "../models/comment";
 import * as categoryController from "./categoryController";
 import * as tagController from "./tagController";
 import * as articleController from "./articleController";
+import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -153,33 +154,11 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         .exec();
 
     // Sanitize the summary
-    const sanitizedSummary = sanitizeHtml(updatedArticle.summary ?? "", {
-        allowedTags: ["h2", "p", "span", "br"],
-        allowedAttributes: {
-            span: ["style"],
-        },
-    });
+    const rawSummary = updatedArticle.summary ?? "";
+    const sanitizedSummary = sanitizeSummary(String(rawSummary));
 
     const rawContent = updatedArticle.content ?? "";
-    console.log("rawContent: ", rawContent);
-    const sanitizedContent = sanitizeHtml(String(rawContent), {
-        allowedTags: ["h2", "p", "br", "a", "img", "em"],
-        allowedAttributes: {
-            span: ["style"],
-            a: ["href", "rel", "target", "style"],
-            img: ["src", "alt", "width", "height"],
-            em: ["style"],
-        },
-        allowedStyles: {
-            "*": {
-                "background-color": [/^rgb\(\d+, \d+, \d+\)$/i],
-                "color": [/^rgb\(\d+, \d+, \d+\)$/i],
-            },
-        },
-    });
-    
-    
-    
+    const sanitizedContent = sanitizeContent(String(rawContent));
 
     // Render article page
     res.status(StatusCodes.OK).render("pages/detail_article", {

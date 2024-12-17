@@ -24,6 +24,7 @@ export const getArticleList = catchAsync(async (req: Request, res: Response, nex
     const categories = await Category.find().lean();
 
     const articleTag = await ArticleTag.find().populate<{article_id: IArticle}>("article_id").populate<{ tag_id: ITag }>("tag_id").lean();
+    // console.log(articleTag);
     const articles = Object.values(
         articleTag.filter(article => article.article_id.status === "draft")
                     .reduce((acc: { [key: string]: any }, article) => {

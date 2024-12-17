@@ -121,3 +121,43 @@ export const authorizeRole = (roles: Role[]) => {
         next();
     };
 };
+
+
+export const handleAccessToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const accessToken = req.headers.authorization?.startsWith("Bearer ")
+        ? req.headers.authorization.split(" ")[1]
+        : null;
+
+    if (!process.env.JWT_ACCESS_SECRET) {
+        return next(new AppError(500, "The JWT_ACCESS_SECRET variable is not defined"));
+    }
+
+    if (!accessToken) {
+        req.body.userId = null; // Nếu không có token, gán userId là null (guest user)
+        return next();
+    }
+
+    let decoded: any;
+    try {
+        decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+    } catch (err: any) {
+        req.body.userId = null; // Nếu token không hợp lệ hoặc hết hạn, gán userId là null
+        return next();
+    }
+
+    const userId = decoded.id;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        req.body.userId = null;
+        return next();
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        req.body.userId = null;
+        return next();
+    }
+
+    req.body.userId = userId; // Gán userId hợp lệ vào request
+    next();
+});
+

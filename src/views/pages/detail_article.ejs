@@ -78,77 +78,34 @@
 
       <section class="other-comments">
         <p class="comment-title">Bình luận</p>
-        <p class="no-comment">Hiện chưa có bình luận</p>
-        <div class="comments-list">
-          <div class="comment">
-            <div class="comment-avatar">
-              <img src="https://robohash.org/1" alt="Avatar" />
-            </div>
-            <div class="comment-content">
-              <div class="comment-info">
-                <span class="comment-author">Nguyễn Văn A</span>
-                <span class="comment-date">Ngày bình luận</span>
-              </div>
-              <p class="comment-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam, voluptates. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Quisquam, voluptates. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-                voluptates. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Quisquam, voluptates. Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
-            </div>
-          </div>
 
-          <div class="comment">
-            <div class="comment-avatar">
-              <img src="https://robohash.org/1" alt="Avatar" />
+        <% if (article.comments.length===0) { %>
+          <p class="no-comment">Hiện chưa có bình luận</p>
+          <% } else { %>
+            <div class="comments-list">
+              <% article.comments.forEach(comment=> { %>
+                <div class="comment">
+                  <div class="comment-avatar">
+                    <!-- Sử dụng RoboHash để tạo ảnh ngẫu nhiên dựa trên tên người dùng -->
+                    <img src="https://robohash.org/<%= comment.userName %>?set=set1" alt="Avatar" />
+                  </div>
+                  <div class="comment-content">
+                    <div class="comment-info">
+                      <span class="comment-author">
+                        <%= comment.userName %>
+                      </span>
+                      <span class="comment-date">
+                        <%= new Date(comment.date).toLocaleString("vi-VN") %>
+                      </span>
+                    </div>
+                    <p class="comment-text">
+                      <%= comment.content %>
+                    </p>
+                  </div>
+                </div>
+                <% }) %>
             </div>
-            <div class="comment-content">
-              <div class="comment-info">
-                <span class="comment-author">Nguyễn Văn A</span>
-                <span class="comment-date">Ngày bình luận</span>
-              </div>
-              <p class="comment-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam, voluptates. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Quisquam, voluptates. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-                voluptates. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Quisquam, voluptates. Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
-            </div>
-          </div>
-
-          <div class="comment">
-            <div class="comment-avatar">
-              <img src="https://robohash.org/1" alt="Avatar" />
-            </div>
-            <div class="comment-content">
-              <div class="comment-info">
-                <span class="comment-author">Nguyễn Văn A</span>
-                <span class="comment-date">Ngày bình luận</span>
-              </div>
-              <p class="comment-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam, voluptates. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Quisquam, voluptates. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-                voluptates. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Quisquam, voluptates. Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Quisquam, voluptates. Lorem
-                ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
-            </div>
-          </div>
-        </div>
+            <% } %>
       </section>
 
       <hr>
@@ -190,6 +147,7 @@
     <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
     <script src="/js/pages/home.js"></script>
     <script src="/js/header.js"></script>
+    <script src="/js/pages/detail_article.js"></script>
 
 </body>
 

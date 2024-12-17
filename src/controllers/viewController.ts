@@ -95,6 +95,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const articleId = req.params.id;
     const user = req.body.user;
 
+
     // Kiểm tra id bài viết
     if (!articleId) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
@@ -143,8 +144,10 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         .populate("user_id create_at content")
         .exec();
 
+
     // Lấy tất cả người dùng từ User
-    const users = await User.find().select("_id name ").exec();
+    const users = await User.find().select("_id name"); 
+
 
     const userMap = new Map(users.map((user) => [user._id.toString(), user.name]));
 
@@ -152,8 +155,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return {
             content: comment.content,
             date: comment.create_at,
-            userName: comment.user_id && userMap.has(comment.user_id.toString())
-                ? userMap.get(comment.user_id.toString()) // Lấy tên người dùng từ Map
+            userName: comment.user_id && userMap.has(comment.user_id._id.toString())
+                ? userMap.get(comment.user_id._id.toString()) // Lấy tên người dùng từ Map
                 : "Ẩn danh",
         };
     });

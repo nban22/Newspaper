@@ -10,6 +10,7 @@ export const createComment = catchAsync(async (req: Request, res: Response, next
     const article_id = req.params.articleId;
     const user_id = req.body.userId;
 
+
     // Kiểm tra đầu vào
     if (!content) {
         return next(new AppError(400, "Content is required"));

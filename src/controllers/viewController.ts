@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import sanitizeHtml from 'sanitize-html';
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
@@ -11,7 +10,8 @@ import moment from "moment";
 import { fetchTopCategories } from "./categoryController";
 import mongoose from "mongoose";
 import Category from "../models/category";
-import tag from "../models/tag";
+import Tag from "../models/tag";
+import ArticleTag from "../models/article_tag";
 import Comment from "../models/comment";
 import * as categoryController from "./categoryController";
 import * as tagController from "./tagController";
@@ -128,14 +128,14 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
     // Get article's author
     const writer = await WriterProfile.findOne({ user_id: updatedArticle.writer_id });
-    const writerName = writer ? writer.full_name : "Khuyết danh";
+    const writerName = writer ? writer.full_name : "Khuyết danh"; 
 
     // Get tags for the article
-    const tagsList = await tag.find({ article_id: articleObjectId }).populate("tag_id");
-    const tags = tagsList.map(tag => tag.name);
-    if (tags.length === 0) {
-        tags.push("No tags");
-    }
+    const tagsListID = await ArticleTag.find({ article_id: articleObjectId }).select("tag_id");
+    
+    const tags = await Tag.find({ _id: { $in: tagsListID.map(tag => tag.tag_id) } });
+
+    const tagNames = tags.map(tag => tag.name);
 
     // Get comments for the article
     const comments = await Comment.find({ article_id: articleObjectId })
@@ -143,15 +143,20 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         .populate("content")
         .populate("create_at");
 
-    // Get all related articles
-    const relatedArticles = await Article.find({
-        category_id: updatedArticle.category_id,
-        _id: { $ne: updatedArticle._id },
-    })
-        .limit(5)
-        .sort({ created_at: -1 })
-        .select("title publish_date thumbnail")
-        .exec();
+        const relatedArticles = await Article.find({
+            category_id: updatedArticle.category_id,
+            _id: { $ne: updatedArticle._id },
+        })
+            .limit(5)
+            .sort({ created_at: -1 })
+            .select("title publish_date thumbnail")
+            .exec();
+        
+        const formattedArticles = relatedArticles.map((article) => ({
+            ...article.toObject(),
+            publish_date: moment(article.publish_date).format("DD-MM-YYYY"), // Format date
+        }));
+    
 
     // Sanitize the summary
     const rawSummary = updatedArticle.summary ?? "";
@@ -169,9 +174,9 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             content: sanitizedContent,
             categoryName,
             writerName,
-            tags,
+            tagNames,
             comments,
-            relatedArticles,
+            relatedArticles: formattedArticles,
             publish_date: formattedPublishDate,
         },
     });

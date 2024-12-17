@@ -6,34 +6,40 @@ import Comment from "../models/comment";
 import mongoose from "mongoose";
 
 export const createComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { article_id, content } = req.body;
-    const user = req.body.user;
+    const { content } = req.body; 
+    const article_id = req.params.articleId;
+    const user_id = req.body.userId;
 
-    if (!article_id) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Article ID is required"));
-    }
 
+    // Kiểm tra đầu vào
     if (!content) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Content is required"));
+        return next(new AppError(400, "Content is required"));
     }
 
+    // Kiểm tra xem article_id có hợp lệ không
     if (!mongoose.Types.ObjectId.isValid(article_id)) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid Article ID format"));
+        return next(new AppError(400, "Invalid article_id"));
     }
 
+    // Tạo bình luận mới
     const newComment = await Comment.create({
-        article_id,
-        content,
-        user_id: user._id,
+        article_id: article_id, // Sử dụng article_id từ params
+        user_id: user_id || null, // Gán null nếu không có user_id (guest user)
+        content: content,
+        create_at: new Date(),
     });
 
-    res.status(StatusCodes.CREATED).json({
+    // Trả về response
+    res.status(201).json({
         status: "success",
         data: {
             comment: newComment,
         },
     });
 });
+
+
+
 
 export const updateComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { id: commentId } = req.params;

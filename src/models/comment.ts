@@ -1,12 +1,11 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 interface IComment extends Document {
-    article_id: mongoose.Types.ObjectId; 
-    user_id: mongoose.Types.ObjectId;  
+    article_id: mongoose.Types.ObjectId;
+    user_id?: mongoose.Types.ObjectId;
     content: string;
     create_at: Date;
 }
-
 // Define the custom static methods interface
 interface ICommentModel extends Model<IComment> {
     createComment(comment: Partial<IComment>): Promise<IComment>;
@@ -15,10 +14,10 @@ interface ICommentModel extends Model<IComment> {
 }
 
 const CommentSchema: Schema<IComment> = new Schema({
-    article_id: { type: Schema.Types.ObjectId, ref: "Article", required: true },
-    user_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    article_id: { type: mongoose.Schema.Types.ObjectId, ref: "Article", required: true },
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
     content: { type: String, required: true },
-    create_at: { type: Date, default: Date.now }
+    create_at: { type: Date, default: Date.now },
 });
 
 // Implement custom static methods

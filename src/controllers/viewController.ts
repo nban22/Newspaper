@@ -17,6 +17,7 @@ import * as categoryController from "./categoryController";
 import * as tagController from "./tagController";
 import * as articleController from "./articleController";
 import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
+import User from "../models/user";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -94,12 +95,13 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const articleId = req.params.id;
     const user = req.body.user;
 
-    // Check if id is provided
+
+    // Kiểm tra id bài viết
     if (!articleId) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Article id cannot be empty!"));
     }
 
-    // Check if article exists
+    // Kiểm tra ID bài viết có hợp lệ không
     if (!mongoose.Types.ObjectId.isValid(articleId)) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Invalid article ID!"));
     }
@@ -110,62 +112,82 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    // Increment view count
+    // Tăng số lượt xem của bài viết
     await Article.incrementViewCount(articleObjectId);
 
-    // Re-fetch the article to ensure updated data is sent
+    // Lấy lại bài viết sau khi đã cập nhật
     const updatedArticle = await Article.findById(articleId);
     if (!updatedArticle) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Updated article not found!"));
     }
 
-    // Format publish date
+    // Định dạng ngày xuất bản
     const formattedPublishDate = moment(updatedArticle.publish_date).format("DD-MM-YYYY");
 
-    // Get category's name 
+    // Lấy tên thể loại bài viết
     const category = await Category.findById(updatedArticle.category_id);
     const categoryName = category ? category.name : "Unknown";
 
-    // Get article's author
-    const writer = await WriterProfile.findOne({ user_id: updatedArticle.writer_id });
-    const writerName = writer ? writer.full_name : "Khuyết danh"; 
+    // Lấy tên tác giả bài viết
+    const writer = await WriterProfile.findById(updatedArticle.writer_id);
+    const writerName = writer && writer.pen_name;
 
-    // Get tags for the article
+    // Lấy các thẻ của bài viết
     const tagsListID = await ArticleTag.find({ article_id: articleObjectId }).select("tag_id");
-    
+
     const tags = await Tag.find({ _id: { $in: tagsListID.map(tag => tag.tag_id) } });
 
     const tagNames = tags.map(tag => tag.name);
 
-    // Get comments for the article
+    // Lấy tất cả bình luận cho bài viết
     const comments = await Comment.find({ article_id: articleObjectId })
-        .populate("user_id")
-        .populate("content")
-        .populate("create_at");
+        .populate("user_id create_at content")
+        .exec();
 
-        const relatedArticles = await Article.find({
-            category_id: updatedArticle.category_id,
-            _id: { $ne: updatedArticle._id },
-        })
-            .limit(5)
-            .sort({ created_at: -1 })
-            .select("title publish_date thumbnail")
-            .exec();
+
+    // Lấy tất cả người dùng từ User
+    const users = await User.find().select("_id name"); 
+
+
+    const userMap = new Map(users.map((user) => [user._id.toString(), user.name]));
+
+    const formattedComments = comments.map((comment) => {
+        return {
+            content: comment.content,
+            date: comment.create_at,
+            userName: comment.user_id && userMap.has(comment.user_id._id.toString())
+                ? userMap.get(comment.user_id._id.toString()) // Lấy tên người dùng từ Map
+                : "Ẩn danh",
+        };
+    });
+
+
+
+
+    // Lấy các bài viết liên quan
+    const relatedArticles = await Article.find({
+        category_id: updatedArticle.category_id,
+        _id: { $ne: updatedArticle._id },
+    })
+        .limit(5)
+        .sort({ created_at: -1 })
+        .select("title publish_date thumbnail")
+        .exec();
         
-        const formattedArticles = relatedArticles.map((article) => ({
-            ...article.toObject(),
-            publish_date: moment(article.publish_date).format("DD-MM-YYYY"), // Format date
-        }));
-    
+    const formattedArticles = relatedArticles.map((article) => ({
+        ...article.toObject(),
+        publish_date: moment(article.publish_date).format("DD-MM-YYYY"), // Định dạng ngày
+    }));
 
-    // Sanitize the summary
+    // Làm sạch tóm tắt
     const rawSummary = updatedArticle.summary ?? "";
     const sanitizedSummary = sanitizeSummary(String(rawSummary));
 
+    // Làm sạch nội dung bài viết
     const rawContent = updatedArticle.content ?? "";
     const sanitizedContent = sanitizeContent(String(rawContent));
 
-    // Render article page
+    // Render trang bài viết
     res.status(StatusCodes.OK).render("pages/detail_article", {
         user,
         article: {
@@ -175,12 +197,13 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             categoryName,
             writerName,
             tagNames,
-            comments,
+            comments: formattedComments, 
             relatedArticles: formattedArticles,
             publish_date: formattedPublishDate,
         },
     });
 });
+
 
 
 export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

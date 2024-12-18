@@ -113,21 +113,49 @@
                     </a>
                 </div>
 
-                <div class="row">
-                    <!-- List of latest articles -->
-                    <ul class="col-md-8 list-group list">
-                        <% latestArticle.forEach(article => { %>
-                        <li class="list-group-item d-flex align-items-start">
-                            <div class="image-container">
-                                <img src="<%= article.thumbnail %>" alt="<%= article.title %>" />
-                            </div>
-                            <div class="group-item-body ms-3 mt-3">
-                                <h5 class="group-item-title"><%= article.title %></h5>
-                                <p class="group-item-text"><%= article.summary %></p>
-                            </div>
-                        </li>
-                        <% }) %>
-                    </ul>
+          <div class="row">
+            <!-- List of latest articles -->
+            <ul class="col-md-8 overflow-auto" style="max-height: 500px;">
+              <% latestArticle.forEach(article=> { %>
+                <div class="col">
+                  <div class="card flex-row" style="min-height: 80px;">
+                    <!-- Image -->
+                    <div class="image-container">
+                      <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
+                        alt="<%= article.title %>" />
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body d-flex flex-column">
+                      <h5 class="card-title mb-2">
+                        <%= article.title || 'No Title' %>
+                      </h5>
+
+                      <!-- Summary -->
+                      <p class="card-text summary-text mb-2">
+                        <%= article.summary || 'No summary available' %>
+                      </p>
+
+                      <!-- Category and Parent Category -->
+                      <p class="card-text small mb-1">
+                        <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name}>
+                          ${article.category_id.name}`
+                          : article.category_id.name %>
+                      </p>
+
+                      <!-- Publish Date -->
+                      <p class="card-text small mb-2 text-muted">
+                        Ngày đăng: <%= article.publish_date %>
+                      </p>
+
+                      <!-- Premium Badge -->
+                      <% if (article.is_premium) { %>
+                        <span class="badge rounded-pill bg-warning text-dark">Premium</span>
+                        <% } %>
+
+                    </div>
+                  </div>
+                  <% }) %>
+            </ul>
 
                     <!-- Trending section -->
                     <div class="col-md-4 border p-3">

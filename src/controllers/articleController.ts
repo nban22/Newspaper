@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import Article from "../models/article";
-import catchAsync from "../utils/catchAsync";
 import { StatusCodes } from "http-status-codes";
-import AppError from "../utils/AppError";
+import Article from "../models/article";
 import WriterProfile from "../models/writerProfile";
 import ArticleTag from "../models/article_tag";
+import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/AppError";
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags } = req.body;
@@ -81,11 +81,14 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
 
 export const getLatestArticles = async () => {
     const latestArticles = await Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id");
+    
+    let articles = latestArticles;
+    // articles = articles.map(article => article.summary = sanitizeSummary(String(article.summary?? "")));
 
     return {
         message: "Successfully got latest article list",
         data: {
-            articles: latestArticles
+            articles: articles
         }
     };
 };

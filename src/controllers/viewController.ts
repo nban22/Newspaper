@@ -18,6 +18,7 @@ import * as tagController from "./tagController";
 import * as articleController from "./articleController";
 import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
+import formatDate from "../utils/formatDate";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -264,4 +265,4 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
         tag: article.data.tag,
         articles: article.data.articles
     })
-})
+});

@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import Article from "../models/article";
-import catchAsync from "../utils/catchAsync";
 import { StatusCodes } from "http-status-codes";
-import AppError from "../utils/AppError";
+import Article from "../models/article";
 import WriterProfile from "../models/writerProfile";
 import ArticleTag from "../models/article_tag";
+import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/AppError";
+import { sanitizeSummary } from "../utils/sanitizeHTML";
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags, is_premium } = req.body;
-    const writer_id = await WriterProfile.findOne({ user_id: userId });
-
+    const writer_id = (await WriterProfile.findOne({ user_id: userId }))?._id;
+    console.log(writer_id);
     if (!writer_id) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Writer profile not found"));
     }
@@ -83,11 +84,18 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
 
 export const getLatestArticles = async () => {
     const latestArticles = await Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id");
-
+    
+    let articles = latestArticles;
+    articles.forEach(article => {
+        console.log(article.summary);
+        article.summary = sanitizeSummary(String(article.summary));
+        console.log(article.summary);
+    });
+    console.log(articles);
     return {
         message: "Successfully got latest article list",
         data: {
-            articles: latestArticles
+            articles: articles
         }
     };
 };

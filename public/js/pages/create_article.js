@@ -124,6 +124,7 @@ document.querySelector('#editor-form').onsubmit = event => {
     .then(data => {
       alert('Article created successfully');
       console.log('Success:', data);
+      window.location.href = '/';
     })
     .catch(error => {
       alert('Error creating article');

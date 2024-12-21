@@ -21,5 +21,6 @@ viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEd
 
 viewRouter.get("/chuyen-muc/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
 viewRouter.get("/nhan/:tagName", authenticateJWT, viewController.getTagArticleList);
+viewRouter.get("/search", authenticateJWT, viewController.getSearchPage);
 
 export default viewRouter;

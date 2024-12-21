@@ -266,3 +266,18 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
         articles: article.data.articles
     })
 });
+
+export const getWriterArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const writer = req.body.user;
+    if (!writer) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Please provide writer account"));
+    }
+
+    const articles = await articleController.getWriterArticleList(writer._id);
+    console.log(articles);
+    res.status(StatusCodes.OK).render("pages/writer_articles", {
+        user: writer,
+        formatDate,
+        articles: articles.data.articles
+    })
+})

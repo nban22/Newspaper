@@ -9,55 +9,51 @@
                 <li><a href="/" class="nav-link px-2 text-dark">Trang chủ</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
                 <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
-                <% if (user && user.role === 'admin') {%>
+                <% if (user && user.role==='admin' ) {%>
                     <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
                     <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
-                <% } %>
+                    <% } %>
             </ul>
 
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                <input
-                    type="search"
-                    class="form-control form-control-dark text-bg-dark"
-                    placeholder="Tìm kiếm..."
-                    aria-label="Search"
-                />
-            </form>  
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form">
+                <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Tìm kiếm..."
+                    aria-label="Search" id="search-input" />
+            </form>
+
             <% if (user) { %>
                 <div class="dropdown text-end">
-                    <a
-                        href="#"
-                        class="d-block link-dark text-decoration-none dropdown-toggle"
-                        id="dropdownUser1"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="50" height="50" class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="50" height="50"
+                            class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                        <% if (user && user.role === "editor") {%>
+                        <% if (user && user.role==="editor" ) {%>
                             <li><a class="dropdown-item" href="/articles">Danh sách bài viết</a></li>
-                        <% } else {%>
-                            <li><a class="dropdown-item" href="#">Dashboard</a></li>
-                        <% } %>
-                        
-                        <li><a class="dropdown-item" href="#">Cài đặt</a></li>
-                        <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li>
-                            <form action="/api/v1/logout" method="post" id="logout-form">
-                                <button type="submit" class="dropdown-item">Đăng xuất</button>
-                            </form>
-                        </li>
+                            <% } else {%>
+                                <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                                <% } %>
+
+                                    <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                                    <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+                                    <li>
+                                        <form action="/api/v1/logout" method="post" id="logout-form">
+                                            <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                        </form>
+                                    </li>
                     </ul>
                 </div>
-            <% } else { %>
-                <div class="text-end">
-                    <a href="/login" ><button type="button" class="btn btn-outline-light mr-2 text-dark border-info">Đăng nhập</button></a>
-                    <a href="/signup"><button type="button" class="btn btn-info mr-2">Đăng ký</button></a>
-                </div>
-            <% } %>
-                       
+                <% } else { %>
+                    <div class="text-end">
+                        <a href="/login"><button type="button"
+                                class="btn btn-outline-light mr-2 text-dark border-info">Đăng nhập</button></a>
+                        <a href="/signup"><button type="button" class="btn btn-info mr-2">Đăng ký</button></a>
+                    </div>
+                    <% } %>
+
         </div>
     </div>
 </header>
@@ -72,7 +68,8 @@
                         <ul class="dropdown-menu" aria-labelledby="22dropdownMenuButton2">
                             <li><a class="dropdown-item" href="/chuyen-muc/thời-sự">Thời sự</a></li>
                             <li><a class="dropdown-item" href="/chuyen-muc/giao-thông">Giao thông</a></li>
-                            <li><a class="dropdown-item" href="/chuyen-muc/môi-trường-khí-hậu">Môi trường - khí hậu</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/môi-trường-khí-hậu">Môi trường - khí hậu</a>
+                            </li>
                         </ul>
                         <span class="dd-trigger"></span>
                     </li>

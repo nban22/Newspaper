@@ -274,10 +274,89 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
     }
 
     const articles = await articleController.getWriterArticleList(writer._id);
-    console.log(articles);
+    // console.log(articles);
     res.status(StatusCodes.OK).render("pages/writer_articles", {
         user: writer,
         formatDate,
         articles: articles.data.articles
     })
 })
+
+
+
+export const getSearchPage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 8;
+        const search = req.query.q as string || '';
+        const sortField = req.query.sort as string || 'view_count';
+        const sortOrder = req.query.order as string || 'desc';
+        const user = req.body.user;
+    
+    
+        // Search query for title, summary, and content
+        const searchQuery = {
+            $or: [
+                { title: { $regex: search, $options: 'i' } },
+                { summary: { $regex: search, $options: 'i' } },
+                { content: { $regex: search, $options: 'i' } },
+            ],
+            status: 'published',
+        };
+    
+        // Pagination calculation: (page - 1) * limit
+        const startIndex = (page - 1) * limit;
+    
+        // Sorting options
+        const sortOptions: { [key: string]: 1 | -1 } = { [sortField]: sortOrder === 'desc' ? -1 : 1 };
+    
+        // Fetching articles with pagination and sorting
+        const articles = await Article.find(searchQuery)
+            .skip(startIndex)
+            .limit(limit)
+            .sort(sortOptions)
+            .populate('category_id', 'name')
+            .populate({
+                path: '_id',
+                model: ArticleTag,
+                populate: { path: 'tag_id', model: Tag, select: 'name' },
+            });
+    
+            const categories = await Category.find({ _id: { $in: articles.map((article) => article.category_id) } });
+            const tags = await Tag.find({ _id: { $in: articles.map((article) => article._id) } });
+    
+        
+        // format publish date
+        const formattedArticles = articles.map((article) => ({
+            ...article.toObject(),
+            publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
+        }));
+        
+        // Mapping articles to display relevant data
+        const results = formattedArticles.map((article) => ({
+            title: article.title,
+            category: categories.find((category) => category._id === article.category_id)?.name || 'Tự do',
+            tags: tags.find((tag) => tag._id === article._id)?.name || [],
+            thumbnail: article.thumbnail || null,
+            summary: article.summary || '',
+            publishDate: article.publish_date || 'Gần đây',
+            viewCount: article.view_count || 0,
+            sortField: sortField,}))
+    
+        // Return the results, or a message if no articles are found
+        res.render('pages/search', {
+            user,
+            articles: results,
+            page,
+            limit,
+            search,
+            sortField,
+            sortOrder,
+            message: results.length ? `Kết quả tìm kiếm cho: ${search}` : 'Không có bài viết nào phù hợp với từ khóa tìm kiếm của bạn.',
+            suggestion: results.length ? null : 'Hãy thử lại với từ khóa khác!',
+        });
+    } catch (error) {
+        next(error);
+    }
+
+};

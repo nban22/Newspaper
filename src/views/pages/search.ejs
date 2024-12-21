@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= message %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/components/header.css" />
+    <link rel="stylesheet" href="/css/components/topCategories.css" />
+    <link rel="stylesheet" href="/css/detail_article.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+    <%- include('../components/home/header', { user: user }) %>
+        <main class="container my-5">
+            <h1 class="text-center my-4">
+                <%= message %>
+            </h1>
+
+            <% if (articles.length> 0) { %>
+                <div class="row mb-4">
+                    <!-- Filter Section -->
+                    <div class="col-md-12 ">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <label for="sort" class="me-2">Xếp theo:</label>
+                                <select id="sort" class="form-select form-select-sm d-inline-block w-auto"
+                                    onchange="updateQuery('sort', this.value)">
+                                    <option value="view_count" <%=sortField==='view_count' ? 'selected' : '' %>>Lượt xem
+                                    </option>
+                                    <option value="publish_date" <%=sortField==='publish_date' ? 'selected' : '' %>>Ngày
+                                        xuất bản</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="order" class="me-2">Thứ tự:</label>
+                                <select id="order" class="form-select form-select-sm d-inline-block w-auto"
+                                    onchange="updateQuery('order', this.value)">
+                                    <option value="asc" <%=sortOrder==='asc' ? 'selected' : '' %>>Cũ nhất</option>
+                                    <option value="desc" <%=sortOrder==='desc' ? 'selected' : '' %>>Mới nhất</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Articles Section -->
+                    <div class="row g-4">
+                        <% articles.forEach(article=> { %>
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="card h-100">
+                                    <img src="<%= article.thumbnail || '/images/default-thumbnail.jpg' %>"
+                                        class="card-img-top" alt="<%= article.title %>">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-truncate" title="<%= article.title %>">
+                                            <%= article.title %>
+                                        </h5>
+                                        <p class="card-text text-muted">
+                                            <%= article.summary.substring(0, 100) %>...
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div>
+                                                <% if (Array.isArray(article.category)) { %>
+                                                    <% article.category.forEach(category => { %>
+                                                        <span class="badge bg-primary"><%= category %></span>
+                                                    <% }) %>
+                                                <% } else { %>
+                                                    <span class="badge bg-primary"><%= article.category %></span>
+                                                <% } %>
+                                    
+                                                    <small class="text-muted"><i class="fas fa-eye"></i>
+                                                        <%= article.viewCount %>
+                                                    </small>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= article.publishDate %>
+                                            </small>
+                                        </div>
+                                        <div class="tags mt-2">
+                                            <% if (article.tags.length> 0) { %>
+                                                <% article.tags.forEach(tag=> { %>
+                                                    <span class="badge bg-secondary">
+                                                        <%= tag %>
+                                                    </span>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <span class="text-muted">No tags</span>
+                                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+
+
+                    <!-- Pagination -->
+                    <nav class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+                                <a class="page-link"
+                                    href="?page=<%= page - 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>"><i class="fas fa-arrow-left"></i></a>
+                            </li>
+                            <li class="page-item">
+                                <span class="page-link"><%= page %></span>
+                            </li>
+                            <li class="page-item <%= articles.length < limit ? 'disabled' : '' %>">
+                                <a class="page-link"
+                                    href="?page=<%= page + 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>"><i class="fas fa-arrow-right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <% } else { %>
+                        <!-- No Articles Section -->
+                        <div class="text-center">
+                            <p class="lead">
+                                <%= message %>
+                            </p>
+                            <p class="text-muted">
+                                <%= suggestion %>
+                            </p>
+                        </div>
+                        <% } %>
+
+                            <%- include('../components/footer.ejs') %>
+        </main>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+        <script src="/js/pages/home.js"></script>
+        <script src="/js/header.js"></script>
+        <script src="/js/pages/detail_article.js"></script>
+        <script>
+            function updateQuery(key, value) {
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set(key, value);
+                window.location.search = urlParams.toString();
+            }
+        </script>
+</body>
+
+</html>

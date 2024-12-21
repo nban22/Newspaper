@@ -14,21 +14,20 @@
 .image-container {
     flex-shrink: 0;
     width: 100%; /* Change to 100% for mobile responsiveness */
-    max-width: 200px; /* Set a max-width for larger screens */
-    height: 100%; /* Change height to auto for better aspect ratio on mobile */
-    overflow: hidden; /* Hide any overflow */
-    position: relative; /* Positioning context for absolute children */
-    margin-right: 20px;
+    max-width: 250px; /* Set a max-width for larger screens */
+    height: auto; /* Change height to auto for better aspect ratio on mobile */
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
 }
 
 .image-container img {
-    width: 100%; /* Make the image take the full width of the container */
-    height: 100%; /* Maintain aspect ratio */
+    width: 100%;
+    height: auto;
     object-fit: contain;
-    position: absolute; /* Position the image absolutely */
     top: 50%; /* Center the image vertically */
     left: 50%; /* Center the image horizontally */
-    transform: translate(-50%, -50%); /* Adjust position to center */
+    
 }
 
 .card img {
@@ -47,7 +46,7 @@
 /* Media Queries for Mobile Devices */
 @media (max-width: 768px) {
     .image-container {
-        width: 100%; /* Full width on mobile */
+        width: 50%; /* Full width on mobile */
         height: auto; /* Adjust height for mobile */
         margin-right: 0; /* Remove margin on mobile */
     }
@@ -62,17 +61,3 @@
         height: 20px; /* Adjust rectangle size for mobile */
     }
 }
-
-.summary-text {
-    font-size: 0.85rem; /* Smaller font size */
-    line-height: 1.4; /* Improved line spacing for readability */
-    color: #555; /* Dark gray color for subtle appearance */
-    margin-bottom: 8px; /* Spacing below the summary */
-    overflow: hidden; /* Prevents overflow */
-    text-overflow: ellipsis; /* Adds ellipsis (...) for long text */
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limit to 3 lines */
-    line-clamp: 3; /* Limit to 3 lines */
-    -webkit-box-orient: vertical;
-  }
-  

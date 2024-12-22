@@ -1,0 +1,41 @@
+/* General Styles for Cards */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.search-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    align-items: center;
+}
+.search-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.search-card img {
+    width: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+
+@media (max-width: 991px) {
+    .search-card {
+        flex-wrap: wrap;
+    }
+    .thumbnail-container {
+        width: 100%;
+    }
+    .search-card img {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+

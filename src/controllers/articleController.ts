@@ -10,7 +10,7 @@ import { sanitizeSummary } from "../utils/sanitizeHTML";
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags, is_premium } = req.body;
     const writer_id = (await WriterProfile.findOne({ user_id: userId }))?._id;
-    console.log(writer_id);
+    // console.log(writer_id);
     if (!writer_id) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Writer profile not found"));
     }
@@ -87,11 +87,11 @@ export const getLatestArticles = async () => {
     
     let articles = latestArticles;
     articles.forEach(article => {
-        console.log(article.summary);
+        //console.log(article.summary);
         article.summary = sanitizeSummary(String(article.summary));
-        console.log(article.summary);
+        //console.log(article.summary);
     });
-    console.log(articles);
+    // console.log(articles);
     return {
         message: "Successfully got latest article list",
         data: {
@@ -117,11 +117,11 @@ export const uploadImage = catchAsync(async (req: Request, res: Response, next: 
 });
 
 export const getWriterArticleList = async (writer_id: string) => {
-    console.log(writer_id)
+    // console.log(writer_id)
     const writer = await WriterProfile.findOne({ user_id: writer_id });
-    console.log(writer)
+    // console.log(writer)
     const articles = await Article.find({writer_id: writer}).sort({created_at: -1, is_premium: -1}).populate("category_id").populate("writer_id");
-    console.log(articles)
+    // console.log(articles)
     return {
         message: "Successfully got writer's article list",
         data: {

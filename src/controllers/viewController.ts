@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, raw, Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import SubscriberProfile from "../models/subscriberProfile";
@@ -301,7 +301,7 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
                 { summary: { $regex: search, $options: 'i' } },
                 { content: { $regex: search, $options: 'i' } },
             ],
-            status: 'published',
+            // status: 'published',
         };
     
         // Pagination calculation: (page - 1) * limit
@@ -314,31 +314,29 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
         const articles = await Article.find(searchQuery)
             .skip(startIndex)
             .limit(limit)
-            .sort(sortOptions)
-            .populate('category_id', 'name')
-            .populate({
-                path: '_id',
-                model: ArticleTag,
-                populate: { path: 'tag_id', model: Tag, select: 'name' },
-            });
+            .sort(sortOptions); 
     
             const categories = await Category.find({ _id: { $in: articles.map((article) => article.category_id) } });
             const tags = await Tag.find({ _id: { $in: articles.map((article) => article._id) } });
     
-        
+
         // format publish date
         const formattedArticles = articles.map((article) => ({
             ...article.toObject(),
             publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
         }));
+
+
+
         
         // Mapping articles to display relevant data
         const results = formattedArticles.map((article) => ({
+            _id: article._id,
             title: article.title,
             category: categories.find((category) => category._id === article.category_id)?.name || 'Tự do',
             tags: tags.find((tag) => tag._id === article._id)?.name || [],
             thumbnail: article.thumbnail || null,
-            summary: article.summary || '',
+            summary: sanitizeSummary(article.summary || ''), 
             publishDate: article.publish_date || 'Gần đây',
             viewCount: article.view_count || 0,
             sortField: sortField,}))

@@ -112,6 +112,10 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     if (!article) {
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
+    
+    if (article.is_premium && (req.body.user === null || req.body.user.role !== "subscriber")) {
+        return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied");
+    }
 
     // Tăng số lượt xem của bài viết
     await Article.incrementViewCount(articleObjectId);
@@ -205,9 +209,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     });
 });
 
-
-
-export const getEditArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const getEditArticleForm = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.articleId;
 
     const user = req.body.user;
@@ -358,3 +360,20 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
     }
 
 };
+
+export const getListOfArticleToEdit = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    const writer = await WriterProfile.findOne({ user_id: user._id });
+    if (!writer) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+    }
+
+    const articles = (await Article.find({ writer_id: writer._id, status: { $in: ["draft", "rejected"] } })).map(article => ({
+        ...article.toObject(),
+        summary: sanitizeSummary(article.summary || ''),
+        content: sanitizeContent(article.content),
+        created_at: moment(article.created_at).format('DD-MM-YYYY'),
+    }));
+
+    res.status(StatusCodes.OK).render("pages/edit_article_list", { user: user, articles: articles });
+});

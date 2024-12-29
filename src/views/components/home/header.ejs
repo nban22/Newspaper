@@ -13,6 +13,10 @@
                     <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
                     <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
                     <% } %>
+                <% if (user && user.role === 'writer') { %>
+                    <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
+                    <li><a href="/edit_article" class="nav-link px-2 text-dark">Chỉnh sửa bài viết</a></li>
+                    <% } %>
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form">

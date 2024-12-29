@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Từ chối truy cập</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+      margin: 0;
+    }
+    .access-denied-container {
+      max-width: 500px;
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .access-denied-container h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #dc3545;
+    }
+    .access-denied-container p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .access-denied-container a {
+      font-size: 1rem;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="access-denied-container">
+    <h1>Từ chối truy cập!</h1>
+    <p>Bài viết này chỉ dành cho <strong>Subscriber</strong>, vui lòng đăng ký trước khi xem.</p>
+    <a href="/signup" class="btn btn-primary">Đăng ký tại đây</a>
+  </div>
+</body>
+</html>

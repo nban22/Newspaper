@@ -93,6 +93,7 @@ document.querySelector('#editor-form').onsubmit = event => {
     thumbnail: document.getElementById('thumbnail').value,
     category_id: document.getElementById('category').value,
     tags: JSON.parse(document.getElementById('selected-tags').value), // Retrieve selected tag IDs
+    is_premium: document.getElementById('is_premium').checked,
   };
 
   // Convert formData to a JSON string

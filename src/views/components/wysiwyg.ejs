@@ -34,20 +34,20 @@
     <div id="content-editor" class="quill-editor" data-content="<%= article ? article.content : '' %>"></div>
   </div>
 
-<!-- Thumbnail Section -->
-<div class="mb-3">
-  <label for="thumbnail" class="form-label">
-    <h2>Ảnh nổi bật</h2>
-  </label>
-  <input type="url" id="thumbnail" name="thumbnail" class="form-control" placeholder="Enter thumbnail URL" required 
-  value="<%= article ? article.thumbnail : '' %>" required />
+  <!-- Thumbnail Section -->
+  <div class="mb-3">
+    <label for="thumbnail" class="form-label">
+      <h2>Ảnh nổi bật</h2>
+    </label>
+    <input type="url" id="thumbnail" name="thumbnail" class="form-control" placeholder="Enter thumbnail URL" required
+      value="<%= article ? article.thumbnail : '' %>" required />
 
-  <!-- Thumbnail Preview -->
-  <div class="mt-3">
-    <img id="thumbnail-preview" src="" alt="Thumbnail Preview" 
-      class="img-fluid" style="max-width: 300px; display: none;" />
+    <!-- Thumbnail Preview -->
+    <div class="mt-3">
+      <img id="thumbnail-preview" src="" alt="Thumbnail Preview" class="img-fluid"
+        style="max-width: 300px; display: none;" />
+    </div>
   </div>
-</div>
 
 
   <!-- Category Section -->
@@ -81,6 +81,18 @@
       <div id="tags-grid" class="tags-grid">
         <!-- Tags will be dynamically inserted here -->
       </div>
+
+      <div id="add-tag-button-container" class="tag-item add-new-tag">
+        <button type="button" id="add-tag-button" class="btn btn-primary">+</button>
+      </div>
+
+      <!-- Input form for new tag (initially hidden) -->
+      <div id="new-tag-form" style="display: none;">
+        <input type="text" id="new-tag-name" class="form-control" placeholder="Nhập tên nhãn" />
+        <button type="button" id="save-tag-button" class="btn btn-success mt-2">Lưu Nhãn</button>
+        <button type="button" id="cancel-tag-button" class="btn btn-secondary mt-2">Hủy</button>
+      </div>
+
     </div>
     <input type="hidden" id="selected-tags" name="tags" />
   </div>
@@ -103,31 +115,31 @@
 <!-- Quill Initialization -->
 <script>
 
-// Get input and preview elements
-const thumbnailInput = document.getElementById('thumbnail');
-const thumbnailPreview = document.getElementById('thumbnail-preview');
+  // Get input and preview elements
+  const thumbnailInput = document.getElementById('thumbnail');
+  const thumbnailPreview = document.getElementById('thumbnail-preview');
 
-// Function to update the thumbnail preview
-const updateThumbnailPreview = () => {
-  const url = thumbnailInput.value;
+  // Function to update the thumbnail preview
+  const updateThumbnailPreview = () => {
+    const url = thumbnailInput.value;
 
-  // Validate the URL format (optional but recommended)
-  try {
-    new URL(url); // Ensures the URL is valid
-    thumbnailPreview.src = url;
-    thumbnailPreview.style.display = 'block'; // Show the image
-  } catch {
-    thumbnailPreview.style.display = 'none'; // Hide if URL is invalid
+    // Validate the URL format (optional but recommended)
+    try {
+      new URL(url); // Ensures the URL is valid
+      thumbnailPreview.src = url;
+      thumbnailPreview.style.display = 'block'; // Show the image
+    } catch {
+      thumbnailPreview.style.display = 'none'; // Hide if URL is invalid
+    }
+  };
+
+  // Display the thumbnail preview on page load if the input has a value
+  if (thumbnailInput.value.trim()) {
+    updateThumbnailPreview();
   }
-};
 
-// Display the thumbnail preview on page load if the input has a value
-if (thumbnailInput.value.trim()) {
-  updateThumbnailPreview();
-}
-
-// Attach event listener for input changes
-thumbnailInput.addEventListener('input', updateThumbnailPreview);
+  // Attach event listener for input changes
+  thumbnailInput.addEventListener('input', updateThumbnailPreview);
 
 
   const accessToken = localStorage.getItem('accessToken');
@@ -188,7 +200,6 @@ thumbnailInput.addEventListener('input', updateThumbnailPreview);
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'header': [1, 2, 3, false] }],
         [{ 'script': 'sub' }, { 'script': 'super' }],    // Subscript/Superscript
         [{ 'align': [] }],                              // Text Alignment
         [{ 'color': [] }, { 'background': [] }],        // Text/Background color
@@ -272,6 +283,126 @@ thumbnailInput.addEventListener('input', updateThumbnailPreview);
     contentEditor.clipboard.dangerouslyPasteHTML(contentContent);
   }
 
+
+
+  // Get the add tag button, input form, and buttons
+  const addTagButton = document.getElementById('add-tag-button');
+  const newTagForm = document.getElementById('new-tag-form');
+  const newTagNameInput = document.getElementById('new-tag-name');
+  const saveTagButton = document.getElementById('save-tag-button');
+  const cancelTagButton = document.getElementById('cancel-tag-button');
+  const tagsGrid = document.getElementById('tags-grid');
+  const selectedTagsInput = document.getElementById('selected-tags');
+
+  // Show the input form when the 'Add More Tags' button is clicked
+  addTagButton.addEventListener('click', function () {
+    newTagForm.style.display = 'block'; // Show the form
+    addTagButton.style.display = 'none'; // Hide the add button
+  });
+
+  // Save the new tag when the 'Save' button is clicked
+  saveTagButton.addEventListener('click', function () {
+    const tagName = newTagNameInput.value.trim();
+
+    if (tagName) {
+      fetch('/api/v1/tags/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ name: tagName }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to add tag');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Update the hidden input with the new tags
+          // Add the tag to the grid
+          const tagDiv = document.createElement('div');
+          tagDiv.className = 'tag-item';
+          tagDiv.textContent = tagName;
+          tagDiv.dataset.id = data.data.tag._id;
+
+          tagDiv.addEventListener('click', () => {
+            if (tagDiv.classList.contains('selected')) {
+              removeTag(tagDiv.dataset.id, tagName, tagDiv);
+            } else {
+              addTag(tagDiv.dataset.id, tagName, tagDiv);
+            }
+          });
+          tagsGrid.appendChild(tagDiv);
+        })
+        .catch((error) => {
+          console.error('Error adding tag:', error);
+          alert('Failed to add tag.');
+        });
+
+      // Clear the input field and hide the form
+      newTagNameInput.value = '';
+      newTagForm.style.display = 'none';
+      addTagButton.style.display = 'block'; // Show the add button again
+    } else {
+      alert('Please enter a tag name.');
+    }
+  });
+
+  // Add tag to the selected list
+  function addTag(id, name, element) {
+    element.classList.add('selected');
+
+    const selectedTagsContainer = document.getElementById('selected-tags-preview');
+    const tagBadge = document.createElement('span');
+    tagBadge.className = 'badge';
+    tagBadge.textContent = name;
+    tagBadge.dataset.id = id;
+
+    tagBadge.addEventListener('click', () => {
+      removeTag(id, name, element);
+    });
+
+    selectedTagsContainer.appendChild(tagBadge);
+    updateSelectedTagsInput();
+  }
+
+  // Remove tag from the selected list
+  function removeTag(id, name, element) {
+    element.classList.remove('selected');
+
+    const selectedTagsContainer = document.getElementById('selected-tags-preview');
+    const tagBadge = Array.from(selectedTagsContainer.children).find(badge => badge.dataset.id === id);
+    if (tagBadge) {
+      selectedTagsContainer.removeChild(tagBadge);
+    }
+    updateSelectedTagsInput();
+  }
+
+  // Update the hidden input with selected tags
+  function updateSelectedTagsInput() {
+    const selectedTagsContainer = document.getElementById('selected-tags-preview');
+    const selectedIds = Array.from(selectedTagsContainer.children).map(tag => tag.dataset.id);
+    document.getElementById('selected-tags').value = JSON.stringify(selectedIds);
+  }
+
+  // Cancel adding a new tag when the 'Cancel' button is clicked
+  cancelTagButton.addEventListener('click', function () {
+    // Clear the input field and hide the form
+    newTagNameInput.value = '';
+    newTagForm.style.display = 'none';
+    addTagButton.style.display = 'block'; // Show the add button again
+  });
+
+  // Function to update the selected tags hidden input
+  function updateSelectedTags(tagName) {
+    const existingTags = selectedTagsInput.value.split(',').filter(tag => tag.trim() !== '');
+    if (!existingTags.includes(tagName)) {
+      existingTags.push(tagName);
+    }
+    selectedTagsInput.value = existingTags.join(',');
+  }
 </script>
 
 

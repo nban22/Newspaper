@@ -155,6 +155,7 @@ document.querySelector('#editor-form').onsubmit = event => {
     thumbnail: document.getElementById('thumbnail').value,
     category_id: document.getElementById('category').value,
     tags: JSON.parse(document.getElementById('selected-tags').value), // Retrieve selected tag IDs
+    is_premium: document.getElementById('is_premium').checked,
   };
 
   console.log("Form data:", formData);
@@ -180,6 +181,7 @@ document.querySelector('#editor-form').onsubmit = event => {
     .then(data => {
       alert('Article updated successfully');
       console.log('Success:', data);
+      window.location.href = '/';
     })
     .catch(error => {
       alert('Error updating article');

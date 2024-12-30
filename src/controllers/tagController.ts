@@ -111,3 +111,25 @@ export const getTagArticleList = async (tagName: string) => {
         }
     };
 };
+
+export const addTag = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { name } = req.body;
+
+    if (name === "") {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Name cannot be empty!"));
+    }
+    
+    // Check if tag already exists
+    const existingTag = await Tag.findOne({ name });
+    if (existingTag) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, `Tag ${name} already exists!`));
+    }
+
+    const tag = await Tag.create({ name });
+    res.status(StatusCodes.OK).json({
+        status: 'success',
+        data: {
+            tag
+        }
+    });
+});

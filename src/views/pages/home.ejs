@@ -77,8 +77,7 @@
                     <!-- Category and Parent Category -->
                     <p class="card-text small mb-1">
                       <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name}>
-                        ${article.category_id.name}`
-                        : article.category_id.name %>
+                        ${article.category_id.name}`: article.category_id.name %>
                     </p>
 
                     <!-- Publish Date -->
@@ -87,15 +86,16 @@
                     </p>
 
 
-
                     <!-- Premium Badge -->
                     <% if (article.is_premium) { %>
                       <span class="badge rounded-pill bg-warning text-dark">Premium</span>
                       <% } %>
-
+                      <a href="/article/<%= article._id %>" class="stretched-link"></a>
                   </div>
                 </div>
               </div>
+
+
               <% }); %>
                 <% } else { %>
                   <p>No featured articles available.</p>
@@ -136,9 +136,7 @@
 
                       <!-- Category and Parent Category -->
                       <p class="card-text small mb-1">
-                        <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name}>
-                          ${article.category_id.name}`
-                          : article.category_id.name %>
+                        <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name} > ${article.category_id.name}` : article.category_id.name %>
                       </p>
 
                       <!-- Publish Date -->
@@ -149,7 +147,7 @@
                       <!-- Premium Badge -->
                       <% if (article.is_premium) { %>
                         <span class="badge rounded-pill bg-warning text-dark">Premium</span>
-                        <% } %>
+                      <% } %>
 
                     </div>
                   </div>

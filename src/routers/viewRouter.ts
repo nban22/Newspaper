@@ -17,7 +17,8 @@ viewRouter.get("/create_article", authenticateJWT, viewController.getCreateArtic
 viewRouter.get("/article/:id", authenticateJWT, viewController.getArticlePage);
 viewRouter.get("/articles", authenticateJWT, authorizeRole(["writer"]), viewController.getWriterArticleList);
 
-viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticlePage);
+viewRouter.get("/edit_article", authenticateJWT, viewController.getListOfArticleToEdit);
+viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticleForm);
 
 viewRouter.get("/chuyen-muc/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
 viewRouter.get("/nhan/:tagName", authenticateJWT, viewController.getTagArticleList);

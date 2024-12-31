@@ -83,7 +83,7 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
     } else {
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
-
+    
     res.status(StatusCodes.OK).render("pages/update_profile", {user: user, profile: profileOwner});
 });
 
@@ -113,8 +113,17 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
     
-    if (article.is_premium && (req.body.user === null || req.body.user.role !== "subscriber")) {
-        return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied");
+    if (article.is_premium && req.body.user === null) {
+        const message = "Bài viết này chỉ dành cho người đăng ký thành viên!";
+        return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
+    }
+
+    if (article.is_premium && req.body.user.role === 'subscriber') {
+        const message = "Tài khoản của bạn đã hết hạn!";
+        const subscriber = await SubscriberProfile.findOne({ user_id: req.body.user._id }); 
+        if (subscriber && subscriber.subscription_status === 'expired') {
+            return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
+        }
     }
 
     // Tăng số lượt xem của bài viết
@@ -270,19 +279,65 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
 });
 
 export const getWriterArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const writer = req.body.user;
+    const user = req.body.user;
+    const writer = await WriterProfile.findOne({ user_id: user._id });
     if (!writer) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "Please provide writer account"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
-    const articles = await articleController.getWriterArticleList(writer._id);
-    // console.log(articles);
-    res.status(StatusCodes.OK).render("pages/writer_articles", {
-        user: writer,
-        formatDate,
-        articles: articles.data.articles
-    })
-})
+    // Pagination parameters
+    const page = parseInt(req.query.page as string) || 1; // Default to page 1
+    const limit = 5; // Limit of articles per page
+    const skip = (page - 1) * limit; // Skip calculation
+
+    // Get the total count of articles for pagination
+    const totalArticles = await Article.countDocuments({ writer_id: writer._id });
+
+    // Fetch articles with pagination
+    const articles = (await Article.find({ writer_id: writer._id })
+        .skip(skip)
+        .limit(limit)).map(article => ({
+        ...article.toObject(),
+        summary: sanitizeSummary(article.summary || ''),
+        content: sanitizeContent(article.content),
+        created_at: moment(article.created_at).format('DD-MM-YYYY'),
+    }))
+    .sort((a, b) => {
+        const getStatusPriority = (article: any) => {
+            if (article.status === "published") return 3;
+            if (article.status === "rejected") return 2;
+            if (article.status === "draft") return 1;
+            return 0;
+        };
+
+        const statusPriorityA = getStatusPriority(a);
+        const statusPriorityB = getStatusPriority(b);
+
+        // First, compare based on status (published > rejected > draft)
+        if (statusPriorityA !== statusPriorityB) {
+            return statusPriorityB - statusPriorityA;
+        }
+
+        // If statuses are the same, compare based on premium
+        if (a.is_premium !== b.is_premium) {
+            return b.is_premium ? 1 : -1;  // Premium first (highest priority)
+        }
+
+        return 0; // If both status and premium are the same, maintain original order
+    });
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalArticles / limit);
+
+    // Render the page with pagination data
+    res.status(StatusCodes.OK).render("pages/writer_articles", { 
+        user: user, 
+        articles: articles,
+        page: page,
+        totalPages: totalPages
+    });
+});
+
 
 
 
@@ -358,22 +413,4 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
     } catch (error) {
         next(error);
     }
-
 };
-
-export const getListOfArticleToEdit = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const user = req.body.user;
-    const writer = await WriterProfile.findOne({ user_id: user._id });
-    if (!writer) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
-    }
-
-    const articles = (await Article.find({ writer_id: writer._id, status: { $in: ["draft", "rejected"] } })).map(article => ({
-        ...article.toObject(),
-        summary: sanitizeSummary(article.summary || ''),
-        content: sanitizeContent(article.content),
-        created_at: moment(article.created_at).format('DD-MM-YYYY'),
-    }));
-
-    res.status(StatusCodes.OK).render("pages/edit_article_list", { user: user, articles: articles });
-});

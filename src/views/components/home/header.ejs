@@ -15,7 +15,7 @@
                     <% } %>
                 <% if (user && user.role === 'writer') { %>
                     <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
-                    <li><a href="/edit_article" class="nav-link px-2 text-dark">Chỉnh sửa bài viết</a></li>
+                    <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
                     <% } %>
             </ul>
 
@@ -39,7 +39,7 @@
                                 <% } %>
 
                                     <li><a class="dropdown-item" href="#">Cài đặt</a></li>
-                                    <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                                    <li><a class="dropdown-item" href="/update_profile">Cập nhật hồ sơ</a></li>
                                     <li>
                                         <hr class="dropdown-divider" />
                                     </li>

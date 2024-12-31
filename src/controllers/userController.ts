@@ -222,13 +222,8 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
 
 
 export const updateMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    if (req.file) {
-        req.body.avatar = `/uploads/${req.file.filename}`;
-    }
-
-    const { user_id, ...updateData } = req.body;
-
-    const user = await User.findOne({ _id: user_id });
+    const { userId, ...updateData } = req.body;
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
         return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
@@ -237,11 +232,11 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
     let profile: any;
 
     if (user.role === "writer") {
-        profile = await WriterProfile.findOne({ user_id: user_id });
+        profile = await WriterProfile.findOne({ user_id: userId });
     } else if (user.role === "editor") {
-        profile = await EditorProfile.findOne({ user_id: user_id });
+        profile = await EditorProfile.findOne({ user_id: userId });
     } else if (user.role === "subscriber") {
-        profile = await SubscriberProfile.findOne({ user_id: user_id });
+        profile = await SubscriberProfile.findOne({ user_id: userId });
     }
 
     if (!profile) {
@@ -253,11 +248,11 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
         
         let updatedProfile: any;
         if (user.role === "writer") {
-            updatedProfile = await WriterProfile.findOne({ user_id: user_id });
+            updatedProfile = await WriterProfile.findOne({ user_id: userId });
         } else if (user.role === "editor") {
-            updatedProfile = await EditorProfile.findOne({ user_id: user_id });
+            updatedProfile = await EditorProfile.findOne({ user_id: userId });
         } else if (user.role === "subscriber") {
-            updatedProfile = await SubscriberProfile.findOne({ user_id: user_id });
+            updatedProfile = await SubscriberProfile.findOne({ user_id: userId });
         }
 
         res.status(StatusCodes.OK).json({

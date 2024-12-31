@@ -6,7 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import catchAsync from "../utils/catchAsync";
 import mongoose from "mongoose";
 
-export const attachUserId = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const attachUserId = catchAsync(async (req: Request, res: Response, next: NextFunction) => {       
     const accessToken = req.headers.authorization?.startsWith("Bearer ")
         ? req.headers.authorization?.split(" ")[1]
         : null;

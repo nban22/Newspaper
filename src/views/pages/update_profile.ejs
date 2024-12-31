@@ -28,7 +28,7 @@
           <% if (user.role === 'writer') { %>
           <div class="col-12">
             <label for="inputPenName1" class="form-label" name="pen_name">Bút danh</label>
-            <input type="text" class="form-control" id="inputPenName1" value="<%= profile.pen_name || ''%>" required>
+            <input type="text" name="pen_name" class="form-control" id="inputPenName1" value="<%= profile.pen_name || ''%>" required>
           </div>
           <% } %>
 
@@ -40,11 +40,6 @@
           <div class="col-12">
             <label for="inputDOB" class="form-label" name="dob">Ngày sinh</label>
             <input type="date" class="form-control" id="inputDOB" name="dob" value="<%= profile.dob ? profile.dob.toISOString().split('T')[0] : '' %>" required>
-          </div>
-
-          <div class="mb-3">
-              <label for="formFile" class="form-label">Ảnh đại diện</label>
-              <input class="form-control" type="file" id="formFile" name="avatar" required>
           </div>
 
           <div class="col-12 d-flex justify-content-center">

@@ -5,11 +5,12 @@ import { attachUserId, authorizeRole } from "../middlewares/authMiddlewares";
 import multer from "multer";
 
 const userRouter = Router();
-const upload = multer({ dest: 'public/uploads/user_profile' }); 
+const upload = multer(); 
 
+userRouter.use(upload.none())
 userRouter.use(attachUserId);
 
-userRouter.put("/me", authorizeRole(["writer", "editor", "subscriber"]), upload.single("avatar"), userController.updateMyProfile);
+userRouter.put("/me", authorizeRole(["writer", "editor", "subscriber"]), userController.updateMyProfile);
 
 userRouter.post("/", authorizeRole(["admin"]), userController.createUser);
 userRouter.get("/", authorizeRole(["admin"]), userController.getAllUsers);

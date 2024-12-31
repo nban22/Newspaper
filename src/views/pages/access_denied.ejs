@@ -40,8 +40,10 @@
 <body>
   <div class="access-denied-container">
     <h1>Từ chối truy cập!</h1>
-    <p>Bài viết này chỉ dành cho <strong>Subscriber</strong>, vui lòng đăng ký trước khi xem.</p>
-    <a href="/signup" class="btn btn-primary">Đăng ký tại đây</a>
+    <p> <%= message %></p>
+    <% if (message === "Bài viết này chỉ dành cho người đăng ký thành viên!") { %>
+      <a href="/signup" class="btn btn-primary">Đăng ký tại đây</a>
+    <% } %>
   </div>
 </body>
 </html>

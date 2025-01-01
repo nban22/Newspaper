@@ -4,6 +4,7 @@ export interface IEditorProfile extends Document {
     user_id: Schema.Types.ObjectId;
     full_name: string;
     dob?: Date;
+    category_id?: Schema.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
     avatar?: string;
@@ -21,6 +22,11 @@ const EditorProfileSchema: Schema<IEditorProfile> = new mongoose.Schema({
     },
     dob: {
         type: Date,
+    },
+    category_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+        default: null,
     },
     createdAt: {
         type: Date,

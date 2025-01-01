@@ -65,6 +65,31 @@
           <% }) %>
       </div>
 
+      <!-- Button for Editor -->
+      <% if (user.role === "editor" && article.status === "draft") {%>
+        <div class="btns-list">
+          <button 
+              type="button" 
+              class="approve-btn"
+              data-bs-toggle="modal" 
+              data-bs-target="#approveArticleModal"
+              data-article-id="<%= article._id %>"
+              data-article-category = "<%= article.categoryName %>">
+                  Phê duyệt
+          </button>
+          <button 
+              type="button" 
+              class="reject-btn"
+              data-bs-toggle="modal" 
+              data-bs-target="#rejectArticleModal"
+              data-article-id="<%= article._id %>">
+                  Từ chối
+          </button>
+        </div>
+        <%- include("../components/modal/approve_article") %>
+        <%- include("../components/modal/reject_article", {categories}) %>
+      <% } %>
+
       <!-- Comments -->
 
       <div class="comments">
@@ -148,7 +173,8 @@
     <script src="/js/pages/home.js"></script>
     <script src="/js/header.js"></script>
     <script src="/js/pages/detail_article.js"></script>
-
+    <script src="/js/handling/reject_article.js"></script>
+    <script src="/js/handling/approve_article.js"></script>
 </body>
 
 </html>

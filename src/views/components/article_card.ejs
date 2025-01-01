@@ -25,7 +25,7 @@
             <a href="/article/<%= article._id %>" class="text-decoration-none text-reset">
                 <h4 class="title"><%= article.title %></h4>
             </a>
-            <p class="summary"><%= article.summary %></p>
+            <p class="summary"><%- article.summary %></p>
             <div class="tags-list">
                 <% article.tag.forEach(tag => { %>
                     <span class="tag">#<%= tag %></span>

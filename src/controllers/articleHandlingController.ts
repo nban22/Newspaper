@@ -9,6 +9,7 @@ import Category from "../models/category";
 import {ITag} from "../models/tag";
 import {IArticle} from "../models/article";
 import { Types } from "mongoose";
+import EditorProfile from "../models/editorProfile";
 
 export const getArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -23,26 +24,37 @@ export const getArticleList = catchAsync(async (req: Request, res: Response, nex
 
     const categories = await Category.find().lean();
 
-    const articleTag = await ArticleTag.find().populate<{article_id: IArticle}>("article_id").populate<{ tag_id: ITag }>("tag_id").lean();
-    // console.log(articleTag);
-    const articles = Object.values(
-        articleTag.filter(article => article.article_id.status === "draft")
-                    .reduce((acc: { [key: string]: any }, article) => {
-                        const __article = article.article_id;
-                        const __tag = article.tag_id;
-                        const __category = categories.find(category => category._id.toString() === __article.category_id.toString());
-                    
-                        if (!acc[__article._id.toString()]) {
-                            acc[__article._id.toString()] = { ...__article, tag: [__tag.name], category: __category ? __category.name : "Không xác định" };
-                        } else {
-                            acc[__article._id.toString()].tag.push(__tag.name);
-                        }
-                    
-                        return acc;
-                    }, {})
-    );
+    const editorProfile = await EditorProfile.findOne({ user_id: user._id }).lean();
+    
+    if (!editorProfile) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Editor profile not found!"));
+    }
 
-    res.status(StatusCodes.OK).render("pages/articles_list", {user, articles, formatDate, categories});
+    if (!editorProfile.category_id) {
+        res.status(StatusCodes.OK).render("pages/articles_list", {user, category: null});
+    }
+    else {
+        const editorcategoryID = editorProfile.category_id;
+        const editorcategory = categories.find(category => category._id.toString() === editorcategoryID.toString());
+        const articleTag = await ArticleTag.find().populate<{article_id: IArticle}>("article_id").populate<{ tag_id: ITag }>("tag_id").lean();
+        const articles = Object.values(
+            articleTag.filter(article => article.article_id.status === "draft" && article.article_id.category_id.toString() === editorcategoryID.toString())
+                        .reduce((acc: { [key: string]: any }, article) => {
+                            const __article = article.article_id;
+                            const __tag = article.tag_id;
+                            const __category = categories.find(category => category._id.toString() === __article.category_id.toString());
+                        
+                            if (!acc[__article._id.toString()]) {
+                                acc[__article._id.toString()] = { ...__article, tag: [__tag.name], category: __category ? __category.name : "Không xác định" };
+                            } else {
+                                acc[__article._id.toString()].tag.push(__tag.name);
+                            }
+                        
+                            return acc;
+                        }, {})
+        );
+        res.status(StatusCodes.OK).render("pages/articles_list", {user, category: editorcategory?.name, articles, formatDate, categories});
+    }
 })
 
 export const rejectArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -74,7 +86,7 @@ export const rejectArticle = catchAsync(async (req: Request, res: Response, next
     article.rejection_reason = req.body.rejectionReasonInput;
     await article.save();
 
-    res.status(StatusCodes.OK).redirect("/articles");
+    res.status(StatusCodes.OK).redirect("/editor/articles");
 });
 
 export const approveArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -113,5 +125,5 @@ export const approveArticle = catchAsync(async (req: Request, res: Response, nex
     article.publish_date = publishDate ? new Date(publishDate) : new Date();
     await article.save();
     // console.log(`Article ${article.title} is approved! Publishing date: ${article.publish_date}`);
-    res.status(StatusCodes.OK).redirect("/articles");
+    res.status(StatusCodes.OK).redirect("/editor/articles");
 });

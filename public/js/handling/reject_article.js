@@ -7,5 +7,5 @@ rejectArticleModal.addEventListener('show.bs.modal', function (event) {
     const articleId = button.getAttribute('data-article-id');
 
     const rejectArticleForm = document.querySelector('#rejectArticleForm');
-    rejectArticleForm.setAttribute('action', `/articles/reject/${articleId}?_method=PUT`);
+    rejectArticleForm.setAttribute('action', `/editor/articles/reject/${articleId}?_method=PUT`);
 });

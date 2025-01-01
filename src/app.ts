@@ -55,7 +55,7 @@ app.use("/auth/facebook", facebookRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/v1", authRouter);
 app.use("/", viewRouter);
-app.use("/articles", articleHandlingRouter);
+app.use("/editor/articles", articleHandlingRouter);
 app.use("/admin", adminRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoriesRouter);

@@ -25,9 +25,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     const latestArticles = (await articleController.getLatestArticles()).data.articles;
     
-    const [popularArticles] = await Promise.all([
-        Article.find().sort({content: -1}).limit(4).populate("category_id").populate("writer_id")
-    ]);
 
     const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
         ...article.toObject(),
@@ -42,7 +39,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     res.status(StatusCodes.OK).render("pages/home", {
         user: user,
         latestArticle: latestArticles,
-        popularArticle: popularArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
     });

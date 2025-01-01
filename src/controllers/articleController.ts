@@ -6,6 +6,7 @@ import ArticleTag from "../models/article_tag";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/AppError";
 import { sanitizeSummary } from "../utils/sanitizeHTML";
+import moment from "moment";
 
 export const createArticle = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const { title, summary, content, thumbnail, category_id, userId, tags, is_premium } = req.body;
@@ -83,15 +84,19 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
 });
 
 export const getLatestArticles = async () => {
-    const latestArticles = await Article.find().sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id");
+    const latestArticles = await Article.find({status: "published"}).sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id")
+                                          
     
-    let articles = latestArticles;
-    articles.forEach(article => {
-        //console.log(article.summary);
-        article.summary = sanitizeSummary(String(article.summary));
-        //console.log(article.summary);
-    });
-    // console.log(articles);
+    let articles = latestArticles.map(article => ({
+        ...article.toObject(),
+        
+        // Sanitize the summary
+        summary: sanitizeSummary(String(article.summary)),
+
+        // Format the publish date
+        publish_date: moment(article.publish_date).format("DD-MM-YYYY")
+    }));
+
     return {
         message: "Successfully got latest article list",
         data: {

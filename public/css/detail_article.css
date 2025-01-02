@@ -53,7 +53,7 @@ h1 {
   margin-bottom: 0.5em;
 }
 
-.btn.download-btn {
+.btn.download-pdf-btn {
   display: inline-block;
   padding: 10px 20px;
   background-color: #007bff; /* Blue background */
@@ -66,7 +66,7 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.btn.download-btn a {
+.btn.download-pdf-btn a {
   text-decoration: none;
   color: inherit; /* Inherit the button color */
   display: flex;
@@ -74,23 +74,23 @@ h1 {
   gap: 8px; /* Space between icon and text */
 }
 
-.btn.download-btn i {
+.btn.download-pdf-btn i {
   font-size: 18px; /* Icon size */
 }
 
-.btn.download-btn:hover {
+.btn.download-pdf-btn:hover {
   background-color: #0056b3; /* Darker blue on hover */
   transform: translateY(-2px); /* Slight upward movement */
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
 }
 
-.btn.download-btn:active {
+.btn.download-pdf-btn:active {
   background-color: #004080; /* Even darker blue on active */
   transform: translateY(0); /* Reset movement */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow on click */
 }
 
-.btn.download-btn:focus {
+.btn.download-pdf-btn:focus {
   outline: 2px solid #007bff; /* Blue focus outline */
   outline-offset: 4px; /* Larger outline */
 }

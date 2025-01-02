@@ -5,6 +5,7 @@ import AppError from "../utils/AppError";
 import { StatusCodes } from "http-status-codes";
 import Article from "../models/article";
 import mongoose from "mongoose";
+import { getAllCategoriesTree } from '../services/category.service';
 
 export const getAllCategories = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -148,3 +149,12 @@ export const getCategoryArticleList = async (categoryName: string) => {
         }
     };
 };
+
+export async function getCategories(req: Request, res: Response) {
+    try {
+        const categories = await getAllCategoriesTree();
+        res.json(categories);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching categories' });
+    }
+}

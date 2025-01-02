@@ -1,72 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= article.title %></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/components/header.css" />
+    <link rel="stylesheet" href="/css/components/topCategories.css" />
+    <link rel="stylesheet" href="/css/detail_article.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    <%= article.title %>
-  </title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <link rel="stylesheet" href="/css/home.css" />
-  <link rel="stylesheet" href="/css/global.css" />
-  <link rel="stylesheet" href="/css/components/header.css" />
-  <link rel="stylesheet" href="/css/components/topCategories.css" />
-  <link rel="stylesheet" href="/css/detail_article.css" />
-</head>
-
-<body>
-  <%- include('../components/home/header', {user: user}) %>
+  <body>
+    <%- include('../components/home/header', {user: user}) %>
     <main class="container">
-      <h1>
-        <%= article.title %>
-      </h1>
+      <div class="article-content">
+        <h1><%= article.title %></h1>
 
-      <div class="section1">
-        <p>
-          <%= article.categoryName %>
-        </p>
-        <p>
-          <%= article.publish_date %>
-        </p>
-      </div>
+        <div class="section1">
+          <p><%= article.categoryName %></p>
+          <p><%= article.publish_date %></p>
+        </div>
 
-      <!-- download button -->
-      <div class="btn download-btn">
-        <a href="<%= article.file %>" download="<%= article.title %>">
+        <!-- download button -->
+        <div class="btn download-pdf-btn" id="download-pdf-btn">
           <i class="fas fa-download"></i> Download
-        </a>
-      </div>
+        </div>
 
-      <!-- Summary -->
-      <div class="summary">
-        <%- article.summary %>
-      </div>
+        <!-- Summary -->
+        <div class="summary"><%- article.summary %></div>
 
-      <!--Content -->
-      <div class="content">
-        <%- article.content %>
-      </div>
+        <!--Content -->
+        <div class="content"><%- article.content %></div>
 
-      <!--Author -->
-      <div class="author">
-        <p></p>
-        <p>
-          <%= article.writerName %>
-        </p>
-      </div>
+        <!--Author -->
+        <div class="author">
+          <p></p>
+          <p><%= article.writerName %></p>
+        </div>
 
-      <!-- Tags -->
-      <div class="tags">
-        <p>Nhãn</p>
-        <% article.tagNames.forEach(tag=> { %>
+        <!-- Tags -->
+        <div class="tags">
+          <p>Nhãn</p>
+          <% article.tagNames.forEach(tag=> { %>
           <a href="/tag/<%= tag._id %>">#<%= tag %></a>
           <% }) %>
+        </div>
       </div>
 
       <!-- Button for Editor -->
-      <% if (user.role === "editor" && article.status === "draft") {%>
+      <% if (user && user.role === "editor" && article.status === "draft") {%>
         <div class="btns-list">
           <button 
               type="button" 
@@ -90,11 +79,17 @@
         <%- include("../components/modal/reject_article", {categories}) %>
       <% } %>
 
+
       <!-- Comments -->
 
       <div class="comments">
         <div class="comment-input bg-light bg-gradient position-relative">
-          <input type="text" id="comment-input" class="form-control" placeholder="Viết bình luận..." />
+          <input
+            type="text"
+            id="comment-input"
+            class="form-control"
+            placeholder="Viết bình luận..."
+          />
           <div class="comment-submit position-absolute">
             <button id="comment-submit-btn" class="btn btn-dark">OK</button>
           </div>
@@ -105,76 +100,97 @@
         <p class="comment-title">Bình luận</p>
 
         <% if (article.comments.length===0) { %>
-          <p class="no-comment">Hiện chưa có bình luận</p>
-          <% } else { %>
-            <div class="comments-list">
-              <% article.comments.forEach(comment=> { %>
-                <div class="comment">
-                  <div class="comment-avatar">
-                    <!-- Sử dụng RoboHash để tạo ảnh ngẫu nhiên dựa trên tên người dùng -->
-                    <img src="https://robohash.org/<%= comment.userName %>?set=set1" alt="Avatar" />
-                  </div>
-                  <div class="comment-content">
-                    <div class="comment-info">
-                      <span class="comment-author">
-                        <%= comment.userName %>
-                      </span>
-                      <span class="comment-date">
-                        <%= new Date(comment.date).toLocaleString("vi-VN") %>
-                      </span>
-                    </div>
-                    <p class="comment-text">
-                      <%= comment.content %>
-                    </p>
-                  </div>
-                </div>
-                <% }) %>
+        <p class="no-comment">Hiện chưa có bình luận</p>
+        <% } else { %>
+        <div class="comments-list">
+          <% article.comments.forEach(comment=> { %>
+          <div class="comment">
+            <div class="comment-avatar">
+              <!-- Sử dụng RoboHash để tạo ảnh ngẫu nhiên dựa trên tên người dùng -->
+              <img
+                src="https://robohash.org/<%= comment.userName %>?set=set1"
+                alt="Avatar"
+              />
             </div>
-            <% } %>
+            <div class="comment-content">
+              <div class="comment-info">
+                <span class="comment-author"> <%= comment.userName %> </span>
+                <span class="comment-date">
+                  <%= new Date(comment.date).toLocaleString("vi-VN") %>
+                </span>
+              </div>
+              <p class="comment-text"><%= comment.content %></p>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
       </section>
 
-      <hr>
-
+      <hr />
 
       <div class="my-5 container">
         <div class="d-flex">
           <div class="rect"></div>
           <h3 class="mb-4">Cùng chuyên mục</h3>
         </div>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-4">
+        <div
+          class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-4"
+        >
           <% article.relatedArticles.forEach((item)=> { %>
-            <div class="col">
-              <div class="card">
-                <a href="/article/<%= item._id %>">
-                  <img src="<%= item.thumbnail %>" alt="<%= item.title %>" />
-                </a>
-                <div class="card-body card-category">
-                  <h6 class="card-title">
-                    <a href="/article/<%= item._id %>">
-                      <%= item.title %>
-                    </a>
-                  </h6>
-                  <p class="card-text">
-                    Ngày xuất bản: <%= item.publish_date %>
-                  </p>
-                </div>
+          <div class="col">
+            <div class="card">
+              <a href="/article/<%= item._id %>">
+                <img src="<%= item.thumbnail %>" alt="<%= item.title %>" />
+              </a>
+              <div class="card-body card-category">
+                <h6 class="card-title">
+                  <a href="/article/<%= item._id %>"> <%= item.title %> </a>
+                </h6>
+                <p class="card-text">Ngày xuất bản: <%= item.publish_date %></p>
               </div>
             </div>
-            <% }) %>
+          </div>
+          <% }) %>
         </div>
       </div>
 
       <%- include('../components/footer.ejs') %>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/65d6f9b274.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="/js/pages/home.js"></script>
     <script src="/js/header.js"></script>
     <script src="/js/pages/detail_article.js"></script>
     <script src="/js/handling/reject_article.js"></script>
     <script src="/js/handling/approve_article.js"></script>
-</body>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+      integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
+    <script>
+      document
+        .getElementById("download-pdf-btn")
+        ?.addEventListener("click", function () {
+          const articleElement = document.querySelector("div.article-content");
+          const options = {
+            filename: `<%= article.title %>.pdf`,
+            jsPDF: { format: "a4", orientation: "portrait" },
+          };
+
+          // Use html2pdf to generate the PDF
+          html2pdf().set(options).from(articleElement).save();
+        });
+    </script>
+  </body>
 </html>

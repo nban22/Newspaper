@@ -57,6 +57,13 @@
             font-size: 0.95rem;
             color: #555;
             line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 4.5em;
         }
 
         .badge-container {
@@ -73,6 +80,24 @@
             border-radius: 12px;
         }
 
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin: 2px;
+            text-decoration: none;
+        }
+
         .stretched-link::after {
             position: absolute;
             top: 0;
@@ -81,6 +106,15 @@
             right: 0;
             content: "";
             z-index: 1;
+            pointer-events: none;
+        }
+
+        .category-name,
+        .tags-container a {
+            pointer-events: auto;
+            /* Re-enable pointer events for category name and tags */
+            z-index: 2;
+            /* Ensure they stay clickable over the stretched link */
         }
 
         .row.g-3 {
@@ -116,7 +150,6 @@
                             <% if (article.status==='published' ) { %>
                                 <a href="/article/<%- article._id %>" class="stretched-link"></a>
                                 <% } else { %>
-                                    <a href="/edit_article/<%- article._id %>" class="stretched-link"></a>
                                     <% } %>
                                         <div class="badge-container">
 
@@ -131,15 +164,44 @@
 
                                         <div class="row g-0 h-100">
                                             <div class="col-4 col-md-3">
-                                                <img src="<%= article.thumbnail %>" class="article-image"
-                                                    alt="<%= article.title %>">
+                                                <% if (article.status==='published' ) { %>
+                                                    <a href="/article/<%- article._id %>">
+                                                        <img src="<%= article.thumbnail %>" class="article-image"
+                                                            alt="<%= article.title %>">
+                                                    </a>
+                                                    <% } else { %>
+                                                        <a href="/edit_article/<%- article._id %>">
+                                                            <img src="<%= article.thumbnail %>" class="article-image"
+                                                                alt="<%= article.title %>">
+                                                        </a>
+                                                        <% } %>
+
                                             </div>
                                             <div class="col-8 col-md-9">
                                                 <div class="card-body">
                                                     <h5 class="card-title">
                                                         <%= article.title %>
                                                     </h5>
-                                                    <p class="card-text"><%- article.summary %></p>
+                                                    <p class="card-text">
+                                                        <%= article.summary %>
+                                                    </p>
+                                                    <div class="article-metadata">
+                                                        <span class="category-name">
+                                                            <a
+                                                                href="/chuyen-muc/<%- article.category_id._id || article.category_id %>">
+                                                                <%= article.category_id.name %>
+                                                            </a>
+                                                        </span>
+                                                        <span class="metadata-divider">•</span>
+                                                        <span class="created-date">
+                                                            <%= new Date(article.created_at).toLocaleDateString('vi-VN',
+                                                                { day: 'numeric' , month: 'numeric' , year: 'numeric' ,
+                                                                hour: '2-digit' , minute: '2-digit' }) %>
+                                                        </span>
+                                                    </div>
+                                                    <div class="tags-container" id="tags-<%= article._id %>">
+                                                        <!-- Tags will be loaded here -->
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -192,5 +254,47 @@
     crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
 <script src="/js/header.js"></script>
+<script>
+    // Function to fetch and display tags for an article
+    async function fetchTags(articleId) {
+        try {
+            const response = await fetch(`/api/v1/tags/article/${articleId}`);
+            const result = await response.json();
+
+            if (result.status === 'success' && result.data.tags) {
+                const tagsContainer = document.getElementById(`tags-${articleId}`);
+
+                if (tagsContainer) {
+                    // Clear any existing tags
+                    tagsContainer.innerHTML = '';
+
+                    // Add each tag directly from the tags array
+                    result.data.tags.forEach(tag => {
+                        const tagLink = document.createElement('a');
+                        tagLink.className = 'tag';
+                        tagLink.href = `/nhan/${tag._id}`;
+                        tagLink.textContent = tag.name;
+                        tagsContainer.appendChild(tagLink);
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+        }
+    }
+
+    // Fetch tags for all articles when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const articles = document.querySelectorAll('.article-card');
+        articles.forEach(article => {
+            // Extract article ID from the href attribute
+            const articleLink = article.querySelector('a');
+            if (articleLink) {
+                const articleId = articleLink.href.split('/').pop();
+                fetchTags(articleId);
+            }
+        });
+    });
+</script>
 
 </html>

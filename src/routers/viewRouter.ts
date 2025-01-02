@@ -19,8 +19,8 @@ viewRouter.get("/articles", authenticateJWT, authorizeRole(["writer"]), viewCont
 
 viewRouter.get("/edit_article/:articleId", authenticateJWT, viewController.getEditArticleForm);
 
-viewRouter.get("/chuyen-muc/:categoryName", authenticateJWT, viewController.getCategoryArticleList);
-viewRouter.get("/nhan/:tagName", authenticateJWT, viewController.getTagArticleList);
+viewRouter.get("/chuyen-muc/:categoryId", authenticateJWT, viewController.getCategoryArticleList);
+viewRouter.get("/nhan/:tagId", authenticateJWT, viewController.getTagArticleList);
 viewRouter.get("/search", authenticateJWT, viewController.getSearchPage);
 
 export default viewRouter;

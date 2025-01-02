@@ -22,7 +22,6 @@ export const getAllCategories = catchAsync(
 
 export const fetchTopCategories = async () => {
     const categoriesWithCounts = await Article.aggregate([
-        // { $match: { status: "published" } },
         { $group: { _id: "$category_id", articleCount: { $sum: 1 } } },
         { $sort: { articleCount: -1 } },
         { $limit: 10 },

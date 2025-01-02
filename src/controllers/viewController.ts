@@ -31,6 +31,11 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         publish_date: moment(article.publish_date).format("DD-MM-YYYY"),
     }));
 
+    // sanitize summary of featured articles
+    featuredArticles.forEach((article) => {
+        article.summary = sanitizeSummary(article.summary);
+    });
+
     const topCategories = (await fetchTopCategories()).map((category) => ({
         ...category,
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),

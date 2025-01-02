@@ -13,18 +13,24 @@
 </head>
 
 <body>
-  <%- include('../components/home/header', {user: user}) %>
-  <div class="container mt-4">
-      <h1><%= articles.length %> <span class="fs-3 fw-medium">bài viết:</span></h1>
-      <div class="articles-list d-flex flex-column gap-4 mt-3">
-          <% articles.forEach(article => { %>
-            <%- include('../components/article_card', {article, formatDate}) %>
-          <% }) %>
-      </div>
-      <%- include('../components/modal/reject_article') %>
-      <%- include('../components/modal/approve_article', {categories}) %>
-
-  </div>
+    <%- include('../components/home/header', {user: user}) %>
+    <div class="container mt-4">
+        <% if (!category) {%>
+            <h1>Bạn chưa được Quản trị viên phân công quản lý bất kỳ chuyên mục nào!</h1>
+        <% } else {%>
+            <h1 style="color: var(--secondary-color);">
+                Danh mục quản lý: <span class="fs-2 fw-medium" style="color: black;"><%= category %></span>
+            </h1>
+            <h1 style="color: var(--secondary-color);"><%= articles.length %> <span class="fs-3 fw-medium" style="color: black;">bài viết:</span></h1>
+            <div class="articles-list d-flex flex-column gap-4 mt-3 mb-5">
+                <% articles.forEach(article => { %>
+                    <%- include('../components/article_card', {article, formatDate}) %>
+                <% }) %>
+            </div>
+            <%- include('../components/modal/reject_article') %>
+            <%- include('../components/modal/approve_article', {categories}) %>
+        <% } %>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" 
             crossorigin="anonymous">

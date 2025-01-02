@@ -211,6 +211,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             relatedArticles: formattedArticles,
             publish_date: formattedPublishDate,
         },
+        categories: await Category.find(),
     });
 });
 

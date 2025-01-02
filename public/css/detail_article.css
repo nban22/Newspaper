@@ -4,6 +4,44 @@ h1 {
   margin-bottom: 0, 5em;
 }
 
+.btns-list {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex: 1;
+
+  & > button {        
+      font-weight: 600;
+      padding: 10px 0px;
+      width: 100px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+  }
+}
+
+.approve-btn{
+  background-color: #fff;
+  color: #0ACA00;
+  border: 1px solid #0ACA00;
+
+  &:hover{
+      background-color: #0ACA00;
+      color: #fff;
+  }
+}
+
+.reject-btn{
+  background-color: #fff;
+  color: #db0000;
+  border: 1px solid #db0000;
+
+  &:hover{
+      background-color: #db0000;
+      color: #fff;
+  }
+}
+
 .comments {
   margin-top: 1em;
 }

@@ -33,7 +33,7 @@
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                         <% if (user && user.role==="editor" ) {%>
-                            <li><a class="dropdown-item" href="/articles">Danh sách bài viết</a></li>
+                            <li><a class="dropdown-item" href="/editor/articles">Danh sách bài viết</a></li>
                             <% } else {%>
                                 <li><a class="dropdown-item" href="#">Dashboard</a></li>
                                 <% } %>
@@ -44,9 +44,8 @@
                                         <hr class="dropdown-divider" />
                                     </li>
                                     <li>
-                                        <form action="/api/v1/logout" method="post" id="logout-form">
-                                            <button type="submit" class="dropdown-item">Đăng xuất</button>
-                                        </form>
+                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">Đăng xuất</button>
+                                        <!-- </form> -->
                                     </li>
                     </ul>
                 </div>
@@ -61,7 +60,7 @@
         </div>
     </div>
 </header>
-
+<%- include("../modal/logout.ejs") %>
 <div class="header-categories">
     <div class="container">
         <div class="row">

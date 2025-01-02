@@ -20,6 +20,8 @@ import commentsRouter from "./routers/commentsRouter";
 
 import googlePassport from "./config/googlePassport";
 
+import expressEjsLayouts from "express-ejs-layouts";
+
 const app = express();
 const methodOverride = require("method-override");
 
@@ -33,14 +35,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use(cookieParser());
 
-// app.use(session({
-//     secret: process.env.SESSION_SECRET!,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-//     },
-// }))
+
 app.use(facebookPassport.initialize());
 // app.use(facebookPassport.session());
 
@@ -48,6 +43,8 @@ app.use(googlePassport.initialize());
 
 app.set("view engine", "ejs");
 app.set("views", "src/views");
+app.use(expressEjsLayouts);
+app.set("layout", false);
 
 app.use(express.static(path.join(__dirname, "../public")));
 

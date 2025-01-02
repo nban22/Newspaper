@@ -1,3 +1,9 @@
+document.getElementById('search-form').style.opacity = 0;
+document.getElementById('search-icon').onclick = function() {
+    document.getElementById('search-form').style.opacity = 1;
+    document.getElementById('search-form').focus();
+    document.getElementById('search-icon').style.opacity = 0;
+}
 // fetch("/api/v1/getme", {
 //     headers: {
 //         "Content-Type": "application/json",

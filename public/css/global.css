@@ -14,7 +14,7 @@ body {
 
 :root {
     --primary-color: white;
-    --secondary-color: rgb(0, 72, 154);
+    --secondary-color: black;
 }
 
 
@@ -28,7 +28,7 @@ body {
 }
   
 .btn {
-    padding: 10px;
+    padding: 8px;
 }
 
 .btn:hover {

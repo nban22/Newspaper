@@ -221,6 +221,8 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const rawContent = updatedArticle.content ?? "";
     const sanitizedContent = sanitizeContent(String(rawContent));
 
+
+    const editorCategory = user.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
     // Render trang bài viết
     res.status(StatusCodes.OK).render("pages/detail_article", {
         user,
@@ -236,6 +238,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             publish_date: formattedPublishDate,
         },
         categories: await Category.find(),
+        isOwnCategory: editorCategory?.category_id?.toString() === category?._id?.toString(),
     });
 });
 

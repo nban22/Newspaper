@@ -40,16 +40,21 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),
     }));
-
-    console.log(latestArticles);
-
-    res.status(StatusCodes.OK).render("pages/home", {
-        layout: false,
+    
+    return res.status(StatusCodes.OK).render("pages/default/home", {
+        layout: "layouts/default",
         user: user,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
     });
+    // res.status(StatusCodes.OK).render("pages/home", {
+    //     layout: false,
+    //     user: user,
+    //     latestArticle: latestArticles,
+    //     featuredArticles: featuredArticles,
+    //     topCategories: topCategories,
+    // });
 });
 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {

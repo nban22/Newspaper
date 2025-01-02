@@ -34,26 +34,12 @@
     object-fit: contain;
 }
 
-.carousel-inner img {
-    width: 100%; /* Change to 100% for mobile responsiveness */
-    max-width: 800px;
-    height: auto; /* Change height to auto for better aspect ratio on mobile */
-    max-height: 400px;
-    object-fit: contain; /* Ensures the image fills the dimensions without distortion */
-    margin: 0 auto; /* Centers the image horizontally */
-}
-
 /* Media Queries for Mobile Devices */
 @media (max-width: 768px) {
     .image-container {
         width: 50%; /* Full width on mobile */
         height: auto; /* Adjust height for mobile */
         margin-right: 0; /* Remove margin on mobile */
-    }
-
-    .carousel-inner img {
-        width: 100%; /* Full width on mobile */
-        height: auto; /* Adjust height for mobile */
     }
 
     .rect {

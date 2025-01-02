@@ -73,6 +73,9 @@
             <div class="row">
                 <div class="col-md-12 classynav">
                     <ul class="m-0 d-flex flex-wrap" id="categoryContainer">
+                        <li>
+                            <a href="/"><i class="fas fa-home"></i></a>
+                        </li>
                         <!-- Categories will be loaded here dynamically -->
                     </ul>
                 </div>
@@ -106,7 +109,7 @@
 
                     if (hasChildren) {
                         const ul = document.createElement('ul');
-                        ul.className = 'dropdown-menu';
+                        ul.className = 'dropdown-menu mt-2';
 
                         category.children.forEach(child => {
                             const childLi = document.createElement('li');

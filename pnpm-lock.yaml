@@ -44,6 +44,9 @@ importers:
       express:
         specifier: ^4.21.1
         version: 4.21.1
+      express-ejs-layouts:
+        specifier: ^2.5.1
+        version: 2.5.1
       express-session:
         specifier: ^1.18.1
         version: 1.18.1
@@ -105,6 +108,9 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      '@types/express-ejs-layouts':
+        specifier: ^2.5.4
+        version: 2.5.4
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.7
@@ -205,6 +211,9 @@ packages:
 
   '@types/dotenv@6.1.1':
     resolution: {integrity: sha512-ftQl3DtBvqHl9L16tpqqzA4YzCSXZfi7g8cQceTz5rOlYtk/IZbFjAv3mLOQlNIgOaylCQWQoBdDQHPgEBJPHg==}
+
+  '@types/express-ejs-layouts@2.5.4':
+    resolution: {integrity: sha512-d093IgtrNO3fD5Xm4+zh5F4E4sTxUsMbfYm7Vx40QdQ1qYTn4NIRCmatU8kqGRt09ojf3KKigtEehUeQUCE4fA==}
 
   '@types/express-serve-static-core@5.0.2':
     resolution: {integrity: sha512-vluaspfvWEtE4vcSDlKRNer52DvOGrB2xv6diXy6UKyKW0lqZiWHGNApSyxOv+8DE5Z27IzVvE7hNkxg7EXIcg==}
@@ -666,6 +675,9 @@ packages:
 
   eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+
+  express-ejs-layouts@2.5.1:
+    resolution: {integrity: sha512-IXROv9n3xKga7FowT06n1Qn927JR8ZWDn5Dc9CJQoiiaaDqbhW5PDmWShzbpAa2wjWT1vJqaIM1S6vJwwX11gA==}
 
   express-session@1.18.1:
     resolution: {integrity: sha512-a5mtTqEaZvBCL9A9aqkrtfz+3SMDhOVUnjafjo+s7A9Txkq+SVX2DLvSp1Zrv4uCXa3lMSK3viWnh9Gg07PBUA==}
@@ -1647,6 +1659,11 @@ snapshots:
     dependencies:
       '@types/node': 22.10.1
 
+  '@types/express-ejs-layouts@2.5.4':
+    dependencies:
+      '@types/express': 5.0.0
+      '@types/node': 22.10.1
+
   '@types/express-serve-static-core@5.0.2':
     dependencies:
       '@types/node': 22.10.1
@@ -2152,6 +2169,8 @@ snapshots:
   etag@1.8.1: {}
 
   eventemitter3@4.0.7: {}
+
+  express-ejs-layouts@2.5.1: {}
 
   express-session@1.18.1:
     dependencies:

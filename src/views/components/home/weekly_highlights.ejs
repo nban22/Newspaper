@@ -1,0 +1,38 @@
+<div class="mb-4">
+    <div class="d-flex">
+        <div class="rect"></div>
+        <h3 class="mb-4">Nổi bật trong tuần</h3>
+    </div>
+    <ul class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 list-unstyled">
+        <% if (featuredArticles && featuredArticles.length > 0) { %>
+            <% featuredArticles.forEach((article) => { %>
+                <li class="col" style="padding: 5px">
+                    <div class="card h-100">
+                        <a href="/article/<%= article._id %>" class="text-decoration-none text-dark">
+                            <div class="p-2">
+                                <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
+                                     class="card-img-top"
+                                     alt="<%= article.title || 'Featured Article' %>" />
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title mb-2"><%= article.title || 'No Title' %></h5>
+                                <p class="card-text summary-text mb-2"><%= article.summary || 'No summary available' %></p>
+                                <p class="card-text small mb-1">
+                                    <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name} > ${article.category_id.name}` : article.category_id.name %>
+                                </p>
+                                <p class="card-text small mb-2 text-muted">
+                                    Ngày đăng: <%= article.publish_date %>
+                                </p>
+                                <% if (article.is_premium) { %>
+                                    <span class="badge rounded-pill bg-warning text-dark">Premium</span>
+                                <% } %>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <p>No featured articles available.</p>
+        <% } %>
+    </ul>
+</div>

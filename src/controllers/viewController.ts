@@ -37,9 +37,15 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     }));
 
     console.log(latestArticles);
-
+    
+    return res.status(StatusCodes.OK).render("pages/default/home", {
+        layout: "layouts/default",
+        user: user,
+        latestArticle: latestArticles,
+        featuredArticles: featuredArticles,
+        topCategories: topCategories,
+    });
     res.status(StatusCodes.OK).render("pages/home", {
-        layout: false,
         user: user,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,

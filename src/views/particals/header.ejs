@@ -1,0 +1,148 @@
+<header class="p-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img src="/images/logo.png" alt="newspaper logo" style="height: 60px; object-fit: contain" class="" />
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
+                <div class="border mt-2 mb-2"></div>
+                <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
+                <% if (user && user.role==='admin' ) {%>
+                    <div class="border mt-2 mb-2"></div>
+                    <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
+                    <div class="border mt-2 mb-2"></div>
+                    <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
+                    <% } %>
+                <% if (user && user.role === 'writer') { %>
+                    <div class="border mt-2 mb-2"></div>
+                    <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
+                    <div class="border mt-2 mb-2"></div>
+                    <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
+                    <% } %>
+            </ul>
+            
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form">
+                <input type="search" class="form-control form-control-dark" placeholder="Tìm kiếm..."
+                    aria-label="Search" id="search-input" />
+            </form>
+            <i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i>
+
+            <% if (user) { %>
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="45" height="45"
+                            class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
+                    </a>
+                    <ul class="dropdown-menu p-0" aria-labelledby="dropdownUser1">
+                        <% if (user && user.role==="editor" ) {%>
+                            <li><a class="dropdown-item" href="/editor/articles">Danh sách bài viết</a></li>
+                            <% } else {%>
+                                <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                                <% } %>
+
+                                    <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                                    <li><a class="dropdown-item pb-2" href="/update_profile">Cập nhật hồ sơ</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider m-0" />
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">Đăng xuất</button>
+                                        <!-- </form> -->
+                                    </li>
+                    </ul>
+                </div>
+                <% } else { %>
+                    
+                    <div class="text-end">
+                        <a href="/login"><button type="button"
+                                class="btn btn-outline-secondary mr-2 text-dark">Đăng nhập</button></a>
+                        <a href="/signup"><button type="button" class="btn btn-secondary mr-2">Đăng ký</button></a>
+                    </div>
+                    <% } %>
+
+        </div>
+    </div>
+</header>
+<%- include("../components/modal/logout.ejs") %>
+<div class="header-categories">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 classynav">
+                <ul class="m-0 d-flex flex-wrap">
+                    <li><a href="/"><i class="fa fa-home"></i></a></li>
+                    <li class="has-down">
+                        <a href="" id="22dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">Xã hội</a>
+                        <ul class="dropdown-menu mt-2" aria-labelledby="22dropdownMenuButton2">
+                            <li><a class="dropdown-item" href="/chuyen-muc/thời-sự">Thời sự</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/giao-thông">Giao thông</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/môi-trường-khí-hậu">Môi trường - khí hậu</a>
+                            </li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+
+                    <li><a href="/chuyen-muc/thế-giới">Thế giới</a></li>
+                    <li><a href="/chuyen-muc/công-nghệ">Công nghệ</a></li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Văn hóa</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="/chuyen-muc/nghệ-thuật">Nghệ Thuật</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/ẩm-thực">Ẩm thực</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/du-lịch">Du lịch</a></li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Kinh Tế</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="/chuyen-muc/kinh-doanh">Kinh Doanh</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/tài-chính">Tài Chính</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/lao-động">Lao Động Việc Làm</a></li>
+                            <li><a class="dropdown-item" href="/chuyen-muc/chứng-khoán">Chứng Khoán</a></li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Giáo dục</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="/học-bổng">Học Bổng - Du lịch</a></li>
+                            <li><a class="dropdown-item" href="/đào-tạo">Đào Tạo - Thi Cử</a></li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Thể Thao</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="/bóng-đá-quốc-tế">Bóng Đá Quốc Tế</a></li>
+                            <li><a class="dropdown-item" href="categories/bong-da-vn">Bóng Đá Việt Nam</a></li>
+                            <li><a class="dropdown-item" href="categories/quan-vot">Quần Vợt</a></li>
+                        </ul>
+
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Giải Trí</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="categories/am-nhac">Âm Nhạc</a></li>
+                            <li><a class="dropdown-item" href="categories/thoi-trang">Thời Trang</a></li>
+                            <li><a class="dropdown-item" href="categories/dien-anh">Điện Ảnh- Truyền Hình</a></li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li class="cn-dropdown-item has-down">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">Pháp Luật</a>
+                        <ul class="dropdown-menu mt-2">
+                            <li><a class="dropdown-item" href="categories/hinh-su">Hình Sự - Dân Sự</a></li>
+                            <li><a class="dropdown-item" href="categories/antt">An Ninh - Trật Tự</a></li>
+                        </ul>
+                        <span class="dd-trigger"></span>
+                    </li>
+                    <li><a href="categories/doi-song">Đời Sống</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

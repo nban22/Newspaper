@@ -55,7 +55,7 @@
       </div>
 
       <!-- Button for Editor -->
-      <% if (user && user.role === "editor" && article.status === "draft") {%>
+      <% if (isOwnCategory && article.status === "draft") {%>
         <div class="btns-list">
           <button 
               type="button" 

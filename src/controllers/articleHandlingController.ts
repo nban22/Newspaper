@@ -38,7 +38,7 @@ export const getArticleList = catchAsync(async (req: Request, res: Response, nex
         const editorcategory = categories.find(category => category._id.toString() === editorcategoryID.toString());
         const articleTag = await ArticleTag.find().populate<{article_id: IArticle}>("article_id").populate<{ tag_id: ITag }>("tag_id").lean();
         const articles = Object.values(
-            articleTag.filter(article => article.article_id.category_id.toString() === editorcategoryID.toString())
+            articleTag.filter(article => article?.article_id?.category_id.toString() === editorcategoryID.toString())
                         .reduce((acc: { [key: string]: any }, article) => {
                             const __article = article.article_id;
                             const __tag = article.tag_id;

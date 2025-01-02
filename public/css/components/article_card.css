@@ -56,7 +56,7 @@
     }
 }
 
-.btns-list {
+.btns-list, .status {
     display: flex;
     align-self: flex-end;
     align-items: end;

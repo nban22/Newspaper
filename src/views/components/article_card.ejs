@@ -31,25 +31,37 @@
                     <span class="tag">#<%= tag %></span>
                 <% }) %>
             </div>
-            <div class="btns-list">
-                <button 
-                    type="button" 
-                    class="approve-btn"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#approveArticleModal"
-                    data-article-id="<%= article._id %>"
-                    data-article-category = "<%= article.category %>">
+            <% if (article.status === 'draft') {%>
+                <div class="btns-list">
+                    <button 
+                        type="button" 
+                        class="approve-btn"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#approveArticleModal"
+                        data-article-id="<%= article._id %>"
+                        data-article-category = "<%= article.category %>">
                         Phê duyệt
-                </button>
-                <button 
-                    type="button" 
-                    class="reject-btn"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#rejectArticleModal"
-                    data-article-id="<%= article._id %>">
+                    </button>
+                    <button 
+                        type="button" 
+                        class="reject-btn"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#rejectArticleModal"
+                        data-article-id="<%= article._id %>">
                         Từ chối
-                </button>
-            </div>
+                    </button>
+                </div>
+            <% } else {%>
+                <div class="status">
+                    <% if (article.status === 'published') {%>
+                        <span class="badge bg-success fs-6">Đã đăng (<%= formatDate(article.publish_date) %>)</span>
+                    <% } else if (article.status === 'rejected') {%>
+                        <span class="badge bg-danger fs-6">Đã từ chối</span>
+                    <% } else if (article.status === 'pending') {%>
+                        <span class="badge bg-info fs-6">Đang đợi đăng (<%= formatDate(article.publish_date) %>)</span>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </div>
 </body>

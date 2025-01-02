@@ -114,14 +114,14 @@
                         <ul class="pagination justify-content-center">
                             <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
                                 <a class="page-link"
-                                    href="?page=<%= page - 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>"><i class="fas fa-arrow-left"></i></a>
+                                    href="?page=<%= page - 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>&limit=<%= limit %>"><i class="fas fa-arrow-left"></i></a>
                             </li>
                             <li class="page-item">
                                 <span class="page-link"><%= page %></span>
                             </li>
                             <li class="page-item <%= articles.length < limit ? 'disabled' : '' %>">
                                 <a class="page-link"
-                                    href="?page=<%= page + 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>"><i class="fas fa-arrow-right"></i></a>
+                                    href="?page=<%= page + 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>&limit=<%= limit %>"><i class="fas fa-arrow-right"></i></a>
                             </li>
                         </ul>
                     </nav>

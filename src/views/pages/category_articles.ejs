@@ -11,42 +11,285 @@
   <link rel="stylesheet" href="/css/components/header.css" />
   <link rel="stylesheet" href="/css/articles.css" />
   <!-- <link rel="stylesheet" href="/css/components/slideshow.css" /> -->
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+    }
+
+    .article-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      height: auto;
+      background: white;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .article-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .card-body {
+      padding: 16px;
+      position: relative;
+      /* Ensure proper positioning */
+      margin-top: 20px;
+      /* Adjust as needed to clear the badge */
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 4.5em;
+    }
+
+    .badge-container {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      /* Ensures the badge stays on top */
+    }
+
+    .badge {
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      border-radius: 12px;
+    }
+
+    .stretched-link::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      content: "";
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .category-name,
+    .tags-container a {
+      pointer-events: auto;
+      /* Re-enable pointer events for category name and tags */
+      z-index: 2;
+      /* Ensure they stay clickable over the stretched link */
+    }
+
+    .row.g-3 {
+      gap: 16px;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background-color: #e9ecef;
+      color: #495057;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      display: inline-block;
+      margin: 2px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-body {
+        margin-top: 30px;
+        /* Increase space on smaller devices */
+      }
+
+      .card-text {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <%- include('../components/home/header', {user: user}) %>
+  <%- include('../particals/header', {user: user}) %>
+
     <div class="latest_articles my-5 mx-5">
       <% if (articles.length===0) { %>
-        <h2>Hiện chưa có bài viết thuộc chuyên mục <%= category %>. Chúng tôi sẽ sớm cập nhật các bài viết mới, mong bạn
+        <h2>Hiện chưa có bài viết thuộc chuyên mục <%= category.name %>. Chúng tôi sẽ sớm cập nhật các bài viết mới,
+            mong bạn
             hãy đón chờ!</h2>
         <% } else { %>
-          <h2>Khám phá những tin tức thuộc chuyên mục <%= category %>
+          <h2>Khám phá những tin tức thuộc chuyên mục <%= category.name %>
           </h2>
-          <ul class="list-group">
-            <% articles.forEach(article=> { %>
-              <li class="list-group-item d-flex align-items-start">
-                <div class="image-container">
-                  <img src="<%= article.thumbnail %>" class="item-img" alt="<%= article.title %>" />
+          <div class="container my-4">
+            <div class="row g-3">
+              <% articles.forEach(article=> { %>
+                <div class="col-md-10 col-lg-8 mx-auto">
+                  <div class="article-card">
+
+                    <div class="badge-container">
+                      <% if (article.is_premium) { %>
+                        <span class="badge rounded-pill bg-warning text-dark">Premium</span>
+                        <% } %>
+                    </div>
+
+                    <div class="row g-0 h-100">
+                      <div class="col-4 col-md-3">
+                        <% if (article.status==='published' ) { %>
+                          <a href="/article/<%- article._id %>">
+                            <img src="<%= article.thumbnail %>" class="article-image" alt="<%= article.title %>">
+                          </a>
+                          <% } else { %>
+                            <a href="/edit_article/<%- article._id %>">
+                              <img src="<%= article.thumbnail %>" class="article-image" alt="<%= article.title %>">
+                            </a>
+                            <% } %>
+                      </div>
+                      <div class="col-8 col-md-9">
+                        <div class="card-body">
+                          <h5 class="card-title">
+                            <%= article.title %>
+                          </h5>
+                          <p class="card-text">
+                            <%= article.summary %>
+                          </p>
+                          <div class="article-metadata">
+                            <span class="category-name">
+                              <%= category.name %>
+                            </span>
+                            <span class="metadata-divider">•</span>
+                            <span class="created-date">
+                              <%= new Date(article.created_at).toLocaleDateString('vi-VN', { day: 'numeric' ,
+                                month: 'numeric' , year: 'numeric' , hour: '2-digit' , minute: '2-digit' }) %>
+                            </span>
+                          </div>
+                          <div class="tags-container" id="tags-<%= article._id %>">
+                            <!-- Tags will be loaded here -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="group-item-body ms-3 mt-3">
-                  <h5 class="group-item-title">
-                    <%= article.title %>
-                  </h5>
-                  <p class="group-item-text">
-                    <%= article.summary %>
-                  </p>
-                </div>
-              </li>
-              <% }) %>
-          </ul>
-        <% } %>
+                <% }); %>
+            </div>
+          </div>
+          <% } %>
     </div>
 
+    <div class="d-flex justify-content-center my-4">
+      <nav aria-label="Article Pagination">
+        <ul class="pagination">
+          <!-- Previous Page Button -->
+          <% if (page> 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= page - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span> <!-- Left arrow -->
+              </a>
+            </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+              </li>
+              <% } %>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+                <!-- Page Number Text -->
+                <li class="page-item disabled">
+                  <span class="page-link">Page <%= page %> of <%= totalPages %></span>
+                </li>
+
+                <!-- Next Page Button -->
+                <% if (page < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= page + 1 %>" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span> <!-- Right arrow -->
+                    </a>
+                  </li>
+                  <% } else { %>
+                    <li class="page-item disabled">
+                      <span class="page-link" aria-hidden="true">&raquo;</span>
+                    </li>
+                    <% } %>
+        </ul>
+      </nav>
+    </div>
+
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/65d6f9b274.js" crossorigin="anonymous"></script>
+<script>
+  // Function to fetch and display tags for an article
+  async function fetchTags(articleId) {
+    try {
+      const response = await fetch(`/api/v1/tags/article/${articleId}`);
+      const result = await response.json();
+
+      if (result.status === 'success' && result.data.tags) {
+        const tagsContainer = document.getElementById(`tags-${articleId}`);
+
+        if (tagsContainer) {
+          // Clear any existing tags
+          tagsContainer.innerHTML = '';
+
+          // Add each tag directly from the tags array
+          result.data.tags.forEach(tag => {
+            const tagLink = document.createElement('a');
+            tagLink.className = 'tag';
+            tagLink.href = `/nhan/${tag._id}`;
+            tagLink.textContent = tag.name;
+            tagsContainer.appendChild(tagLink);
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+    }
+  }
+
+  // Fetch tags for all articles when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    const articles = document.querySelectorAll('.article-card');
+    articles.forEach(article => {
+      // Extract article ID from the href attribute
+      const articleLink = article.querySelector('a');
+      if (articleLink) {
+        const articleId = articleLink.href.split('/').pop();
+        fetchTags(articleId);
+      }
+    });
+  });
+</script>
 
 </html>

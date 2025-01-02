@@ -1,0 +1,29 @@
+<div class="p-2 px-lg-5 my-4 mx-lg-5">
+    <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner rounded">
+            <% if (featuredArticles && featuredArticles.length > 0) { %>
+                <% featuredArticles.forEach((article, index) => { %>
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                        <img src="<%= article.thumbnail || 'https://via.placeholder.com/800x400' %>"
+                             class="d-block w-100"
+                             alt="<%= article.title || 'Featured Article' %>" />
+                        <div class="carousel-caption d-none d-md-block bg-opacity-75 bg-dark rounded">
+                            <h5><%= article.title || 'No Title' %></h5>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No featured articles available.</p>
+            <% } %>
+        </div>
+    
+        <button class="carousel-control-prev bg-dark bg-opacity-50" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next bg-dark bg-opacity-50" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>

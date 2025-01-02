@@ -254,41 +254,114 @@ export const getEditArticleForm = catchAsync(async (req: Request, res: Response,
     res.status(StatusCodes.OK).render("pages/edit_article", { user: user, article: article });
 });
 
-export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const getCategoryArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {    
     const user = req.body.user;
 
-    const category =
-        req.params.categoryName.replace("-", " ").charAt(0).toUpperCase() +
-        req.params.categoryName.replace("-", " ").slice(1);
+    const category = await Category.findById(req.params.categoryId);
+
     if (!category) {
         throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide category name"));
     }
 
-    const article = await categoryController.getCategoryArticleList(category);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    const articles = (await Article.find({ category_id: category._id })
+        .skip(skip)
+        .limit(limit)).map(article => ({
+        ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
+        created_at: moment(article.created_at).format('DD-MM-YYYY'),
+    }))
+    .sort((a, b) => {
+        const getStatusPriority = (article: any) => {
+            if (article.status === "published") return 3;
+            if (article.status === "rejected") return 2;
+            if (article.status === "draft") return 1;
+            return 0;
+        };
+
+        const statusPriorityA = getStatusPriority(a);
+        const statusPriorityB = getStatusPriority(b);
+
+        // First, compare based on status (published > rejected > draft)
+        if (statusPriorityA !== statusPriorityB) {
+            return statusPriorityB - statusPriorityA;
+        }
+
+        // If statuses are the same, compare based on premium
+        if (a.is_premium !== b.is_premium) {
+            return b.is_premium ? 1 : -1;  // Premium first (highest priority)
+        }
+
+        return 0; // If both status and premium are the same, maintain original order
+    });
 
     res.status(StatusCodes.OK).render("pages/category_articles", {
         user: user,
-        category: article.data.category,
-        articles: article.data.articles,
-    });
-});
+        category,
+        articles,
+        page,
+        totalPages: Math.ceil(articles.length / limit)
+    })
+})
 
 export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
 
-    const tag =
-        req.params.tagName.replace("-", " ").charAt(0).toUpperCase() + req.params.tagName.replace("-", " ").slice(1);
+    const tag = await Tag.findById(req.params.tagId);
+
     if (!tag) {
         throw next(new AppError(StatusCodes.BAD_REQUEST, "Please provide tag name"));
     }
 
-    const article = await tagController.getTagArticleList(tag);
+    const article_tag = await ArticleTag.find({ tag_id: tag._id })
+    const article_ids = article_tag.map(tag => tag.article_id);
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    const articles = (await Article.find({ _id: { $in: article_ids } })
+        .populate("category_id")
+        .skip(skip)
+        .limit(limit)).map(article => ({
+        ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
+        created_at: moment(article.created_at).format('DD-MM-YYYY'),
+    }))
+    .sort((a, b) => {
+        const getStatusPriority = (article: any) => {
+            if (article.status === "published") return 3;
+            if (article.status === "rejected") return 2;
+            if (article.status === "draft") return 1;
+            return 0;
+        };
+
+        const statusPriorityA = getStatusPriority(a);
+        const statusPriorityB = getStatusPriority(b);
+
+        // First, compare based on status (published > rejected > draft)
+        if (statusPriorityA !== statusPriorityB) {
+            return statusPriorityB - statusPriorityA;
+        }
+
+        // If statuses are the same, compare based on premium
+        if (a.is_premium !== b.is_premium) {
+            return b.is_premium ? 1 : -1;  // Premium first (highest priority)
+        }
+
+        return 0; // If both status and premium are the same, maintain original order
+    });
 
     res.status(StatusCodes.OK).render("pages/tag_articles", {
         user: user,
-        tag: article.data.tag,
-        articles: article.data.articles,
-    });
+        tag,
+        articles,
+        page,
+        totalPages: Math.ceil(articles.length / limit)
+    })
 });
 
 export const getWriterArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -307,20 +380,22 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
     const totalArticles = await Article.countDocuments({ writer_id: writer._id });
 
     // Fetch articles with pagination
-    const articles = (await Article.find({ writer_id: writer._id }).skip(skip).limit(limit))
-        .map((article) => ({
-            ...article.toObject(),
-            summary: sanitizeSummary(article.summary || ""),
-            content: sanitizeContent(article.content),
-            created_at: moment(article.created_at).format("DD-MM-YYYY"),
-        }))
-        .sort((a, b) => {
-            const getStatusPriority = (article: any) => {
-                if (article.status === "published") return 3;
-                if (article.status === "rejected") return 2;
-                if (article.status === "draft") return 1;
-                return 0;
-            };
+    const articles = (await Article.find({ writer_id: writer._id })
+        .populate("category_id")
+        .skip(skip)
+        .limit(limit)).map(article => ({
+        ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
+        content: article.content?.replace(/<\/?[^>]+(>|$)/g, ""),
+        created_at: moment(article.created_at).format('DD-MM-YYYY'),
+    }))
+    .sort((a, b) => {
+        const getStatusPriority = (article: any) => {
+            if (article.status === "published") return 3;
+            if (article.status === "rejected") return 2;
+            if (article.status === "draft") return 1;
+            return 0;
+        };
 
             const statusPriorityA = getStatusPriority(a);
             const statusPriorityB = getStatusPriority(b);

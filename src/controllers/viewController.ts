@@ -28,6 +28,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     const featuredArticles = (await Article.getFeaturedArticles()).map(article => ({
         ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
         publish_date: moment(article.publish_date).format('DD-MM-YYYY'),
     }));
 
@@ -91,7 +92,6 @@ export const getCreateArticlePage = (req: Request, res: Response, next: NextFunc
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const articleId = req.params.id;
     const user = req.body.user;
-
 
     // Kiểm tra id bài viết
     if (!articleId) {
@@ -170,9 +170,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
                 : "Ẩn danh",
         };
     });
-
-
-
 
     // Lấy các bài viết liên quan
     const relatedArticles = await Article.find({

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Default parameters
             const params = new URLSearchParams({
                 q: query,
-                limit: "10",
+                limit: "8",
                 page: "1",
                 sort: "view_count",
                 order: "desc"

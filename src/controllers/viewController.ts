@@ -25,6 +25,18 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     const latestArticles = (await articleController.getLatestArticles()).data.articles;
 
+    const trendingArticles = (await Article.find({ status: "published" })).map((article) => ({
+        ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
+        publish_date: moment(article.publish_date).format("DD-MM-YYYY"),
+        created_at: moment(article.created_at).format("DD-MM-YYYY"),
+    }));
+
+    // sort trending articles by view count and limit to 10
+    trendingArticles.sort((a, b) => b.view_count - a.view_count);
+    trendingArticles.splice(10);
+
+
     const featuredArticles = (await Article.getFeaturedArticles()).map((article) => ({
         ...article.toObject(),
         summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
@@ -67,6 +79,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
+        trendingArticles: trendingArticles,
     });
 });
 
@@ -305,7 +318,7 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
     const limit = 5;
     const skip = (page - 1) * limit;
 
-    const articles = (await Article.find({ category_id: category._id })
+    const articles = (await Article.find({ category_id: category._id, status: "published" })
         .skip(skip)
         .limit(limit)).map(article => ({
         ...article.toObject(),
@@ -336,7 +349,7 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    const totalArticles = await Article.countDocuments({ category_id: category._id });    
+    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });    
 
     return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
         layout: "layouts/default",
@@ -366,7 +379,7 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
     const limit = 5;
     const skip = (page - 1) * limit;
 
-    const articles = (await Article.find({ _id: { $in: article_ids } })
+    const articles = (await Article.find({ _id: { $in: article_ids }, status: "published" })
         .populate("category_id")
         .skip(skip)
         .limit(limit)).map(article => ({
@@ -398,13 +411,13 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
         return 0; // If both status and premium are the same, maintain original order
     });
 
-
+    const totalArticles = await Article.countDocuments({ _id: { $in: article_ids }, status: "published" });
     res.status(StatusCodes.OK).render("pages/tag_articles", {
         user: user,
         tag,
         articles,
         page,
-        totalPages: Math.ceil(article_ids.length / limit)
+        totalPages: Math.ceil(totalArticles / limit)
     })
 });
 

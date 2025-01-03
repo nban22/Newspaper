@@ -363,13 +363,23 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });    
+    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });
+    
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+    }
 
     return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
         layout: "layouts/default",
         scripts: `<script src="/js/pages/articles_by_category.js"></script>`,
         title: category.name,
         user: user,
+        profile,
         category,
         articles,
         page,
@@ -487,9 +497,21 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
     // Calculate total pages
     const totalPages = Math.ceil(totalArticles / limit);
 
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+    }
+
     // Render the page with pagination data
-    res.status(StatusCodes.OK).render("pages/writer_articles", {
+    res.status(StatusCodes.OK).render("pages/default/writer_articles", {
+        layout: "layouts/default",
+        title: "Danh sách bài viết",
         user: user,
+        profile,
         articles: articles,
         page: page,
         totalPages: totalPages,
@@ -546,6 +568,16 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
             is_premium: article.is_premium,
         }));
 
+        let profile = null;
+        if (user?.role === "subscriber") {
+            profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+        } else if (user?.role === "writer") {
+            profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+        } else if (user?.role === "editor") {
+            profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+        }
+        
+
         // Return the results, or a message if no articles are found
         res.render("pages/default/search", {
             layout: "layouts/default",
@@ -553,6 +585,7 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
             styles: `<link rel="stylesheet" href="/css/search.css" />`,
             scripts: `<script src="/js/pages/detail_article.js"></script>`,
             user,
+            profile,
             articles: results,
             page,
             limit,

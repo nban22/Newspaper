@@ -22,6 +22,7 @@ export const getAllCategories = catchAsync(
 
 export const fetchTopCategories = async () => {
     const categoriesWithCounts = await Article.aggregate([
+        { $match: { status: "published" } },
         { $group: { _id: "$category_id", articleCount: { $sum: 1 } } },
         { $sort: { articleCount: -1 } },
         { $limit: 10 },
@@ -34,15 +35,17 @@ export const fetchTopCategories = async () => {
             const category = await Category.findById(categoryId).select("name");
             const article = await Article.findOne({ category_id: categoryId })
                 .sort({ publish_date: -1 })
-                .select("title publish_date thumbnail");
+                .select("title publish_date thumbnail is_premium");
 
 
             return {
+                id: categoryId,
                 name: category?.name,
                 articleTitle: article?.title,
                 articleId: article?._id,
                 publishDate: article?.publish_date,
                 thumbnail: article?.thumbnail,
+                isPremium: article?.is_premium,
             };
         })
     );

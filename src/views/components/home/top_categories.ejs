@@ -8,7 +8,10 @@
             <% topCategories.forEach((category) => { %>
                 <div class="col">
                     <div class="border rounded p-2 h-100">
-                        <h5 class="text-primary"><%= category.name || "Danh mục không xác định" %></h5>
+                        <a href="http://localhost:3002/chuyen-muc/<%= category.id %>" style="text-decoration: none;">
+                            <h5 class="text-primary"><%= category.name || "Danh mục không xác định" %></h5>
+                        </a>
+                        
                         <div class="d-flex flex-column">
                             <a href="http://localhost:3002/article/<%= category.articleId %>" class="d-block">
                                 <img src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
@@ -23,6 +26,9 @@
                                     <p class="card-text">
                                         Ngày xuất bản: <%= category.publishDate %>
                                     </p>
+                                    <% if (category.isPremium) { %>
+                                        <span class="badge rounded-pill bg-warning text-dark">Premium</span>
+                                    <% } %>
                                 <% } %>
                             </div>
                         </div>

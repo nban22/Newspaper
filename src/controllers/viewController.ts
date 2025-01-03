@@ -484,11 +484,19 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
     const limit = 5; // Limit of articles per page
     const skip = (page - 1) * limit; // Skip calculation
 
+    // Get filter criteria
+    const statusFilter = req.query.status;
+
+    const filterCriteria: any = { writer_id: writer._id };
+    if (statusFilter) {
+        filterCriteria.status = statusFilter;
+    }
+
     // Get the total count of articles for pagination
-    const totalArticles = await Article.countDocuments({ writer_id: writer._id });
+    const totalArticles = await Article.countDocuments(filterCriteria);
 
     // Fetch articles with pagination
-    const articles = (await Article.find({ writer_id: writer._id })
+    const articles = (await Article.find(filterCriteria)
         .populate("category_id")
         .skip(skip)
         .limit(limit)).map(article => ({
@@ -505,45 +513,35 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
             return 0;
         };
 
-            const statusPriorityA = getStatusPriority(a);
-            const statusPriorityB = getStatusPriority(b);
+        const statusPriorityA = getStatusPriority(a);
+        const statusPriorityB = getStatusPriority(b);
 
-            // First, compare based on status (published > rejected > draft)
-            if (statusPriorityA !== statusPriorityB) {
-                return statusPriorityB - statusPriorityA;
-            }
+        if (statusPriorityA !== statusPriorityB) {
+            return statusPriorityB - statusPriorityA;
+        }
 
-            // If statuses are the same, compare based on premium
-            if (a.is_premium !== b.is_premium) {
-                return b.is_premium ? 1 : -1; // Premium first (highest priority)
-            }
+        if (a.is_premium !== b.is_premium) {
+            return b.is_premium ? 1 : -1;
+        }
 
-            return 0; // If both status and premium are the same, maintain original order
-        });
+        return 0;
+    });
 
     // Calculate total pages
     const totalPages = Math.ceil(totalArticles / limit);
 
-    let profile = null;
-    if (user?.role === "subscriber") {
-        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
-    } else if (user?.role === "writer") {
-        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
-    } else if (user?.role === "editor") {
-        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
-    }
-
-    // Render the page with pagination data
     res.status(StatusCodes.OK).render("pages/default/writer_articles", {
         layout: "layouts/default",
         title: "Danh sách bài viết",
         user: user,
-        profile,
         articles: articles,
         page: page,
         totalPages: totalPages,
+        currentStatus: statusFilter || "", // Pass the current filter to the view
     });
 });
+
+
 
 export const getSearchPage = async (req: Request, res: Response, next: NextFunction) => {
     try {

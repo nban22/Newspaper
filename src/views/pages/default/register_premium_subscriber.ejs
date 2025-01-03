@@ -1,0 +1,78 @@
+<div class="row justify-content-center my-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Đăng ký Tài khoản Premium</h3>
+            </div>
+            <div class="card-body">
+                <form id="register_premium_subscriber_form">
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="Nhập email"
+                            value="<%= user?.email %>"
+                            disabled
+                        />
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Nhập mật khẩu"
+                            required
+                        />
+                    </div>
+                    <!-- // thông báo lỗi với class của boostrap -->
+                    <div class="mb-3">
+                        <div id="error-message" class="text-danger"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.querySelector("#register_premium_subscriber_form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+
+        const response = await fetch("/api/v1/subscribers/register-premium", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                password,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            alert("Đăng ký tài khoản Premium thành công");
+            window.location.href = "/";
+        } else {
+            document.querySelector("#error-message").textContent = data.message;
+        }
+    });
+
+</script>

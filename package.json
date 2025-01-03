@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules",
-    "seed": "ts-node src/seeds/datafake.ts"
+    "seed": "ts-node src/seeds/datafake.ts",
+    "build": "tsc",
+    "start_prod": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",

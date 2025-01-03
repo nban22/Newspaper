@@ -3,14 +3,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const articlesList = document.querySelector('.articles-list');
     const articlesCount = document.querySelector('.articlesCount');
     const allArticles = Array.from(articlesList.children);
+    let allArticlesPremium = allArticles.concat();
     const dropdownButton = document.getElementById('dropdownStatus');
+    const premiumCheckbox = document.getElementById('premiumCheckbox');
     let previousStatus = 'all';
 
+    premiumCheckbox.addEventListener('change', () => {
+        const isPremium = premiumCheckbox.checked;
+        const filteredArticles = allArticlesPremium.filter(article => {
+            return article.getAttribute('is-premium') === isPremium.toString();
+        });
+
+        articlesCount.innerText = filteredArticles.length;
+        articlesList.innerHTML = '';
+        filteredArticles.forEach(article => articlesList.appendChild(article));
+    });
+
+    // Filter articles based on the selected status
     Array.from(selectMenu.children).forEach((state) => {
         state.addEventListener('click', () => {
+            const isPremium = premiumCheckbox.checked;
             // Update the dropdown text to show the selected status
             dropdownButton.innerText = state.innerText;
-            
 
             // Update the previous status
             const status = state.getAttribute('status');
@@ -23,9 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // If the selected status is 'all', show all articles
             if (status === 'all') {
-                articlesCount.innerText = allArticles.length;
+                allArticlesPremium = allArticles.concat();
+
+                const filterPremium = allArticles.filter(article => {
+                    return article.getAttribute('is-premium') === isPremium.toString();
+                });
+                articlesCount.innerText = filterPremium.length;
                 articlesList.innerHTML = '';
-                allArticles.forEach(article => articlesList.appendChild(article));
+                filterPremium.forEach(article => articlesList.appendChild(article));
                 return;
             }
 
@@ -40,9 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             );
 
-            articlesCount.innerText = filteredArticles.length;
+            allArticlesPremium = filteredArticles.concat();
+            const filterPremium = filteredArticles.filter(article => {
+                return article.getAttribute('is-premium') === isPremium.toString();
+            });
+            articlesCount.innerText = filterPremium.length;
             articlesList.innerHTML = '';
-            filteredArticles.forEach(article => articlesList.appendChild(article));
+            filterPremium.forEach(article => articlesList.appendChild(article));
+            // filteredArticles.forEach(article => articlesList.appendChild(article));
         });
     });
 });

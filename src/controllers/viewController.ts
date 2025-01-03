@@ -310,11 +310,7 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    console.log({ articles });
-
-    
-    console.log({category});
-    
+    const totalArticles = await Article.countDocuments({ category_id: category._id });    
 
     return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
         layout: "layouts/default",
@@ -324,9 +320,8 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         category,
         articles,
         page,
-        totalPages: Math.ceil(articles.length / limit)
-    })
-
+        totalPages: Math.ceil(totalArticles / limit)
+    });
 })
 
 export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -377,12 +372,13 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
         return 0; // If both status and premium are the same, maintain original order
     });
 
+
     res.status(StatusCodes.OK).render("pages/tag_articles", {
         user: user,
         tag,
         articles,
         page,
-        totalPages: Math.ceil(articles.length / limit)
+        totalPages: Math.ceil(article_ids.length / limit)
     })
 });
 

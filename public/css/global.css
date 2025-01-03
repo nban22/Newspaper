@@ -17,20 +17,34 @@ body {
     --secondary-color: black;
 }
 
-
 .no-underline {
-    text-decoration: none; 
+    text-decoration: none;
 }
-  
+
 .no-underline:hover {
-    color: #007bff; 
+    color: #007bff;
     text-decoration: underline;
 }
-  
+
 .btn {
     padding: 8px;
 }
 
 .btn:hover {
     border-bottom: 2px solid var(--secondary-color);
+}
+
+.rect {
+    width: 8px;
+    height: 30px;
+    background-color: var(--secondary-color);
+    margin-top: 3px;
+    margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+    .rect {
+        width: 6px; /* Adjust rectangle size for mobile */
+        height: 20px; /* Adjust rectangle size for mobile */
+    }
 }

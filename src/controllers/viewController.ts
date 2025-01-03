@@ -100,11 +100,11 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
     const user = req.body.user;
 
     let profileOwner: any;
-    if (user.role === "subscriber") {
+    if (user?.role === "subscriber") {
         profileOwner = await SubscriberProfile.findOne({ user_id: userId });
-    } else if (user.role === "writer") {
+    } else if (user?.role === "writer") {
         profileOwner = await WriterProfile.findOne({ user_id: userId });
-    } else if (user.role === "editor") {
+    } else if (user?.role === "editor") {
         profileOwner = await EditorProfile.findOne({ user_id: userId });
     } else {
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
@@ -138,12 +138,12 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    if (article.is_premium && req.body.user === null) {
+    if (article.is_premium && user === null) {
         const message = "Bài viết này chỉ dành cho người đăng ký thành viên!";
         return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
     }
 
-    if (article.is_premium && req.body.user.role === "subscriber") {
+    if (article.is_premium && user?.role === "subscriber") {
         const message = "Tài khoản của bạn đã hết hạn!";
         const subscriber = await SubscriberProfile.findOne({ user_id: req.body.user._id });
         if (subscriber && subscriber.subscription_status === "expired") {
@@ -221,9 +221,21 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const sanitizedContent = sanitizeContent(String(rawContent));
 
 
-    const editorCategory = user.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
+    const editorCategory = user?.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
     // Render trang bài viết
-    res.status(StatusCodes.OK).render("pages/detail_article", {
+    res.status(StatusCodes.OK).render("pages/default/detail_article", {
+        layout: "layouts/default",
+        title: updatedArticle.title,
+        scripts: `<script src="/js/pages/detail_article.js"></script>
+                <script src="/js/handling/reject_article.js"></script>
+                <script src="/js/handling/approve_article.js"></script>
+                <script
+                    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+                    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+                    crossorigin="anonymous"
+                    referrerpolicy="no-referrer"
+                ></script>`,
+        styles: `<link rel="stylesheet" href="/css/detail_article.css" />`,
         user,
         article: {
             ...updatedArticle.toObject(),
@@ -246,9 +258,9 @@ export const getEditArticleForm = catchAsync(async (req: Request, res: Response,
 
     const user = req.body.user;
 
-    const writer = await WriterProfile.findOne({ user_id: user._id });
+    const writer = await WriterProfile.findOne({ user_id: user?._id });
     if (!writer) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!", true));
     }
 
     // status draft or rejected
@@ -498,7 +510,11 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
         }));
 
         // Return the results, or a message if no articles are found
-        res.render("pages/search", {
+        res.render("pages/default/search", {
+            layout: "layouts/default",
+            title: "Tìm kiếm",
+            styles: `<link rel="stylesheet" href="/css/search.css" />`,
+            scripts: `<script src="/js/pages/detail_article.js"></script>`,
             user,
             articles: results,
             page,

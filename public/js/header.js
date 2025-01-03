@@ -1,14 +1,10 @@
-const categoriesList = document.querySelector("categories-list");
-// const logoutForm = document.querySelector('#logout-form');
 
-// logoutForm.addEventListener('submit', (e) => {
-//     const ok = confirm('Bạn có chắc chắn muốn đăng xuất?');
-//     if (!ok) {
-//         e.preventDefault();
-//     } else {
-//         return;
-//     }
-// })
+
+// document.getElementById("search-form").style.display = "none";
+// document.getElementById("search-icon").onclick = function () {
+//     document.getElementById("search-form").style.display = "block";
+//     document.getElementById("search-form").focus();
+// };
 
 document.addEventListener("DOMContentLoaded", () => {
     const searchForm = document.getElementById("search-form");
@@ -26,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 limit: "10",
                 page: "1",
                 sort: "view_count",
-                order: "desc"
+                order: "desc",
             });
 
             // Navigate to the search page with query parameters

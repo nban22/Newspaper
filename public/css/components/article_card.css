@@ -3,6 +3,10 @@
     --container-padding: 10px;
 }
 
+.premium {
+    border: 2px solid #ffc107;
+}
+
 .article-container {
     padding: var(--container-padding);
     height: var(--container-height);
@@ -92,5 +96,24 @@
     &:hover{
         background-color: #db0000;
         color: #fff;
+    }
+}
+
+
+@media screen and (max-width: 1200px) {
+    .article-container {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: 200px;
+    }
+
+    .information {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 }

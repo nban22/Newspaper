@@ -84,7 +84,14 @@ export const updateArticle = catchAsync(async (req: Request, res: Response, next
 });
 
 export const getLatestArticles = async () => {
-    const latestArticles = await Article.find({status: "published"}).sort({created_at: -1}).limit(10).populate("category_id").populate("writer_id")                         
+    const latestArticles = await Article.find({status: "published"}).sort({created_at: -1}).limit(10).populate({
+        path: "category_id",              // Populate category_id
+        select: "name parent_id",         // Select name and parent_id fields
+        populate: {                       // Populate parent_id to get parent category
+            path: "parent_id",
+            select: "name",               // Select the name field of the parent category
+        },
+    }).populate("writer_id")                         
     
     let articles = latestArticles.map(article => ({
         ...article.toObject(),

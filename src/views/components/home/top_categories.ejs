@@ -1,60 +1,99 @@
-<div class="m-3">
-    <div class="d-flex">
+<div class="m-2">
+    <div class="d-flex align-items-center">
         <div class="rect"></div>
-        <h3 class="mb-2">Top 10 chuyên mục hàng đầu</h3>
+        <h3 class="mb-2 fs-4">Top 10 chuyên mục hàng đầu</h3>
     </div>
-    <div class="">
+    <div class="categories-wrapper">
         <% if (topCategories && topCategories.length> 0) { %>
             <div class="top-categories">
-                <div class="container">
+                <div class="container-fluid px-0">
                     <div class="row">
-                        <div class="col-md-12 ">
-                            <ul class="m-0 d-flex list-unstyled justify-content-between" id="categoryContainer">
-                                <% topCategories.forEach((category)=> { %>
-                                    <li class="text-dark" value="<%= category.articleId %>"
-                                        onclick="showArticle(this.value)">
-                                        <%= category.name %>
-                                    </li>
+                        <div class="col-12">
+                            <div class="categories-scroll">
+                                <ul class="m-0 d-flex list-unstyled gap-3 flex-nowrap overflow-auto py-2" id="categoryContainer">
+                                    <% topCategories.forEach((category, index)=> { %>
+                                        <li class="text-dark">
+                                            <button class="category-btn <%= index === 0 ? 'active' : '' %>"
+                                                    id="<%= index === 0 ? 'first' : '' %>" 
+                                                    value="<%= category.articleId %>"
+                                                    onclick="showArticle(this.value)">
+                                                <%= category.name %>
+                                            </button>
+                                        </li>
                                     <% }) %>
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <% topCategories.forEach((category)=> { %>
+
+                <% topCategories.forEach((category, index)=> { %>
                     <% if (category.articleId) { %>
-                        <div class="d-flex" style="display: none;" id="<%= category.articleId %>">
-                            <img src="<%= category.thumbnail || 'https://via.placeholder.com/300x300' %>"
-                                class="d-block w-80" height="300px"
-                                alt="<%= category.articleTitle %>" />
-                            <div class="flex">
-                                <p class="card-text mb-1">
-                                    <%= category.name %>
-                                </p>
-                                <h5>
-                                    <%= category.articleTitle %>
-                                </h5>
+                        <div class="category-content d-flex flex-column flex-md-row mt-2 gap-3 <%= index === 0 ? 'd-block' : 'd-none' %>" 
+                             id="<%= category.articleId %>">
+                            <div class="category-image-wrapper">
+                                <img src="<%= category.thumbnail || 'https://via.placeholder.com/300x300' %>"
+                                     class="category-image rounded" 
+                                     alt="<%= category.articleTitle %>" />
+                            </div>
+                            <div class="category-info">
+                                <p class="card-text mb-1"><%= category.name %></p>
+                                <h5 class="fs-5"><%= category.articleTitle %></h5>
                                 <p class="card-text small mb-2 text-muted">
                                     Ngày đăng: <%= category.publishDate %>
                                 </p>
                             </div>
                         </div>
-                        <% } %>
-                            <% }) %>
+                    <% } %>
+                <% }) %>
             </div>
-            <% } else { %>
-                <p>No categories available.</p>
-                <% } %>
+        <% } %>
     </div>
 </div>
 <script>
-    let pre = "";
-    function show(id) {
-        if (pre != "") {
-            var preArticle = document.getElementById(pre);
-            article.style.display = 'none';
+    let currentActiveId = "";
+    
+    function showArticle(id) {
+        // Initialize with first category if none selected
+        if (currentActiveId === "") {
+            const firstCategory = document.getElementById('first');
+            currentActiveId = firstCategory.value;
         }
-        var article = document.getElementById(id);
-        article.style.display = 'block';
-        pre = id;
+
+        // Handle article visibility
+        const previousArticle = document.getElementById(currentActiveId);
+        const newArticle = document.getElementById(id);
+        
+        if (previousArticle) {
+            previousArticle.classList.remove('d-block');
+            previousArticle.classList.add('d-none');
+        }
+        
+        if (newArticle) {
+            newArticle.classList.remove('d-none');
+            newArticle.classList.add('d-block');
+        }
+
+        // Update button states
+        const buttons = document.querySelectorAll('.category-btn');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+            if (button.value === id) {
+                button.classList.add('active');
+            }
+        });
+
+        currentActiveId = id;
+    }
+
+    // Add smooth scroll for category buttons
+    const categoryContainer = document.getElementById('categoryContainer');
+    if (categoryContainer) {
+        categoryContainer.addEventListener('wheel', (e) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                categoryContainer.scrollLeft += e.deltaY;
+            }
+        });
     }
 </script>

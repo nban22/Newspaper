@@ -26,6 +26,18 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
     const latestArticles = (await articleController.getLatestArticles()).data.articles;
 
+    const trendingArticles = (await Article.find({ status: "published" })).map((article) => ({
+        ...article.toObject(),
+        summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
+        publish_date: moment(article.publish_date).format("DD-MM-YYYY"),
+        created_at: moment(article.created_at).format("DD-MM-YYYY"),
+    }));
+
+    // sort trending articles by view count and limit to 10
+    trendingArticles.sort((a, b) => b.view_count - a.view_count);
+    trendingArticles.splice(10);
+
+
     const featuredArticles = (await Article.getFeaturedArticles()).map((article) => ({
         ...article.toObject(),
         summary: article.summary?.replace(/<\/?[^>]+(>|$)/g, ""),
@@ -41,8 +53,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),
     }));
-
-    console.log({ topCategories });
     
     
     return res.status(StatusCodes.OK).render("pages/default/home", {
@@ -53,6 +63,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
+        trendingArticles: trendingArticles,
     });
 });
 

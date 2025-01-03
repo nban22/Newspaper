@@ -1,62 +1,147 @@
 <div class="update-form-container container-sm my-5">
-    <h1>Cập nhật thông tin</h1>
-    <hr />
-    <form id="updateProfileForm" enctype="multipart/form-data">
-        <input type="hidden" name="user_id" value="<%= user._id %>" />
+  <h1>Cập nhật thông tin</h1>
+  <hr />
+  <form id="updateProfileForm" enctype="multipart/form-data">
+      <input type="hidden" name="user_id" value="<%= user._id %>" />
 
-        <div class="col-12">
-            <label for="inputFullName1" class="form-label" name="full_Name">Họ tên</label>
-            <input
-                type="text"
-                class="form-control"
-                name="full_name"
-                id="inputFullName1"
-                value="<%= profile.full_name || ''%>"
-                required
-            />
-        </div>
+      <div class="col-12">
+          <label for="inputFullName1" class="form-label" name="full_Name">Họ tên</label>
+          <input
+              type="text"
+              class="form-control"
+              name="full_name"
+              id="inputFullName1"
+              value="<%= profile.full_name || ''%>"
+              required
+          />
+      </div>
 
-        <% if (user.role === 'writer') { %>
-        <div class="col-12">
-            <label for="inputPenName1" class="form-label" name="pen_name">Bút danh</label>
-            <input
-                type="text"
-                name="pen_name"
-                class="form-control"
-                id="inputPenName1"
-                value="<%= profile.pen_name || ''%>"
-                required
-            />
-        </div>
-        <% } %>
+      <% if (user.role === 'writer') { %>
+      <div class="col-12">
+          <label for="inputPenName1" class="form-label" name="pen_name">Bút danh</label>
+          <input
+              type="text"
+              name="pen_name"
+              class="form-control"
+              id="inputPenName1"
+              value="<%= profile.pen_name || ''%>"
+              required
+          />
+      </div>
+      <% } %>
 
-        <div class="col-12">
-            <label for="inputEmail1" class="form-label" name="email">Email</label>
-            <input
-                type="email"
-                class="form-control"
-                name="email"
-                id="inputEmail1"
-                placeholder="abc@gmail.com"
-                value="<%= user.email || ''%>"
-                disabled
-            />
-        </div>
+      <div class="col-12">
+          <label for="inputEmail1" class="form-label" name="email">Email</label>
+          <input
+              type="email"
+              class="form-control"
+              name="email"
+              id="inputEmail1"
+              placeholder="abc@gmail.com"
+              value="<%= user.email || ''%>"
+              disabled
+          />
+      </div>
 
-        <div class="col-12">
-            <label for="inputDOB" class="form-label" name="dob">Ngày sinh</label>
-            <input
-                type="date"
-                class="form-control"
-                id="inputDOB"
-                name="dob"
-                value="<%= profile.dob ? profile.dob.toISOString().split('T')[0] : '' %>"
-                required
-            />
-        </div>
+      <div class="col-12">
+          <label for="inputDOB" class="form-label" name="dob">Ngày sinh</label>
+          <input
+              type="date"
+              class="form-control"
+              id="inputDOB"
+              name="dob"
+              value="<%= profile.dob ? profile.dob.toISOString().split('T')[0] : '' %>"
+              required
+          />
+      </div>
 
-        <div class="col-12 d-flex justify-content-center">
-            <button type="submit" class="btn-update btn btn-secondary">Cập nhật</button>
-        </div>
-    </form>
+      <div class="col-12 d-flex justify-content-center">
+          <button type="submit" class="btn-update btn btn-secondary">Cập nhật</button>
+      </div>
+  </form>
+
+  <hr />
+
+  <!-- Form đổi mật khẩu -->
+  <h2>Đổi mật khẩu</h2>
+  <form id="updatePasswordForm">
+      <input type="hidden" name="user_id" value="<%= user._id %>" />
+
+      <div class="col-12">
+          <label for="inputOldPassword" class="form-label">Mật khẩu cũ</label>
+          <input
+              type="password"
+              class="form-control"
+              name="old_password"
+              id="inputOldPassword"
+              required
+          />
+      </div>
+
+      <div class="col-12">
+          <label for="inputNewPassword" class="form-label">Mật khẩu mới</label>
+          <input
+              type="password"
+              class="form-control"
+              name="new_password"
+              id="inputNewPassword"
+              required
+          />
+      </div>
+
+      <div class="col-12">
+          <label for="inputConfirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+          <input
+              type="password"
+              class="form-control"
+              name="confirm_password"
+              id="inputConfirmPassword"
+              required
+          />
+      </div>
+
+      <div>
+          <p id="error-message" class="text-danger"></p>
+      </div>
+
+      <div class="col-12 d-flex justify-content-center">
+          <button type="submit" class="btn-update-password btn btn-primary">Đổi mật khẩu</button>
+      </div>
+  </form>
 </div>
+
+
+<script>
+  document.querySelector("#updatePasswordForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const oldPassword = document.querySelector("#inputOldPassword").value;
+    const newPassword = document.querySelector("#inputNewPassword").value;
+    const confirmPassword = document.querySelector("#inputConfirmPassword").value;
+    const userId = document.querySelector("input[name='user_id']").value;
+
+    if (newPassword !== confirmPassword) {
+      document.querySelector("#error-message").innerText = "Mật khẩu mới không khớp";
+      return;
+    }
+    const response = await fetch("/api/v1/change_password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentPassword: oldPassword,
+        newPassword,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      alert("Đổi mật khẩu thành công");
+      document.querySelector("#updatePasswordForm").reset();
+    } else {
+      document.querySelector("#error-message").innerText = data.message;
+    }
+  })
+</script>

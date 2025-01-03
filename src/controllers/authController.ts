@@ -17,12 +17,12 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     const { email, password, role } = req.body;
     if (!email || !password || !role) {
         return next(
-            new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role")
+            new AppError(StatusCodes.BAD_REQUEST, "Vui lòng cung cấp email, mật khẩu và vai trò")
         );
     }
 
     if (!validator.isEmail(email)) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Email is not valid"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Email không hợp lệ"));
     }
 
     const validRoles = ["admin", "writer", "subscriber", "editor"];
@@ -38,7 +38,7 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
 
     // Check if user already exists
     if (await User.findOne({ email: email })) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "User already exists"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Email đã tồn tại"));
     }
 
     // Create new user
@@ -65,25 +65,25 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email and password"));
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Vui lòng cung cấp email và mật khẩu"));
     }
 
     // Check if user exists
     const user = await User.findOne({ email: email }).select("+password");
     if (!user) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "Email is not found"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "Người dùng không tồn tại"));
     }
 
     // Check if password is correct
     if (!user.password || !(await bcrypt.compare(password, user.password))) {
-        return next(new AppError(StatusCodes.UNAUTHORIZED, "Wrong password"));
+        return next(new AppError(StatusCodes.UNAUTHORIZED, "Mật khẩu không chính xác"));
     }
     const accessTokenStr = accessToken(user);
 
     if (user.role === "subscriber") {
         const subscriberProfile = await SubscriberProfile.findOne({ user_id: user._id });
         if (!subscriberProfile) {
-            return next(new AppError(StatusCodes.NOT_FOUND, "No subscriber profile found!"));
+            return next(new AppError(StatusCodes.NOT_FOUND, "Độc giả không tồn tại"));
         }
 
         if (new Date() > subscriberProfile.expiryDate) {
@@ -207,5 +207,32 @@ export const resetPassword = catchAsync(async (req: Request, res: Response, next
         status: "success",
         data: null,
         message: "Password has been reset successfully",
+    });
+});
+
+
+export const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { currentPassword, newPassword } = req.body;
+    isRequired(currentPassword, "currentPassword");
+    isRequired(newPassword, "newPassword");
+
+    const user = await User.findById(req.body.userId).select("+password");
+
+    if (!user) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "Người dùng không tồn tại"));
+    }
+
+    if (!(await bcrypt.compare(currentPassword, user.password!))) {
+        return next(new AppError(StatusCodes.UNAUTHORIZED, "Mât khẩu hiện tại không chính xác"));
+    }
+
+    user.password = newPassword;
+
+    await user.save();
+
+    res.status(StatusCodes.OK).json({
+        status: "success",
+        data: null,
+        message: "Password has been changed successfully",
     });
 });

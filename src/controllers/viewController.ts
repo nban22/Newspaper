@@ -24,6 +24,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     const user = req.body.user;
 
     const latestArticles = (await articleController.getLatestArticles()).data.articles;
+    const topArticles = (await articleController.getTopArticles()).data.articles;
 
     const featuredArticles = (await Article.getFeaturedArticles()).map((article) => ({
         ...article.toObject(),
@@ -44,6 +45,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     return res.status(StatusCodes.OK).render("pages/default/home", {
         layout: "layouts/default",
         user: user,
+        topArticles: topArticles,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,

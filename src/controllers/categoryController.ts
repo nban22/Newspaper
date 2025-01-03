@@ -32,11 +32,10 @@ export const fetchTopCategories = async () => {
     const categoriesWithArticles = await Promise.all(
         topCategoryIds.map(async (categoryId) => {
             const category = await Category.findById(categoryId).select("name");
-            const article = await Article.findOne({ category_id: categoryId })
+            const article = await Article.findOne({ category_id: categoryId, status: "published" })
                 .sort({ publish_date: -1 })
                 .select("title publish_date thumbnail");
-
-
+            
             return {
                 name: category?.name,
                 articleTitle: article?.title,
@@ -46,7 +45,6 @@ export const fetchTopCategories = async () => {
             };
         })
     );
-
     return categoriesWithArticles;
 };
 

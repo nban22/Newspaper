@@ -1,36 +1,60 @@
-<div class="mt-5">
+<div class="m-3">
     <div class="d-flex">
         <div class="rect"></div>
-        <h3 class="mb-4">Danh Mục Hàng Đầu</h3>
+        <h3 class="mb-2">Top 10 chuyên mục hàng đầu</h3>
     </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-4">
-        <% if (topCategories && topCategories.length > 0) { %>
-            <% topCategories.forEach((category) => { %>
-                <div class="col">
-                    <div class="border rounded p-2 h-100">
-                        <h5 class="text-primary"><%= category.name || "Danh mục không xác định" %></h5>
-                        <div class="d-flex flex-column">
-                            <a href="http://localhost:3002/article/<%= category.articleId %>" class="d-block">
-                                <img src="<%= category.thumbnail || '/path/to/default-thumbnail.jpg' %>"
-                                     alt="<%= category.name || 'Danh mục không xác định' %>"
-                                     class="img-fluid"/>
-                            </a>
-                            <div class="card-body d-flex flex-column justify-content-between mt-2" style="flex: 1">
-                                <% if (category.articleTitle) { %>
-                                    <a href="/article/<%= category.articleId %>" class="text-decoration-none text-dark">
-                                        <h6 class="card-title article-title"><%= category.articleTitle %></h6>
-                                    </a>
-                                    <p class="card-text">
-                                        Ngày xuất bản: <%= category.publishDate %>
-                                    </p>
-                                <% } %>
-                            </div>
+    <div class="">
+        <% if (topCategories && topCategories.length> 0) { %>
+            <div class="top-categories">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <ul class="m-0 d-flex list-unstyled justify-content-between" id="categoryContainer">
+                                <% topCategories.forEach((category)=> { %>
+                                    <li class="text-dark" value="<%= category.articleId %>"
+                                        onclick="showArticle(this.value)">
+                                        <%= category.name %>
+                                    </li>
+                                    <% }) %>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            <% }); %>
-        <% } else { %>
-            <p>No categories available.</p>
-        <% } %>
+                <% topCategories.forEach((category)=> { %>
+                    <% if (category.articleId) { %>
+                        <div class="d-flex" style="display: none;" id="<%= category.articleId %>">
+                            <img src="<%= category.thumbnail || 'https://via.placeholder.com/300x300' %>"
+                                class="d-block w-80" height="300px"
+                                alt="<%= category.articleTitle %>" />
+                            <div class="flex">
+                                <p class="card-text mb-1">
+                                    <%= category.name %>
+                                </p>
+                                <h5>
+                                    <%= category.articleTitle %>
+                                </h5>
+                                <p class="card-text small mb-2 text-muted">
+                                    Ngày đăng: <%= category.publishDate %>
+                                </p>
+                            </div>
+                        </div>
+                        <% } %>
+                            <% }) %>
+            </div>
+            <% } else { %>
+                <p>No categories available.</p>
+                <% } %>
     </div>
 </div>
+<script>
+    let pre = "";
+    function show(id) {
+        if (pre != "") {
+            var preArticle = document.getElementById(pre);
+            article.style.display = 'none';
+        }
+        var article = document.getElementById(id);
+        article.style.display = 'block';
+        pre = id;
+    }
+</script>

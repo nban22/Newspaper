@@ -1,0 +1,34 @@
+<div class="w-25 m-2">
+    <a href="/top_articles" class="text-decoration-none text-dark">
+        <h3 class="">Bài viết phổ biến</h3>
+    </a>
+    <div class="">
+        <ul class="trending list-unstyled list-group d-flex flex-column gap-3 p-2 overflow-auto">
+            <% topArticles.forEach((article, index) => { %>
+                <li class="rounded">
+                    <a href="/article/<%= article._id %>"
+                        class="list-group-item list-group-item-action d-flex gap-3 py-3 align-items-center"
+                        aria-current="true">
+                        <h1><%= index %></h1>
+                        <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
+                            alt="<%= article.title %>" width="32" height="32" class="rounded-circle flex-shrink-0" />
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">
+                                    <%= article.title || 'No Title' %>
+                                </h6>
+                                <p class="card-text small mb-1">
+                                    <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name}>
+                                        ${article.category_id.name}` : article.category_id.name %>
+                                </p>
+                            </div>
+                            <small class="opacity-50 text-nowrap">
+                                <%= article.publish_date %>
+                            </small>
+                        </div>
+                    </a>
+                </li>
+                <% }) %>
+        </ul>
+    </div>
+</div>

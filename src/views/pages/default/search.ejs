@@ -25,20 +25,20 @@
         </div>
 
         <!-- Articles Section -->
-        <div class="row g-4">
+        <ul class="row g-4 list-unstyled mt-4 gap-3">
             <% articles.forEach(article => { %>
-                <div class="col-12">
-                    <div class="card d-flex flex-row align-items-start search-card">
+                <li class="m-0">
+                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2 border rounded">
                         <!-- Image Section -->
-                        <a href="/article/<%= article._id %>" class="thumbnail-container">
+                        <a href="/article/<%= article._id %>" class="thumbnail-container" style="flex: 0 1 250px">
                             <img 
                                 src="<%= article.thumbnail || '/images/default-thumbnail.jpg' %>" 
-                                class="card-img-top" 
+                                class="img-fluid rounded-top" 
                                 alt="<%= article.title %>" 
                                 loading="lazy">
                         </a>
                         <!-- Text Section -->
-                        <div class="card-body">
+                        <div class="card-body" style="flex: 1 1 200px">
                             <a href="/article/<%= article._id %>">
                                 <h5 class="card-title" title="<%= article.title %>">
                                     <%= article.title %>
@@ -73,9 +73,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </li>
             <% }); %>
-        </div>
+        </ul>
 
         <!-- Pagination -->
         <nav class="mt-4">

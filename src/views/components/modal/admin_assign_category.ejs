@@ -1,0 +1,66 @@
+<!-- Modal Phân Công Chuyên Mục -->
+<div class="modal fade" id="assignCategoryModal" tabindex="-1" aria-labelledby="assignCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignCategoryModalLabel">Phân Công Chuyên Mục Cho Biên Tập Viên</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="assignCategoryForm" data-igf>
+          <!-- Chọn Biên Tập Viên -->
+          <div class="mb-3">
+            <label for="editorSelect" class="form-label">Chọn Biên Tập Viên</label>
+            <select class="form-select" id="editorSelect">
+              <option value="">Chọn Biên Tập Viên</option>
+              <% editors?.forEach(editor => { %>
+                <option value="<%= editor._id %>"><%= editor.email %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Chọn Chuyên Mục -->
+          <div class="mb-3">
+            <label for="categoriesSelect" class="form-label">Chọn Chuyên Mục</label>
+            <select class="form-select" id="categoriesSelect">
+              <% categories?.forEach(category => { %>
+                <option value="<%= category._id %>"><%= category.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary" id="assignButton">Phân Công</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.querySelector("#assignCategoryForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const editorId = document.querySelector("#editorSelect").value;
+    const categoryId = document.querySelector("#categoriesSelect").value;
+    const response = await fetch(`/api/v1/users/assign-category`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        editorId,
+        categoryId,
+      }),
+    });
+    const result = await response.json();
+    if (result.status === "success") {
+      alert("Phân công chuyên mục thành công");
+      window.location.reload();
+    } else {
+      alert(result.message);
+    }
+  });
+</script>

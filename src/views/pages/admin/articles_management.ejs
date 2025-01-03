@@ -1,0 +1,92 @@
+<div class="container mt-5">
+    <h1 class="text-center">Quản lý bài viết</h1>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="/admin/articles/add" class="btn btn-success">+ Thêm bài viết</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tiêu đề</th>
+                <th>Chuyên mục</th>
+                <th>Trạng thái</th>
+                <th>Ngày đăng</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% articles.forEach((article, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= article?.title || 'N/A' %></td>
+                    <td><%= article?.category || 'Chưa phân loại' %></td>
+                    <td>
+                        <form 
+                            action="/admin/articles/<%= article?._id %>/status" 
+                            method="POST" 
+                            class="d-inline"
+                        >
+                            <input type="hidden" name="_method" value="PUT">
+                            <select 
+                                name="status" 
+                                class="form-select form-select-sm" 
+                                onchange="this.form.submit()"
+                            >
+                                <option value="draft" <%= article?.status === 'draft' ? 'selected' : '' %>>
+                                    Draft
+                                </option>
+                                <option value="published" <%= article?.status === 'published' ? 'selected' : '' %>>
+                                    Xuất bản
+                                </option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <% if (article?.created_at) { %>
+                            <%= new Date(article.created_at).toLocaleString('vi-VN', { 
+                                year: 'numeric', 
+                                month: '2-digit', 
+                                day: '2-digit', 
+                                hour: '2-digit', 
+                                minute: '2-digit', 
+                                second: '2-digit', 
+                                hour12: false 
+                            }) %>
+                        <% } else { %>
+                            N/A
+                        <% } %>
+                        </td>
+                    <td>
+                        <a 
+                            href="/article/<%= article?._id %>" 
+                            class="btn btn-info btn-sm"
+                        >
+                            Xem chi tiết
+                        </a>
+                        <a 
+                            href="/edit_article/<%= article?._id %>" 
+                            class="btn btn-warning btn-sm"
+                        >
+                            Cập nhật
+                        </a>
+                        <form 
+                            action="/admin/articles/<%= article?._id %>" 
+                            method="POST" 
+                            class="d-inline"
+                        >
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button 
+                                type="submit" 
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');"
+                            >
+                                Xoá
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>

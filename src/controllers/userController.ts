@@ -7,6 +7,7 @@ import WriterProfile from "../models/writerProfile";
 import EditorProfile from "../models/editorProfile";
 import SubscriberProfile from "../models/subscriberProfile";
 import validator from "validator";
+import Category from "../models/category";
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const users = await User.find();
@@ -209,11 +210,11 @@ export const deleteUser = catchAsync(async (req: Request, res: Response, next: N
         profile = await SubscriberProfile.findOne({ user_id: req.params.id });
     }
 
-    if (!profile) {
-        return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
-    }
+    // if (!profile) {
+    //     return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
+    // }
 
-    await profile.deleteOne();
+    await profile?.deleteOne();
 
     res.status(StatusCodes.OK).json({
         status: "success"
@@ -264,4 +265,45 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
     } catch (err) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Failed to update profile!"));
     }
+});
+
+
+export const assignCategory = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { editorId, categoryId } = req.body;
+    const user = await User.findOne({ _id: editorId, role: "editor" });
+
+    if (!user) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No user found with that ID!"));
+    }
+
+    const category = await Category.findOne({ _id: categoryId });
+
+    if (!category) {
+        return next(new AppError(StatusCodes.NOT_FOUND, "No category found with that ID!"));
+    }
+
+    let profile: any;
+
+    if (user.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: editorId });
+    }
+
+    if (!profile) {
+        return next(new AppError(StatusCodes.NOT_FOUND, `No profile found for user`));
+    } 
+
+    try {
+        await profile.updateOne({ category_id: categoryId });
+        
+        let updatedProfile = await EditorProfile.findOne({ user_id: editorId });
+
+        res.status(StatusCodes.OK).json({
+            status: "success",
+            profile: updatedProfile,
+            data: {
+            },
+        });
+    } catch (err) {
+        return next(new AppError(StatusCodes.BAD_REQUEST, "Failed to assign category!"));
+    }  
 });

@@ -13,10 +13,12 @@ userRouter.put("/me",attachUserId, authorizeRole(["writer", "editor", "subscribe
 
 userRouter.post("/",attachUserId, authorizeRole(["admin"]), userController.createUser);
 userRouter.get("/",attachUserId, authorizeRole(["admin"]), userController.getAllUsers);
-userRouter.put("/:id",attachUserId, authorizeRole(["admin"]), userController.updateUser);
-userRouter.delete("/:id",attachUserId, authorizeRole(["admin"]), userController.deleteUser);
+userRouter.put("/:id", userController.updateUser);
+userRouter.delete("/:id", userController.deleteUser);
 
 userRouter.get("/:id", userController.getUser);
+
+userRouter.post("/assign-category", userController.assignCategory);
 
 
 

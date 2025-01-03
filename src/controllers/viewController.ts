@@ -102,11 +102,11 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
     const user = req.body.user;
 
     let profileOwner: any;
-    if (user.role === "subscriber") {
+    if (user?.role === "subscriber") {
         profileOwner = await SubscriberProfile.findOne({ user_id: userId });
-    } else if (user.role === "writer") {
+    } else if (user?.role === "writer") {
         profileOwner = await WriterProfile.findOne({ user_id: userId });
-    } else if (user.role === "editor") {
+    } else if (user?.role === "editor") {
         profileOwner = await EditorProfile.findOne({ user_id: userId });
     } else {
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
@@ -140,12 +140,12 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
         return next(new AppError(StatusCodes.NOT_FOUND, "Article not found!"));
     }
 
-    if (article.is_premium && req.body.user === null) {
+    if (article.is_premium && user === null) {
         const message = "Bài viết này chỉ dành cho người đăng ký thành viên!";
         return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
     }
 
-    if (article.is_premium && req.body.user.role === "subscriber") {
+    if (article.is_premium && user?.role === "subscriber") {
         const message = "Tài khoản của bạn đã hết hạn!";
         const subscriber = await SubscriberProfile.findOne({ user_id: req.body.user._id });
         if (subscriber && subscriber.subscription_status === "expired") {
@@ -223,9 +223,21 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     const sanitizedContent = sanitizeContent(String(rawContent));
 
 
-    const editorCategory = user.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
+    const editorCategory = user?.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
     // Render trang bài viết
-    res.status(StatusCodes.OK).render("pages/detail_article", {
+    res.status(StatusCodes.OK).render("pages/default/detail_article", {
+        layout: "layouts/default",
+        title: updatedArticle.title,
+        scripts: `<script src="/js/pages/detail_article.js"></script>
+                <script src="/js/handling/reject_article.js"></script>
+                <script src="/js/handling/approve_article.js"></script>
+                <script
+                    src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+                    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+                    crossorigin="anonymous"
+                    referrerpolicy="no-referrer"
+                ></script>`,
+        styles: `<link rel="stylesheet" href="/css/detail_article.css" />`,
         user,
         article: {
             ...updatedArticle.toObject(),
@@ -248,9 +260,9 @@ export const getEditArticleForm = catchAsync(async (req: Request, res: Response,
 
     const user = req.body.user;
 
-    const writer = await WriterProfile.findOne({ user_id: user._id });
+    const writer = await WriterProfile.findOne({ user_id: user?._id });
     if (!writer) {
-        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
+        return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!", true));
     }
 
     // status draft or rejected
@@ -281,7 +293,7 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
     const limit = 5;
     const skip = (page - 1) * limit;
 
-    const articles = (await Article.find({ category_id: category._id })
+    const articles = (await Article.find({ category_id: category._id, status: "published" })
         .skip(skip)
         .limit(limit)).map(article => ({
         ...article.toObject(),
@@ -312,11 +324,7 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    console.log({ articles });
-
-    
-    console.log({category});
-    
+    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });    
 
     return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
         layout: "layouts/default",
@@ -326,9 +334,8 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         category,
         articles,
         page,
-        totalPages: Math.ceil(articles.length / limit)
-    })
-
+        totalPages: Math.ceil(totalArticles / limit)
+    });
 })
 
 export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -347,7 +354,7 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
     const limit = 5;
     const skip = (page - 1) * limit;
 
-    const articles = (await Article.find({ _id: { $in: article_ids } })
+    const articles = (await Article.find({ _id: { $in: article_ids }, status: "published" })
         .populate("category_id")
         .skip(skip)
         .limit(limit)).map(article => ({
@@ -379,12 +386,13 @@ export const getTagArticleList = catchAsync(async (req: Request, res: Response, 
         return 0; // If both status and premium are the same, maintain original order
     });
 
+    const totalArticles = await Article.countDocuments({ _id: { $in: article_ids }, status: "published" });
     res.status(StatusCodes.OK).render("pages/tag_articles", {
         user: user,
         tag,
         articles,
         page,
-        totalPages: Math.ceil(articles.length / limit)
+        totalPages: Math.ceil(totalArticles / limit)
     })
 });
 
@@ -500,7 +508,11 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
         }));
 
         // Return the results, or a message if no articles are found
-        res.render("pages/search", {
+        res.render("pages/default/search", {
+            layout: "layouts/default",
+            title: "Tìm kiếm",
+            styles: `<link rel="stylesheet" href="/css/search.css" />`,
+            scripts: `<script src="/js/pages/detail_article.js"></script>`,
             user,
             articles: results,
             page,

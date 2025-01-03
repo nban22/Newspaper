@@ -47,6 +47,12 @@ app.set("view engine", "ejs");
 app.set("views", "src/views");
 app.use(expressEjsLayouts);
 app.set("layout", false);
+app.use((req, res, next) => {
+    res.locals.scripts = res.locals.scripts || "";
+    res.locals.styles = res.locals.styles || "";
+    next();
+});
+
 
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -70,6 +76,12 @@ app.all("*", (req, res, next) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || "error";
+
+    if (err.renderErrorPage) {
+        return res.status(err.statusCode).render("pages/error/not_found_page", {
+            message: process.env.NODE_ENV === "development" ? err.message : false,
+        });
+    }
 
     res.status(err.statusCode).json({
         status: err.status,

@@ -12,11 +12,10 @@
             <ul class="d-flex flex-column gap-3 list-unstyled">
                 <% latestArticle.forEach(article=> { %>
                     <li class="" style="min-height: 80px;">
-                        <a href="/article/<%= article._id %>"
-                            class="d-flex flex-wrap gap-3 border rounded justify-content-center p-3 text-decoration-none text-dark">
-                            <div style="flex: 0 0 300px;">
+                        <a href="/article/<%= article._id %>" class="d-flex flex-wrap gap-3 border rounded justify-content-center p-3 text-decoration-none text-dark">
+                            <div style="flex: 1 1 250px;">
                                 <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
-                                    alt="<%= article.title %>" class="img-fluid" />
+                                        alt="<%= article.title %>" class="img-fluid rounded-top" />
                             </div>
                             <div class="card-body d-flex flex-column" style="flex: 1 1 200px;">
                                 <h5 class="card-title mb-2">

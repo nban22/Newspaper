@@ -69,7 +69,6 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
 
         
     }
-    console.log(userFilter);
 
     return res.status(StatusCodes.OK).render("pages/default/home", {
         layout: "layouts/default",
@@ -498,7 +497,7 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
                 { summary: { $regex: search, $options: "i" } },
                 { content: { $regex: search, $options: "i" } },
             ],
-            // status: 'published',
+            status: 'published',
         };
 
         // Pagination calculation: (page - 1) * limit
@@ -523,13 +522,13 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
         const results = formattedArticles.map((article) => ({
             _id: article._id,
             title: article.title,
-            category: categories.find((category) => category._id === article.category_id)?.name || "Tự do",
             tags: tags.find((tag) => tag._id === article._id)?.name || [],
             thumbnail: article.thumbnail || null,
             summary: sanitizeSummary(article.summary || ""),
             publishDate: article.publish_date || "Gần đây",
             viewCount: article.view_count || 0,
             sortField: sortField,
+            is_premium: article.is_premium,
         }));
 
         // Return the results, or a message if no articles are found
@@ -559,7 +558,6 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
 export const getRegisterPremiumSubscriberPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
     
-    console.log(user);
     if (!user || user.role !== "subscriber") {
         return next(new AppError(StatusCodes.NOT_FOUND, "You are not authorized to access this page!", true));
     }

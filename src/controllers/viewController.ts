@@ -19,6 +19,7 @@ import * as articleController from "./articleController";
 import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
 import formatDate from "../utils/formatDate";
+import { title } from "process";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -40,21 +41,19 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),
     }));
+
+    console.log({ topCategories });
+    
     
     return res.status(StatusCodes.OK).render("pages/default/home", {
         layout: "layouts/default",
+        scripts: `<script src="/js/pages/home.js"></script>`,
+        title: "Trang chủ",
         user: user,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
     });
-    // res.status(StatusCodes.OK).render("pages/home", {
-    //     layout: false,
-    //     user: user,
-    //     latestArticle: latestArticles,
-    //     featuredArticles: featuredArticles,
-    //     topCategories: topCategories,
-    // });
 });
 
 export const getLoginPage = (req: Request, res: Response, next: NextFunction) => {
@@ -311,13 +310,23 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    res.status(StatusCodes.OK).render("pages/category_articles", {
+    console.log({ articles });
+
+    
+    console.log({category});
+    
+
+    return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
+        layout: "layouts/default",
+        scripts: `<script src="/js/pages/articles_by_category.js"></script>`,
+        title: category.name,
         user: user,
         category,
         articles,
         page,
         totalPages: Math.ceil(articles.length / limit)
     })
+
 })
 
 export const getTagArticleList = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

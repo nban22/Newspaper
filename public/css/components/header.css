@@ -51,15 +51,15 @@
     border-color: var(--secondary-color);
 }
 
-.btn-secondary {
+.cusbtn-secondary {
     background-color: var(--secondary-color);
 }
 
-.btn-outline-secondary:hover {
+.cusbtn-outline-secondary:hover {
     background-color: var(--primary-color);
 }
 
-.btn-secondary:hover {
+.cusbtn-secondary:hover {
     background-color: var(--secondary-color);
 }
 

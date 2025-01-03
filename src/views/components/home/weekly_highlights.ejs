@@ -1,38 +1,108 @@
+<style>
+    .summary-text-weekly {
+        font-size: 0.85rem;
+        /* Smaller font size */
+        line-height: 1.4;
+        /* Improved line spacing for readability */
+        color: #555;
+        /* Dark gray color for subtle appearance */
+        margin-bottom: 8px;
+        /* Spacing below the summary */
+        overflow: hidden;
+        /* Prevents overflow */
+        text-overflow: ellipsis;
+        /* Adds ellipsis (...) for long text */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        /* Limit to 3 lines */
+        line-clamp: 3;
+        /* Limit to 3 lines */
+        -webkit-box-orient: vertical;
+        min-height: 3.5em;
+        /* Consistent height for summaries */
+    }
+
+    .card-title-weekly {
+        font-size: 1.25rem;
+        /* Larger font size for the title */
+        line-height: 1.4;
+        /* Adjusted line height for readability */
+        margin-bottom: 0.5rem;
+        min-height: 3em;
+        /* Adjust height for two lines of text */
+        overflow: hidden;
+        /* Prevents text overflow */
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+    }
+
+    .card-img-top-weekly {
+        object-fit: cover;
+        /* Ensures images cover the defined area */
+        height: 200px;
+        /* Set a fixed height for images */
+        width: 100%;
+        /* Maintain full width */
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column; /* Ensures card content is stacked */
+        justify-content: space-between; /* Equal spacing for card elements */
+        height: 100%; /* Consistent height across all cards */
+    }
+
+</style>
+
+
 <div class="mb-4">
     <div class="d-flex">
         <div class="rect"></div>
         <h3 class="mb-4">Nổi bật trong tuần</h3>
     </div>
     <ul class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 list-unstyled">
-        <% if (featuredArticles && featuredArticles.length > 0) { %>
-            <% featuredArticles.forEach((article) => { %>
+        <% if (featuredArticles && featuredArticles.length> 0) { %>
+            <% featuredArticles.forEach((article)=> { %>
                 <li class="col" style="padding: 5px">
                     <div class="card h-100">
-                        <a href="/article/<%= article._id %>" class="text-decoration-none text-dark">
+                        
                             <div class="p-2">
-                                <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
-                                     class="card-img-top"
-                                     alt="<%= article.title || 'Featured Article' %>" />
+                                <a href="/article/<%= article._id %>" class="text-decoration-none text-dark">
+                                    <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
+                                        class="card-img-top-weekly" alt="<%= article.title || 'Featured Article' %>" />
+                                </a>
                             </div>
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title mb-2"><%= article.title || 'No Title' %></h5>
-                                <p class="card-text summary-text mb-2"><%= article.summary || 'No summary available' %></p>
-                                <p class="card-text small mb-1">
-                                    <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name} > ${article.category_id.name}` : article.category_id.name %>
-                                </p>
+                                <a href="/article/<%= article._id %>" class="text-decoration-none text-dark">
+                                    <h5 class="card-title-weekly mb-2">
+                                        <%= article.title || 'No Title' %>
+                                    </h5>
+                                    <p class="card-text summary-text-weekly mb-2">
+                                        <%= article.summary || 'No summary available' %>
+                                    </p>
+                                </a>
+                                <a href="/chuyen-muc/<%= article.category_id._id %>" class="text-decoration-none">
+                                    <p class="card-text small mb-1">
+                                        <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name} >
+                                        ${article.category_id.name}` : article.category_id.name %>
+                                    </p>
+                                </a>
                                 <p class="card-text small mb-2 text-muted">
                                     Ngày đăng: <%= article.publish_date %>
                                 </p>
                                 <% if (article.is_premium) { %>
                                     <span class="badge rounded-pill bg-warning text-dark">Premium</span>
-                                <% } %>
+                                    <% } %>
                             </div>
                         </a>
                     </div>
                 </li>
-            <% }); %>
-        <% } else { %>
-            <p>No featured articles available.</p>
-        <% } %>
+                <% }); %>
+                    <% } else { %>
+                        <p>No featured articles available.</p>
+                        <% } %>
     </ul>
 </div>

@@ -23,4 +23,6 @@ viewRouter.get("/chuyen-muc/:categoryId", authenticateJWT, viewController.getCat
 viewRouter.get("/nhan/:tagId", authenticateJWT, viewController.getTagArticleList);
 viewRouter.get("/search", authenticateJWT, viewController.getSearchPage);
 
+viewRouter.get("/register-premium-subscriber", authenticateJWT, viewController.getRegisterPremiumSubscriberPage);
+
 export default viewRouter;

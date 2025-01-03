@@ -19,7 +19,6 @@ import * as articleController from "./articleController";
 import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
 import formatDate from "../utils/formatDate";
-import { title } from "process";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -54,8 +53,25 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         ...category,
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),
     }));
+
+    let subscription_status = "" as any;
+    if (user?.role === "subscriber") {
+        const subscriber = await SubscriberProfile.findOne({ user_id: user._id });
+        subscription_status = subscriber?.subscription_status;
+    }
     
-    
+
+    const userFilter = {
+        _id: user?._id,
+        email: user?.email,
+        role: user?.role,
+        name: user?.name, 
+        subscription_status: subscription_status ? subscription_status : null,
+
+        
+    }
+    console.log(userFilter);
+
     return res.status(StatusCodes.OK).render("pages/default/home", {
         layout: "layouts/default",
         scripts: `<script src="/js/pages/home.js"></script>`,
@@ -540,3 +556,35 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
         next(error);
     }
 };
+
+
+export const getRegisterPremiumSubscriberPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    
+    console.log(user);
+    if (!user || user.role !== "subscriber") {
+        return next(new AppError(StatusCodes.NOT_FOUND, "You are not authorized to access this page!", true));
+    }
+    const subscriber = await SubscriberProfile.findOne({ user_id: user._id });
+
+    const userFilter = {
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+        avatar: subscriber?.avatar,
+        dob: subscriber?.dob,
+        full_name: subscriber?.full_name,
+        subscription_status: subscriber?.subscription_status,
+    }
+
+    console.log(userFilter);
+
+    
+    
+    return res.status(StatusCodes.OK).render("pages/default/register_premium_subscriber", {
+        layout: "layouts/default",
+        title: "Đăng ký thành viên Premium",
+        user: userFilter,
+    });
+});

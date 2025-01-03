@@ -51,6 +51,7 @@ app.use((req, res, next) => {
     res.locals.scripts = res.locals.scripts || "";
     res.locals.styles = res.locals.styles || "";
     res.locals.user = res.locals.user || null;
+    res.locals.profile = res.locals.profile || null;
     next();
 });
 

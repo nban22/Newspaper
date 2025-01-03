@@ -179,9 +179,15 @@ document.querySelector('#editor-form').onsubmit = event => {
       return response.json();
     })
     .then(data => {
-      alert('Article updated successfully');
-      console.log('Success:', data);
-      window.location.href = '/';
+      // Show the Bootstrap modal using JavaScript
+      const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+      successModal.show();
+
+      // Handle modal close
+      const modalElement = document.getElementById('successModal');
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        window.location.href = '/articles'; // Redirect after modal is closed
+      });
     })
     .catch(error => {
       alert('Error updating article');

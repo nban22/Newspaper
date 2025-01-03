@@ -20,6 +20,7 @@ import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
 import formatDate from "../utils/formatDate";
 import { sub } from "date-fns";
+import expressEjsLayouts from "express-ejs-layouts";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -142,7 +143,25 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(StatusCodes.OK).render("pages/create_article", { user: user, article: null });
+
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = EditorProfile.findOne({ user_id: user._id }).lean();
+    }
+
+    console.log(profile);
+
+    res.status(StatusCodes.OK).render("pages/default/create_article", {
+        layout: "layouts/default",
+        title: "Tạo bài viết",
+        user,
+        profile,
+        article: null,
+    });
 };
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

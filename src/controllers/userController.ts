@@ -69,7 +69,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
 });
 
 export const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const {email, password, role, full_name, pen_name, dob, avatar} = req.body;
+    const {email, password, role, name, full_name, pen_name, dob, avatar} = req.body;
    // Check if all required fields are filled
     if (!email || !password || !role) {
         return next(new AppError(StatusCodes.BAD_REQUEST, "Please provide email, password and role"));
@@ -93,20 +93,20 @@ export const createUser = catchAsync(async (req: Request, res: Response, next: N
     }
 
     // Create new user
-    const newUser = await User.create({ email, password, role });
+    const newUser = await User.create({ email, password, role, name, loginMethod: "local" });
     newUser.password = undefined;
 
     if (role === "subscriber") {
         await SubscriberProfile.create({
             user_id: newUser._id,
-            full_name: full_name,
+            full_name: full_name || name,
             dob: dob,
             avatar: avatar,
         });
     } else if (role === "writer") {
         await WriterProfile.create({
             user_id: newUser._id,
-            full_name: full_name,
+            full_name: full_name || name,
             pen_name: pen_name,
             dob: dob,
             avatar: avatar,
@@ -114,7 +114,7 @@ export const createUser = catchAsync(async (req: Request, res: Response, next: N
     } else if (role === "editor") {
         await EditorProfile.create({
             user_id: newUser._id,
-            full_name: full_name,
+            full_name: full_name || name,
             dob: dob,
             avatar: avatar,
         });

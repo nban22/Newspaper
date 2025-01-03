@@ -1,0 +1,117 @@
+<h1 class="text-center my-4">
+    <%= message %>
+</h1>
+
+<% if (articles.length > 0) { %>
+    <div class="row mb-4">
+        <!-- Filter Section -->
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <label for="sort" class="me-2">Xếp theo:</label>
+                    <select id="sort" class="form-select form-select-sm d-inline-block w-auto" onchange="updateQuery('sort', this.value)">
+                        <option value="view_count" <%= sortField === 'view_count' ? 'selected' : '' %>>Lượt xem</option>
+                        <option value="publish_date" <%= sortField === 'publish_date' ? 'selected' : '' %>>Ngày xuất bản</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="order" class="me-2">Thứ tự:</label>
+                    <select id="order" class="form-select form-select-sm d-inline-block w-auto" onchange="updateQuery('order', this.value)">
+                        <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Cũ nhất</option>
+                        <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Mới nhất</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles Section -->
+        <ul class="row g-4 list-unstyled mt-4 gap-3">
+            <% articles.forEach(article => { %>
+                <li class="m-0">
+                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2 border rounded">
+                        <!-- Image Section -->
+                        <a href="/article/<%= article._id %>" class="thumbnail-container" style="flex: 0 1 250px">
+                            <img 
+                                src="<%= article.thumbnail || '/images/default-thumbnail.jpg' %>" 
+                                class="img-fluid rounded-top" 
+                                alt="<%= article.title %>" 
+                                loading="lazy">
+                        </a>
+                        <!-- Text Section -->
+                        <div class="card-body" style="flex: 1 1 200px">
+                            <a href="/article/<%= article._id %>">
+                                <h5 class="card-title" title="<%= article.title %>">
+                                    <%= article.title %>
+                                </h5>
+                            </a>
+                            <p class="card-text text-muted">
+                                <%- article.summary.substring(0, 150) %>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div>
+                                    <% if (Array.isArray(article.category)) { %>
+                                        <% article.category.forEach(category => { %>
+                                            <span class="badge bg-primary"><%= category %></span>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <span class="badge bg-primary"><%= article.category %></span>
+                                    <% } %>
+                                    <small class="text-muted"><i class="fas fa-eye"></i> <%= article.viewCount %></small>
+                                </div>
+                                <small class="text-muted">
+                                    <%= article.publishDate %>
+                                </small>
+                            </div>
+                            <div class="tags mt-2">
+                                <% if (article.tags.length > 0) { %>
+                                    <% article.tags.forEach(tag => { %>
+                                        <span class="badge bg-secondary"><%= tag %></span>
+                                    <% }) %>
+                                <% } else { %>
+                                    <span class="text-muted">No tags</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+
+        <!-- Pagination -->
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= page - 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>&limit=<%= limit %>">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <span class="page-link"><%= page %></span>
+                </li>
+                <li class="page-item <%= articles.length < limit ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= page + 1 %>&q=<%= search %>&sort=<%= sortField %>&order=<%= sortOrder %>&limit=<%= limit %>">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+<% } else { %>
+    <!-- No Articles Section -->
+    <div class="text-center">
+        <p class="lead">
+            <%= message %>
+        </p>
+        <p class="text-muted">
+            <%= suggestion %>
+        </p>
+    </div>
+<% } %>
+
+<script>
+    function updateQuery(key, value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(key, value);
+        window.location.search = urlParams.toString();
+    }
+</script>

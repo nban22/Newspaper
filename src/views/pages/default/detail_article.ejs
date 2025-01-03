@@ -1,0 +1,164 @@
+<div class="article-content" tabindex="4">
+    <h1 tabindex="4"><%= article.title %></h1>
+
+    <!-- Section 1 -->
+    <div class="section1" tabindex="4">
+        <p tabindex="4"><%= article.categoryName %></p>
+        <p tabindex="4"><%= article.publish_date %></p>
+    </div>
+
+    <!-- Download Button -->
+    <div class="btn download-pdf-btn" id="download-pdf-btn" tabindex="4">
+        <i class="fas fa-download"></i> Tải PDF
+    </div>
+
+    <!-- Summary -->
+    <div class="summary" tabindex="4">
+        <%- article.summary %>
+    </div>
+
+    <!-- Content -->
+    <div class="content" tabindex="4">
+        <%- article.content %>
+    </div>
+
+    <!-- Author -->
+    <div class="author" tabindex="4">
+        <p></p>
+        <p tabindex="4"><%= article.writerName %></p>
+    </div>
+
+    <!-- Tags -->
+    <div class="tags" tabindex="4">
+        <p tabindex="4">Nhãn</p>
+        <% article.tagNames.forEach(tag => { %>
+            <a href="/tag/<%= tag._id %>" tabindex="4">#<%= tag %></a>
+        <% }) %>
+    </div>
+</div>
+
+<!-- Buttons for Editor -->
+<% if (isOwnCategory && article.status === "draft") { %>
+    <div class="btns-list" tabindex="4">
+        <button
+            type="button"
+            class="approve-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#approveArticleModal"
+            data-article-id="<%= article._id %>"
+            data-article-category="<%= article.categoryName %>"
+            tabindex="4"
+        >
+            Phê duyệt
+        </button>
+        <button
+            type="button"
+            class="reject-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#rejectArticleModal"
+            data-article-id="<%= article._id %>"
+            tabindex="4"
+        >
+            Từ chối
+        </button>
+    </div>
+    <%- include("../../components/modal/approve_article") %>
+    <%- include("../../components/modal/reject_article", { categories }) %>
+<% } %>
+
+<!-- Comments -->
+<div class="comments" tabindex="4">
+    <div class="comment-input bg-light bg-gradient position-relative border rounded d-flex" tabindex="4">
+        <textarea
+            type="text"
+            id="comment-input"
+            class="form-control flex-fill bg-transparent fs-5"
+            placeholder="Viết bình luận..."
+            tabindex="4"
+            required
+            
+        ></textarea>
+        <!-- <div class="comment-submit position-absolute" tabindex="4"> -->
+            <button id="comment-submit-btn" class="btn btn-dark position-absolute px-3 py-1 fs-5" style="bottom: 10px; right: 10px" tabindex="4">Gửi</button>
+        <!-- </div> -->
+    </div>
+</div>
+
+<section class="other-comments mt-4" tabindex="4">
+    <div class="d-flex" tabindex="4">
+        <div class="rect" tabindex="4"></div>
+        <h3 class="mb-4" tabindex="4">Bình luận</h3>
+    </div>
+
+    <% if (article.comments.length === 0) { %>
+        <p class="no-comment" tabindex="4">Hiện chưa có bình luận</p>
+    <% } else { %>
+        <div class="comments-list" tabindex="4">
+            <% article.comments.forEach(comment => { %>
+                <div class="comment" tabindex="4">
+                    <div class="comment-avatar" tabindex="4">
+                        <!-- Generate random avatar using RoboHash -->
+                        <img
+                            src="https://robohash.org/<%= comment.userName %>?set=set1"
+                            alt="Avatar"
+                            tabindex="4"
+                        />
+                    </div>
+                    <div class="comment-content" tabindex="4">
+                        <div class="comment-info" tabindex="4">
+                            <span class="comment-author" tabindex="4"><%= comment.userName %></span>
+                            <span class="comment-date" tabindex="4">
+                                <%= new Date(comment.date).toLocaleString("vi-VN") %>
+                            </span>
+                        </div>
+                        <p class="comment-text" tabindex="4"><%= comment.content %></p>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</section>
+
+<hr tabindex="4" />
+
+<!-- Related Articles -->
+<div class="my-5" tabindex="4">
+    <div class="d-flex" tabindex="4">
+        <div class="rect" tabindex="4"></div>
+        <h3 class="mb-4" tabindex="4">Cùng chuyên mục</h3>
+    </div>
+    <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-4"
+        tabindex="4"
+    >
+        <% article.relatedArticles.forEach(item => { %>
+            <div class="col" tabindex="4">
+                <div class="border rounded p-2 h-100 d-flex flex-column" tabindex="4">
+                    <a href="/article/<%= item._id %>" tabindex="4">
+                        <img src="<%= item.thumbnail %>" alt="<%= item.title %>" tabindex="4" class="img-fluid"/>
+                    </a>
+                    <div class="card-body d-flex flex-column justify-content-between mt-2" tabindex="4" style="flex: 1">
+                        <h6 class="card-title" tabindex="4">
+                            <a href="/article/<%= item._id %>" tabindex="4"><%= item.title %></a>
+                        </h6>
+                        <p class="card-text" tabindex="4">Ngày xuất bản: <%= item.publish_date %></p>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById("download-pdf-btn")?.addEventListener("click", function () {
+    const articleElement = document.querySelector("div.article-content");
+    const options = {
+        filename: `<%= article.title %>.pdf`,
+        jsPDF: { format: "a4", orientation: "portrait" },
+    };
+
+    // Use html2pdf to generate the PDF
+    html2pdf().set(options).from(articleElement).save();
+});ftgyhj 
+</script>

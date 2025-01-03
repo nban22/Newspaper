@@ -11,13 +11,12 @@
             <% articles.forEach(article=> { %>
             <li class="">
                 <div class="article-card">
-                    <div class="badge-container">
-                        <% if (article.is_premium) { %>
-                        <span class="badge rounded-pill bg-warning text-dark">Premium</span>
-                        <% } %>
-                    </div>
-
-                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2">
+                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2 position-relative">
+                        <div class="position-absolute bottom-0 start-0">
+                            <% if (article.is_premium) { %>
+                            <span class="badge rounded-pill bg-warning text-dark m-2">Premium</span>
+                            <% } %>
+                        </div>
                         <% if (article.status==='published' ) { %>
                         <a class="text-dark" style="flex: 0 1 250px" href="/article/<%- article._id %>" >
                             <img src="<%= article.thumbnail %>" class="img-fluid rounded-top" alt="<%= article.title %>" />

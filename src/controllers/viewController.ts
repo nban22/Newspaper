@@ -19,6 +19,7 @@ import * as articleController from "./articleController";
 import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
 import formatDate from "../utils/formatDate";
+import { sub } from "date-fns";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -170,9 +171,12 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     }
 
     if (article.is_premium && user?.role === "subscriber") {
-        const message = "Tài khoản của bạn đã hết hạn!";
         const subscriber = await SubscriberProfile.findOne({ user_id: req.body.user._id });
-        if (subscriber && subscriber.subscription_status === "expired") {
+        if (subscriber && (subscriber.subscription_status === "expired" || subscriber.subscription_status === "normal")) {   
+            let message = "Bài viết này chỉ dành cho người đăng ký thành viên Premium!";
+            if (subscriber.subscription_status === "expired") {
+                message = "Tài khoản của bạn đã hết hạn";
+            }
             return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
         }
     }

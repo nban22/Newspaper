@@ -69,8 +69,12 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         layout: "layouts/default",
         scripts: `<script src="/js/pages/home.js"></script>`,
         title: "Trang chủ",
+<<<<<<< HEAD
+        user: user,
+=======
         user,
         profile,
+>>>>>>> main
         topArticles: topArticles,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,

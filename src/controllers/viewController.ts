@@ -210,7 +210,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
     // Lấy tất cả bình luận cho bài viết
     const comments = await Comment.find({ article_id: articleObjectId }).populate("user_id create_at content").exec();
-
     // Lấy tất cả người dùng từ User
     const users = await User.find().select("_id name");
 
@@ -226,6 +225,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
                     : "Ẩn danh",
         };
     });
+
 
     // Lấy các bài viết liên quan
     const relatedArticles = await Article.find({

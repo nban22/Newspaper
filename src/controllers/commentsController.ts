@@ -6,38 +6,42 @@ import Comment from "../models/comment";
 import mongoose from "mongoose";
 
 export const createComment = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { content } = req.body; 
+    const { content } = req.body;
     const article_id = req.params.articleId;
     const user_id = req.body.userId;
 
-
-    // Kiểm tra đầu vào
+    // Validate input
     if (!content) {
         return next(new AppError(400, "Content is required"));
     }
 
-    // Kiểm tra xem article_id có hợp lệ không
+    // Check if article_id is valid
     if (!mongoose.Types.ObjectId.isValid(article_id)) {
         return next(new AppError(400, "Invalid article_id"));
     }
 
-    // Tạo bình luận mới
-    const newComment = await Comment.create({
-        article_id: article_id, // Sử dụng article_id từ params
-        user_id: user_id || null, // Gán null nếu không có user_id (guest user)
-        content: content,
+    // Check if the content is unique for this article
+    const existingComment = await Comment.findOne({
+        article_id: article_id,
+        content: content.trim(),
+    });
+    
+    // Create the new comment
+    if (!existingComment) {
+    await Comment.create({
+        article_id: article_id, // Use article_id from params
+        user_id: user_id || null, // Assign null if user_id is not provided (guest user)
+        content: content.trim(),
         create_at: new Date(),
     });
+    }
 
-    // Trả về response
+    // Return response
     res.status(201).json({
         status: "success",
-        data: {
-            comment: newComment,
-        },
+        message: "Comment created successfully",
     });
 });
-
 
 
 

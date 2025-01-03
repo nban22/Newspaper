@@ -15,14 +15,14 @@
                     <div class="border mt-2 mb-2"></div>
                     <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
                     <% } %>
-                <% if (user && user.role === 'writer') { %>
-                    <div class="border mt-2 mb-2"></div>
-                    <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
-                    <div class="border mt-2 mb-2"></div>
-                    <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
-                    <% } %>
+                        <% if (user && user.role==='writer' ) { %>
+                            <div class="border mt-2 mb-2"></div>
+                            <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
+                            <div class="border mt-2 mb-2"></div>
+                            <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
+                            <% } %>
             </ul>
-            
+
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form">
                 <input type="search" class="form-control form-control-dark" placeholder="Tìm kiếm..."
                     aria-label="Search" id="search-input" required />
@@ -64,11 +64,11 @@
                     </ul>
                 </div>
                 <% } else { %>
-                    
+
                     <div class="text-end">
-                        <a href="/login"><button type="button"
-                                class="btn btn-outline-secondary mr-2 text-dark">Đăng nhập</button></a>
-                        <a href="/signup"><button type="button" class="btn btn-secondary mr-2">Đăng ký</button></a>
+                        <a href="/login"><button type="button" class="cusbtn btn-outline-secondary mr-2 text-dark">Đăng
+                                nhập</button></a>
+                        <a href="/signup"><button type="button" class="cusbtn cusbtn-secondary mr-2">Đăng ký</button></a>
                     </div>
                     <% } %>
 

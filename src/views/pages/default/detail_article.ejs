@@ -2,15 +2,31 @@
     <h1 tabindex="4"><%= article.title %></h1>
 
     <!-- Section 1 -->
-    <div class="section1" tabindex="4">
-        <p tabindex="4"><%= article.categoryName %></p>
-        <p tabindex="4"><%= article.publish_date %></p>
+    <div class="section1 gap-2" tabindex="4">
+        <span class="bg-black bg-opacity-25 rounded-pill px-2 py-1" tabindex="4"><%= article.categoryName %></span>
+        •
+        <span class="text-muted" style="font-size: 1.2rem;"  tabindex="4"><%= article.publish_date %></span>
     </div>
 
     <!-- Download Button -->
-    <div class="btn download-pdf-btn" id="download-pdf-btn" tabindex="4">
-        <i class="fas fa-download"></i> Tải PDF
-    </div>
+    <% if (user && user?.role === "subscriber" && profile?.subscription_status === "active") { %>
+        <button class="btn download-pdf-btn mt-3" id="download-pdf-btn" tabindex="4">
+            <i class="fas fa-download"></i> Tải PDF
+        </button>
+    <% } else if (user && user?.role === "subscriber") { %>
+        <a href="/register-premium-subscriber" tabindex="4">
+            <button class="btn download-pdf-btn mt-4" tabindex="4">
+                <i class="fas fa-download"></i> Nâng cấp tài khoản để tải PDF
+            </button>
+        </a>
+    <% } else if (!user) { %>
+        <a href="/login" tabindex="4">
+            <button class="btn download-pdf-btn mt-4" tabindex="4">
+                <i class="fas fa-download"></i> Đăng nhập để tải PDF
+            </button>
+        </a>
+    <% } %>
+     
 
     <!-- Summary -->
     <div class="summary" tabindex="4">

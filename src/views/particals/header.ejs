@@ -29,19 +29,28 @@
             </form>
             <i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i>
 
-            <% if (user && user?.role==="subscriber" && user?.subscription_status === "active") { %>
-                <span class="bg-warning rounded-pill px-2 me-2" style="font-size: 0.8rem;">premium</span>
-            <% } else if (user && user?.role==="subscriber" && (user?.subscription_status === "normal" || user?.subscription_status === "expired")) { %>
+            
+            <% if (user && user?.role==="subscriber" && (profile?.subscription_status === "normal" || profile?.subscription_status === "expired")) { %>
                 <a class="btn btn-warning me-2" href="/register-premium-subscriber">Nâng cấp
                     tài khoản</a>
             <% } %>
+
              
 
             <% if (user) { %>
+                <!-- hiển thị tên ngươi dùng profile.full_name -->
+                <div class="d-flex align-items-center flex-column ">
+                    <span class="text-dark me-2" style="font-size: 1.2rem;"><%= profile?.full_name %></span>
+                
+                    <% if (user && user?.role==="subscriber" && profile?.subscription_status === "active") { %>
+                        <span class="bg-warning rounded-pill px-2 me-2" style="font-size: 0.8rem;">premium</span>
+                    <% } %>
+                </div>
+                
                 <div class="dropdown text-end">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://robohash.org/<%= user._id %>" alt="mdo" width="45" height="45"
+                        <img src="https://robohash.org/<%= user?._id %>" alt="mdo" width="45" height="45"
                             class="rounded-circle" style="box-shadow: 0 0 5px #000;" />
                     </a>
                     <ul class="dropdown-menu p-0" aria-labelledby="dropdownUser1">

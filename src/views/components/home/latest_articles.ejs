@@ -46,12 +46,13 @@
     <div class="d-flex align-items-center mb-4">
         <div class="rect"></div>
         <a href="/latest_article" class="text-decoration-none text-dark">
-            <h3 class="mb-0 fs-4">Mới nhất</h3>
+            <h3 class="mb-0">Mới nhất</h3>
         </a>
     </div>
 
     <div class="row g-3">
-        <div class="overflow-auto" style="max-height: 700px;">
+
+        <div class="col-md-8 overflow-auto" style="max-height: 700px;">
             <ul class="d-flex flex-column gap-3 list-unstyled">
                 <% latestArticle.forEach(article=> { %>
                     <li class="" style="min-height: 80px;">
@@ -59,7 +60,7 @@
                             class="d-flex flex-wrap gap-3 border rounded justify-content-center p-3 text-decoration-none text-dark">
                             <div style="flex: 1 1 250px;">
                                 <img src="<%= article.thumbnail || 'https://via.placeholder.com/300x200' %>"
-                                    alt="<%= article.title %>" class="img-fluid rounded-top w-100 h-100" />
+                                    alt="<%= article.title %>" class="img-fluid rounded-top" />
                             </div>
                             <div class="card-body d-flex flex-column" style="flex: 1 1 200px;">
                                 <h5 class="card-title mb-2">
@@ -68,14 +69,14 @@
                                 <p class="card-text summary-text mb-2"><%- article.summary || 'No summary available' %>
                                 </p>
                                 <p class="card-text small mb-1">
-                                    <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name} >
+                                    <%= article.category_id.parent_id?.name ? `${article.category_id.parent_id.name}>
                                         ${article.category_id.name}` : article.category_id.name %>
                                 </p>
                                 <p class="card-text small mb-2 text-muted">
                                     Ngày đăng: <%= article.publish_date %>
                                 </p>
                                 <% if (article.is_premium) { %>
-                                    <span class="badge rounded-pill bg-warning text-dark w-25">Premium</span>
+                                    <span class="badge rounded-pill bg-warning text-dark">Premium</span>
                                     <% } %>
                             </div>
                         </a>
@@ -84,5 +85,41 @@
             </ul>
         </div>
 
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <h3 class="card-header bg-white border-bottom fw-bold fs-5 py-3">Được xem nhiều nhất</h3>
+                <div class="card-body p-0">
+                    <ul class="list-unstyled mb-0 trending-articles">
+                        <% trendingArticles.forEach(article => { %>
+                            <li class="border-bottom">
+                                <a href="/article/<%-article._id%>" class="text-decoration-none d-flex gap-3 p-3 transition hover:bg-gray-50">
+                                    <img 
+                                        src="<%= article.thumbnail %>" 
+                                        alt="Article thumbnail" 
+                                        width="48" 
+                                        height="48"
+                                        class="rounded object-cover flex-shrink-0" 
+                                    />
+                                    <div class="d-flex flex-column w-100 overflow-hidden">
+                                        <h6 class="text-dark mb-1 text-truncate fw-semibold">
+                                            <%= article.title %>
+                                        </h6>
+                                        <p class="text-secondary small mb-2 line-clamp-2">
+                                            <%= article.summary %>
+                                        </p>
+                                        <div class="d-flex align-items-center">
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar me-1"></i>
+                                                <%= article.created_at %>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

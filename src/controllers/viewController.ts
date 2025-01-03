@@ -54,28 +54,21 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         publishDate: moment(category.publishDate).format("DD-MM-YYYY"),
     }));
 
-    let subscription_status = "" as any;
+    let profile = null;
     if (user?.role === "subscriber") {
-        const subscriber = await SubscriberProfile.findOne({ user_id: user._id });
-        subscription_status = subscriber?.subscription_status;
-    }
-    
-
-    const userFilter = {
-        _id: user?._id,
-        email: user?.email,
-        role: user?.role,
-        name: user?.name, 
-        subscription_status: subscription_status ? subscription_status : null,
-
-        
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
     }
 
     return res.status(StatusCodes.OK).render("pages/default/home", {
         layout: "layouts/default",
         scripts: `<script src="/js/pages/home.js"></script>`,
         title: "Trang chủ",
-        user: user,
+        user,
+        profile,
         topArticles: topArticles,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
@@ -138,7 +131,12 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
         return next(new AppError(StatusCodes.NOT_FOUND, "No profile found for this user!"));
     }
 
-    res.status(StatusCodes.OK).render("pages/update_profile", { user: user, profile: profileOwner });
+    res.status(StatusCodes.OK).render("pages/default/update_profile", { 
+        layout: "layouts/default",
+        title: "Cập nhật thông tin cá nhân",
+        styles: `<link rel="stylesheet" href="/css/update_user_profile.css" />`,
+        scripts: `<script src="js/update_profile.js"></script>`,
+        user: user, profile: profileOwner });
 });
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
@@ -250,6 +248,16 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
 
     const editorCategory = user?.role === "editor" ? await EditorProfile.findOne({ user_id: user._id }) : null;
+
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user?._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user?._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user?._id }).lean();
+    }
+
     // Render trang bài viết
     res.status(StatusCodes.OK).render("pages/default/detail_article", {
         layout: "layouts/default",
@@ -265,6 +273,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
                 ></script>`,
         styles: `<link rel="stylesheet" href="/css/detail_article.css" />`,
         user,
+        profile,
         article: {
             ...updatedArticle.toObject(),
             summary: sanitizedSummary,
@@ -565,24 +574,19 @@ export const getRegisterPremiumSubscriberPage = catchAsync(async (req: Request, 
     }
     const subscriber = await SubscriberProfile.findOne({ user_id: user._id });
 
-    const userFilter = {
-        _id: user._id,
-        email: user.email,
-        role: user.role,
-        name: user.name,
-        avatar: subscriber?.avatar,
-        dob: subscriber?.dob,
-        full_name: subscriber?.full_name,
-        subscription_status: subscriber?.subscription_status,
+    let profile = null;
+    if (user.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
     }
-
-    console.log(userFilter);
-
-    
     
     return res.status(StatusCodes.OK).render("pages/default/register_premium_subscriber", {
         layout: "layouts/default",
         title: "Đăng ký thành viên Premium",
-        user: userFilter,
+        user,
+        profile,
     });
 });

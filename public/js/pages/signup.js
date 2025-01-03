@@ -8,6 +8,11 @@ const role = signupForm.querySelector('#role');
 signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    if (password.value !== confirmPassword.value) {
+        document.querySelector('#error-message').textContent = 'Mật khẩu không khớp';
+        return;
+    }
+
     fetch('/api/v1/signup', {
         headers: {
             'Content-Type': 'application/json'
@@ -24,11 +29,10 @@ signupForm.addEventListener('submit', (e) => {
     .then(response => response.json())
     .then(data => {
         console.log({data});
-        
         if (data.status === 'success') {
             window.location.href = '/login';
         } else {
-            alert(data.message);
+            document.querySelector('#error-message').textContent = data.message;
         }
     })
 })

@@ -21,7 +21,7 @@ loginForm.addEventListener('submit', (e) => {
         if (data.status === 'success') {
             handleLoginSuccess(data.data);
         } else {
-            alert(data.message);
+            document.querySelector('#error-message').textContent = data.message;
         }
     })
 })

@@ -23,11 +23,11 @@
                             <% } %>
             </ul>
 
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" id="search-form">
-                <input type="search" class="form-control form-control-dark" placeholder="Tìm kiếm..."
-                    aria-label="Search" id="search-input" required />
+            <form class="d-flex align-items-center" role="search" id="search-form">
+                <input type="search" class="form-control border-dark" placeholder="Tìm kiếm..."
+                        aria-label="Search" id="search-input" required />
+                <label for="search-input"><i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i></label>
             </form>
-            <i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i>
 
             
             <% if (user && user?.role==="subscriber" && (profile?.subscription_status === "normal" || profile?.subscription_status === "expired")) { %>
@@ -74,10 +74,10 @@
                 </div>
                 <% } else { %>
 
-                    <div class="text-end">
-                        <a href="/login"><button type="button" class="cusbtn btn-outline-secondary mr-2 text-dark">Đăng
+                    <div class="text-end d-flex gap-2">
+                        <a href="/login"><button type="button" class="btn btn-outline-dark">Đăng
                                 nhập</button></a>
-                        <a href="/signup"><button type="button" class="cusbtn cusbtn-secondary mr-2">Đăng ký</button></a>
+                        <a href="/signup"><button type="button" class="cusbtn cusbtn-secondary mr-2 text-white">Đăng ký</button></a>
                     </div>
                     <% } %>
 

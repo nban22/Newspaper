@@ -1,13 +1,19 @@
-document.getElementById("comment-submit-btn").addEventListener("click", async () => {
-    const comment = document.getElementById("comment-input").value; // Lấy nội dung bình luận từ input
-    const articleId = window.location.pathname.split("/").pop(); // Lấy articleId từ URL
+// Function to handle comment submission
+async function submitComment() {
+    const commentInput = document.getElementById("comment-input");
+    const comment = commentInput.value.trim(); // Get the trimmed comment
+    const articleId = window.location.pathname.split("/").pop(); // Extract articleId from URL
 
     if (!comment) {
-        alert("Please enter a comment.");
+        Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: "Please enter a comment.",
+        });
         return;
     }
 
-    const token = localStorage.getItem("token"); // Lấy access token từ localStorage
+    const token = localStorage.getItem("token"); // Get access token from localStorage
 
     try {
         const response = await fetch(`/api/v1/comments/${articleId}`, {
@@ -20,17 +26,38 @@ document.getElementById("comment-submit-btn").addEventListener("click", async ()
         });
 
         const res = await response.json();
-        console.log("Response:", res);
 
         if (response.status === 201) {
-            alert("Comment posted successfully.");
-            document.getElementById("comment-input").value = "";
+            Swal.fire({
+                icon: "success",
+                title: "Hoàn tất",
+                text: "Bình luận đã được gửi.",
+            });
+            commentInput.value = ""; // Clear input
+            window.location.reload(); // Reload to show the new comment
         } else {
-            console.error("Server Error:", res.message);
-            alert(res.message || "Failed to post comment.");
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.message || "Failed to post comment.",
+            });
         }
     } catch (error) {
-        console.error("Request Error:", error);
-        alert("Failed to post comment.");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to post comment. Please try again.",
+        });
     }
+}
+
+// Debounce handler
+let isSubmitting = false; 
+
+document.getElementById("comment-submit-btn")?.addEventListener("click", async () => {
+    if (isSubmitting) return; // Block if already submitting
+
+    isSubmitting = true; // Set submitting state
+    await submitComment(); // Call the submit function
+    isSubmitting = false; // Reset state after completion
 });

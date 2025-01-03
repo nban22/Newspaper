@@ -26,22 +26,29 @@
                     <h1 class="articlesCount" style="color: var(--secondary-color);"> <%= articles.length %></h1>
                     <span class="fs-3 fw-medium" style="color: black;">bài báo</span>
                 </div>
-                <div class="dropdown">
-                    <a class="btn btn-secondary dropdown-toggle" style="width: 140px !important;" role="button" id="dropdownStatus" data-bs-toggle="dropdown" aria-expanded="false">
-                        Trạng thái 
-                    </a>
-            
-                    <ul class="dropdown-menu articlesMenu" aria-labelledby="dropdownStatus">
-                        <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="all">Tất cả</li>
-                        <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="draft">Đang đợi duyệt</li>
-                        <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="published">Đã phê duyệt</li>
-                        <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="rejected">Đã từ chối</li>
-                    </ul>
+                <div class="d-flex align-items-center gap-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="premiumCheckbox">
+                        <label class="form-check-label" for="premiumCheckbox">
+                          Premium
+                        </label>
+                    </div>
+                    <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" style="width: 140px !important;" role="button" id="dropdownStatus" data-bs-toggle="dropdown" aria-expanded="false">
+                            Trạng thái
+                        </a>
+                        <ul class="dropdown-menu articlesMenu" aria-labelledby="dropdownStatus">
+                            <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="all">Tất cả</li>
+                            <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="draft">Đang đợi duyệt</li>
+                            <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="published">Đã phê duyệt</li>
+                            <li class="dropdown-item articlesStatus" style="cursor: pointer;" status="rejected">Đã từ chối</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="articles-list d-flex flex-column gap-4 mt-3 mb-5">
+            <div class="articles-list d-flex flex-column gap-5 mt-5 mb-5">
                 <% articles.forEach(article => { %>
-                    <div class="article-card" status="<%= article.status %>">
+                    <div class="article-card" status="<%= article.status %>" is-premium="<%= article.is_premium %>">
                         <%- include('../components/article_card', {article, formatDate}) %>
                     </div>
                 <% }) %>

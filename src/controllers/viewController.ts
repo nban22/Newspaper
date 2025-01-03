@@ -20,6 +20,7 @@ import { sanitizeSummary, sanitizeContent } from "../utils/sanitizeHTML";
 import User from "../models/user";
 import formatDate from "../utils/formatDate";
 import { sub } from "date-fns";
+import expressEjsLayouts from "express-ejs-layouts";
 
 export const getHomePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -146,7 +147,25 @@ export const getUpdateUserProfilePage = catchAsync(async (req: Request, res: Res
 
 export const getCreateArticlePage = (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
-    res.status(StatusCodes.OK).render("pages/create_article", { user: user, article: null });
+
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = EditorProfile.findOne({ user_id: user._id }).lean();
+    }
+
+    console.log(profile);
+
+    res.status(StatusCodes.OK).render("pages/default/create_article", {
+        layout: "layouts/default",
+        title: "Tạo bài viết",
+        user,
+        profile,
+        article: null,
+    });
 };
 
 export const getArticlePage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -214,7 +233,6 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
     // Lấy tất cả bình luận cho bài viết
     const comments = await Comment.find({ article_id: articleObjectId }).populate("user_id create_at content").exec();
-
     // Lấy tất cả người dùng từ User
     const users = await User.find().select("_id name");
 
@@ -230,6 +248,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
                     : "Ẩn danh",
         };
     });
+
 
     // Lấy các bài viết liên quan
     const relatedArticles = await Article.find({
@@ -367,13 +386,23 @@ export const getCategoryArticleList = catchAsync(async (req: Request, res: Respo
         return 0; // If both status and premium are the same, maintain original order
     });
 
-    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });    
+    const totalArticles = await Article.countDocuments({ category_id: category._id, status: "published" });
+    
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+    }
 
     return res.status(StatusCodes.OK).render("pages/default/articles_by_category", {
         layout: "layouts/default",
         scripts: `<script src="/js/pages/articles_by_category.js"></script>`,
         title: category.name,
         user: user,
+        profile,
         category,
         articles,
         page,
@@ -491,9 +520,21 @@ export const getWriterArticleList = catchAsync(async (req: Request, res: Respons
     // Calculate total pages
     const totalPages = Math.ceil(totalArticles / limit);
 
+    let profile = null;
+    if (user?.role === "subscriber") {
+        profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "writer") {
+        profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+    } else if (user?.role === "editor") {
+        profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+    }
+
     // Render the page with pagination data
-    res.status(StatusCodes.OK).render("pages/writer_articles", {
+    res.status(StatusCodes.OK).render("pages/default/writer_articles", {
+        layout: "layouts/default",
+        title: "Danh sách bài viết",
         user: user,
+        profile,
         articles: articles,
         page: page,
         totalPages: totalPages,
@@ -550,6 +591,16 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
             is_premium: article.is_premium,
         }));
 
+        let profile = null;
+        if (user?.role === "subscriber") {
+            profile = await SubscriberProfile.findOne({ user_id: user._id }).lean();
+        } else if (user?.role === "writer") {
+            profile = await WriterProfile.findOne({ user_id: user._id }).lean();
+        } else if (user?.role === "editor") {
+            profile = await EditorProfile.findOne({ user_id: user._id }).lean();
+        }
+        
+
         // Return the results, or a message if no articles are found
         res.render("pages/default/search", {
             layout: "layouts/default",
@@ -557,6 +608,7 @@ export const getSearchPage = async (req: Request, res: Response, next: NextFunct
             styles: `<link rel="stylesheet" href="/css/search.css" />`,
             scripts: `<script src="/js/pages/detail_article.js"></script>`,
             user,
+            profile,
             articles: results,
             page,
             limit,

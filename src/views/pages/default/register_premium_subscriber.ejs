@@ -47,7 +47,7 @@
     </div>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelector("#register_premium_subscriber_form").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -68,8 +68,12 @@
         const data = await response.json();
 
         if (data.status === "success") {
-            alert("Đăng ký tài khoản Premium thành công");
-            window.location.href = "/";
+            Swal.fire({
+                icon: "success",
+                title: "Hoàn tất",
+                text: "Đăng ký tài khoản Premium thành công.",
+            })
+                window.location.href = "/";
         } else {
             document.querySelector("#error-message").textContent = data.message;
         }

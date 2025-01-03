@@ -14,6 +14,13 @@
 
 <body>
     <%- include('../components/home/header', {user: user}) %><br>
+
+    <% if (article.status === "rejected") { %>
+        <div class="alert alert-danger" role="alert">
+            <%= article.rejection_reason %>
+        </div>
+    <% } %>
+
     <%- include('../components/wysiwyg.ejs', {script: '/js/pages/edit_article.js' , article: article}) %>
                 <!-- Success Modal -->
                 <div id="successModal" class="modal" tabindex="-1">

@@ -1,186 +1,160 @@
 <header class="p-3">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <img src="/images/logo.png" alt="newspaper logo" style="height: 60px; object-fit: contain" class="" />
-            </a>
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <img src="/images/logo.png" alt="newspaper logo" style="height: 60px; object-fit: contain" class="" />
+      </a>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
-                <div class="border mt-2 mb-2"></div>
-                <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
-                <% if (user && user.role==='admin' ) {%>
-                <div class="border mt-2 mb-2"></div>
-                <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
-                <div class="border mt-2 mb-2"></div>
-                <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
-                <% } %> <% if (user && user.role==='writer' ) { %>
-                <div class="border mt-2 mb-2"></div>
-                <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
-                <div class="border mt-2 mb-2"></div>
-                <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
-                <% } %>
-            </ul>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="#" class="nav-link px-2 text-dark">Giới thiệu</a></li>
+        <div class="border mt-2 mb-2"></div>
+        <li><a href="#" class="nav-link px-2 text-dark">Liên hệ</a></li>
+        <% if (user && user.role==='admin' ) {%>
+        <div class="border mt-2 mb-2"></div>
+        <li><a href="/admin/categories" class="nav-link px-2 text-dark">Quản lý danh mục</a></li>
+        <div class="border mt-2 mb-2"></div>
+        <li><a href="/admin/tags" class="nav-link px-2 text-dark">Quản lý nhãn tag</a></li>
+        <% } %> <% if (user && user.role==='writer' ) { %>
+        <div class="border mt-2 mb-2"></div>
+        <li><a href="/create_article" class="nav-link px-2 text-dark">Viết bài</a></li>
+        <div class="border mt-2 mb-2"></div>
+        <li><a href="/articles" class="nav-link px-2 text-dark">Danh sách bài viết</a></li>
+        <% } %>
+      </ul>
 
-            <form class="d-flex align-items-center" role="search" id="search-form">
-                <input
-                    type="search"
-                    class="form-control border-dark"
-                    placeholder="Tìm kiếm..."
-                    aria-label="Search"
-                    id="search-input"
-                    required
-                />
-                <label for="search-input"
-                    ><i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i
-                ></label>
-            </form>
+      <form class="d-flex align-items-center" role="search" id="search-form">
+        <input type="search" class="form-control border-dark" placeholder="Tìm kiếm..." aria-label="Search" id="search-input" required />
+        <label for="search-input"><i id="search-icon" class="fa fa-search p-3" style="font-size: 1.38em"></i></label>
 
-            <% if (user && user?.role==="subscriber" && (profile?.subscription_status === "normal" ||
+      </form>
+
+      <% if (user && user?.role==="subscriber" && (profile?.subscription_status === "normal" ||
             profile?.subscription_status === "expired")) { %>
-            <a class="btn btn-warning me-2" href="/register-premium-subscriber">Nâng cấp tài khoản</a>
-            <% } %> <% if (user) { %>
-            <!-- hiển thị tên ngươi dùng profile.full_name -->
-            <div class="d-flex align-items-center flex-column">
-                <span class="text-dark me-2" style="font-size: 1.2rem"><%= profile?.full_name %></span>
+      <a class="btn btn-warning me-2" href="/register-premium-subscriber">Nâng cấp tài khoản</a>
+      <% } %> <% if (user) { %>
+      <!-- hiển thị tên ngươi dùng profile.full_name -->
+      <div class="d-flex align-items-center flex-column">
+        <span class="text-dark me-2" style="font-size: 1.2rem"><%= profile?.full_name %></span>
 
-                <% if (user && user?.role==="subscriber" && profile?.subscription_status === "active") { %>
-                <span class="bg-warning rounded-pill px-2 me-2" style="font-size: 0.8rem">premium</span>
-                <% } %>
-            </div>
+        <% if (user && user?.role==="subscriber" && profile?.subscription_status === "active") { %>
+        <span class="bg-warning rounded-pill px-2 me-2" style="font-size: 0.8rem">premium</span>
+        <% } %>
+      </div>
 
-            <div class="dropdown text-end">
-                <a
-                    href="#"
-                    class="d-block link-dark text-decoration-none dropdown-toggle"
-                    id="dropdownUser1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <img
-                        src="https://robohash.org/<%= user?._id %>"
-                        alt="mdo"
-                        width="45"
-                        height="45"
-                        class="rounded-circle"
-                        style="box-shadow: 0 0 5px #000"
-                    />
-                </a>
-                <ul class="dropdown-menu p-0" aria-labelledby="dropdownUser1">
-                    <% if (user && user.role==="editor" ) {%>
-                    <li><a class="dropdown-item" href="/editor/articles">Danh sách bài viết</a></li>
-                    <% } else {%>
-                    <li><a class="dropdown-item" href="#">Dashboard</a></li>
-                    <% } %>
+      <div class="dropdown text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://robohash.org/<%= user?._id %>" alt="mdo" width="45" height="45" class="rounded-circle" style="box-shadow: 0 0 5px #000" />
+        </a>
+        <ul class="dropdown-menu p-0" aria-labelledby="dropdownUser1">
+          <% if (user && user.role==="editor" ) {%>
+          <li><a class="dropdown-item" href="/editor/articles">Danh sách bài viết</a></li>
+          <% } else {%>
+          <li><a class="dropdown-item" href="#">Dashboard</a></li>
+          <% } %>
 
-                    <li><a class="dropdown-item" href="#">Cài đặt</a></li>
-                    <li><a class="dropdown-item pb-2" href="/update_profile">Cập nhật hồ sơ</a></li>
-                    <li>
-                        <hr class="dropdown-divider m-0" />
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            class="dropdown-item"
-                            data-bs-toggle="modal"
-                            data-bs-target="#logoutModal"
-                        >
-                            Đăng xuất
-                        </button>
-                        <!-- </form> -->
-                    </li>
-                </ul>
-            </div>
-            <% } else { %>
+          <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+          <li><a class="dropdown-item pb-2" href="/update_profile">Cập nhật hồ sơ</a></li>
+          <li>
+            <hr class="dropdown-divider m-0" />
+          </li>
+          <li>
+            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">
+              Đăng xuất
+            </button>
+            <!-- </form> -->
+          </li>
+        </ul>
+      </div>
+      <% } else { %>
 
-            <div class="text-end d-flex gap-2">
-                <a href="/login"><button type="button" class="btn btn-outline-dark">Đăng nhập</button></a>
-                <a href="/signup"><button type="button" class="btn btn-dark">Đăng ký</button></a>
-            </div>
-            <% } %>
-        </div>
+      <div class="text-end d-flex gap-2">
+        <a href="/login"><button type="button" class="btn btn-outline-dark">Đăng nhập</button></a>
+        <a href="/signup"><button type="button" class="btn btn-dark">Đăng ký</button></a>
+      </div>
+      <% } %>
     </div>
+  </div>
 </header>
 <%- include("../components/modal/logout.ejs") %>
 <div class="header-categories">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 classynav">
-                <ul class="m-0 d-flex flex-wrap" id="categoryContainer">
-                    <li>
-                        <a href="/"><i class="fas fa-home"></i></a>
-                    </li>
-                    <!-- Categories will be loaded here dynamically -->
-                </ul>
-            </div>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 classynav">
+        <ul class="m-0 d-flex flex-wrap" id="categoryContainer">
+          <li>
+            <a href="/"><i class="fas fa-home"></i></a>
+          </li>
+          <!-- Categories will be loaded here dynamically -->
+        </ul>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    async function fetchAndDisplayCategories() {
-        try {
-            let categories = JSON.parse(localStorage.getItem("categories"));
-            if (!categories) {
-                const response = await fetch("/api/v1/categories/header");
-                categories = await response.json();
-                localStorage.setItem("categories", JSON.stringify(categories));
-            }
-            const categoryContainer = document.getElementById("categoryContainer");
+  async function fetchAndDisplayCategories() {
+    try {
+      let categories = JSON.parse(localStorage.getItem("categories"));
+      if (!categories) {
+        const response = await fetch("/api/v1/categories/header");
+        categories = await response.json();
+        localStorage.setItem("categories", JSON.stringify(categories));
+      }
+      const categoryContainer = document.getElementById("categoryContainer");
 
-            function createCategoryHTML(category) {
-                const hasChildren = category.children && category.children.length > 0;
+      function createCategoryHTML(category) {
+        const hasChildren = category.children && category.children.length > 0;
 
-                const li = document.createElement("li");
-                li.className = hasChildren ? "cn-dropdown-item has-down" : "";
+        const li = document.createElement("li");
+        li.className = hasChildren ? "cn-dropdown-item has-down" : "";
 
-                const a = document.createElement("a");
-                a.href = hasChildren ? "#" : `/chuyen-muc/${category._id}`;
-                if (hasChildren) {
-                    a.setAttribute("data-bs-toggle", "dropdown");
-                    a.setAttribute("aria-expanded", "false");
-                }
-                a.textContent = category.name;
-
-                li.appendChild(a);
-
-                if (hasChildren) {
-                    const ul = document.createElement("ul");
-                    ul.className = "dropdown-menu mt-2";
-
-                    category.children.forEach((child) => {
-                        const childLi = document.createElement("li");
-                        const childA = document.createElement("a");
-                        childA.className = "dropdown-item";
-                        childA.href = `/chuyen-muc/${child._id}`;
-                        childA.textContent = child.name;
-                        childLi.appendChild(childA);
-                        ul.appendChild(childLi);
-                    });
-
-                    li.appendChild(ul);
-
-                    const span = document.createElement("span");
-                    span.className = "dd-trigger";
-                    li.appendChild(span);
-                }
-
-                return li;
-            }
-
-            categories.forEach((category) => {
-                const categoryElement = createCategoryHTML(category);
-                categoryContainer.appendChild(categoryElement);
-            });
-
-            const response = await fetch("/api/v1/categories/header");
-            categories = await response.json();
-            localStorage.setItem("categories", JSON.stringify(categories));
-        } catch (error) {
-            console.error("Error fetching categories:", error);
+        const a = document.createElement("a");
+        a.href = hasChildren ? "#" : `/chuyen-muc/${category._id}`;
+        if (hasChildren) {
+          a.setAttribute("data-bs-toggle", "dropdown");
+          a.setAttribute("aria-expanded", "false");
         }
-    }
+        a.textContent = category.name;
 
-    // Call the function when the page loads
-    document.addEventListener("DOMContentLoaded", fetchAndDisplayCategories);
+        li.appendChild(a);
+
+        if (hasChildren) {
+          const ul = document.createElement("ul");
+          ul.className = "dropdown-menu mt-2";
+
+          category.children.forEach((child) => {
+            const childLi = document.createElement("li");
+            const childA = document.createElement("a");
+            childA.className = "dropdown-item";
+            childA.href = `/chuyen-muc/${child._id}`;
+            childA.textContent = child.name;
+            childLi.appendChild(childA);
+            ul.appendChild(childLi);
+          });
+
+          li.appendChild(ul);
+
+          const span = document.createElement("span");
+          span.className = "dd-trigger";
+          li.appendChild(span);
+        }
+
+        return li;
+      }
+
+      categories.forEach((category) => {
+        const categoryElement = createCategoryHTML(category);
+        categoryContainer.appendChild(categoryElement);
+      });
+
+      const response = await fetch("/api/v1/categories/header");
+      categories = await response.json();
+      localStorage.setItem("categories", JSON.stringify(categories));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
+
+  // Call the function when the page loads
+  document.addEventListener("DOMContentLoaded", fetchAndDisplayCategories);
 </script>

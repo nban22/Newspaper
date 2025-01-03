@@ -1,20 +1,17 @@
 {
   "name": "newspaper",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules",
-    "seed": "ts-node src/seeds/datafake.ts",
+    "dev": "ts-node-dev src/server.ts --transpile-only --ignore-watch node_modules",
     "build": "tsc",
-    "start_prod": "node dist/server.js"
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@types/express-session": "^1.18.1",
-    "@types/passport-google-oauth20": "^2.0.16",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.0.2",
     "bootstrap-icons": "^1.11.3",
@@ -43,6 +40,8 @@
     "validator": "^13.12.0"
   },
   "devDependencies": {
+    "@types/express-session": "^1.18.1",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/bcrypt": "^5.0.2",
     "@types/browser-sync": "^2.29.0",
     "@types/cookie-parser": "^1.4.8",
@@ -59,7 +58,6 @@
     "@types/passport-facebook": "^3.0.3",
     "@types/sanitize-html": "^2.13.0",
     "@types/validator": "^13.12.2",
-    "browser-sync": "^3.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
   },

@@ -1,0 +1,32 @@
+<!-- Modal Xem Chi Tiết Người Dùng -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewUserModalLabel">Chi Tiết Người Dùng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Thông Tin Người Dùng -->
+        <form>
+          <div class="mb-3">
+            <label for="userName" class="form-label">Họ Tên</label>
+            <input type="text" class="form-control" id="userName" value="<%= user?.name %>" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="userEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="userEmail" value="<%= user?.email %>" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="userRole" class="form-label">Vai Trò</label>
+            <input type="text" class="form-control" id="userRole" value="<%= user?.role %>" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="userStatus" class="form-label">Trạng Thái</label>
+            <input type="text" class="form-control" id="userStatus" value="<%= user?.status %>" disabled>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

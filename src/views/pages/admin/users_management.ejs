@@ -1,0 +1,130 @@
+<div class="container mt-5">
+    <h1 class="text-center">Quản lý người dùng</h1>
+
+    <div class="d-flex justify-content-start mb-3 gap-2">
+        <button type="button" class=" btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            + Thêm Người Dùng
+        </button>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#assignCategoryModal">
+            Phân công chuyên mục
+        </button>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên người dùng</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach((user, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td>
+                        <% if (user.role === 'subscriber') { %>
+                            <form action="/admin/users/<%= user.id %>/extend" method="POST" class="d-inline">
+                                <input type="hidden" name="_method" value="PUT">
+                                <button type="submit" class="btn btn-primary btn-sm">Gia hạn</button>
+                            </form>
+                        <% } else { %>
+                            <span class="badge bg-success">Hoạt động</span>
+                        <% } %>
+                    </td>
+                    <td>
+                        <button type="button" id="view-user" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewUserModal" onclick="viewUserDetails(`<%= user._id %>`, '<%= user.name %>', '<%= user.email %>', '<%= user.role %>', '<%= user.status %>')">
+                          Xem Chi Tiết
+                        </button>
+
+                        
+                        <!-- <% if (user.role === 'editor') { %>
+                            
+                        <% } %> -->
+
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal" onclick="loadUserData(`<%= user._id %>`, '<%= user.name %>', '<%= user.email %>', '<%= user.role %>')">
+                            Cập Nhật
+                        </button>
+                        
+                        
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteUserId(`<%= user._id %>`)">
+                            Xóa
+                        </button>
+                        
+                        
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+    <%- include('../../components/modal/admin_create_user') %>
+    <%- include('../../components/modal/admin_view_user') %>
+    <%- include('../../components/modal/admin_update_user') %>
+    <%- include('../../components/modal/admin_delete_user') %>
+    <%- include('../../components/modal/admin_assign_category') %>
+
+<script>
+    // Mock user data retrieval function (you can replace it with a real API call)
+    async function getUserById(userId) {
+        try {
+            const response = await fetch(`/api/v1/users/${userId}`, 
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+            );
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Could not fetch user data');
+            }
+
+            if (!data.user) {
+                throw new Error('User not found');
+            }
+
+            return {
+                id: data.user._id,
+                name: data.user.name,
+                email: data.user.email,
+                role: data.user.role,
+                status: data.user.status
+            };
+
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            alert('Failed to fetch user details');
+        }
+    }
+
+
+    function loadUserData(userId, userName, userEmail, userRole) {
+        // Update values in the edit modal form
+        document.getElementById('userId').value = userId;
+        document.getElementById('editName').value = userName;
+        document.getElementById('editEmail').value = userEmail;
+        document.getElementById('editRole').value = userRole;
+    }
+
+    function setDeleteUserId(userId) {
+        document.getElementById('deleteUserId').value = userId;
+    }
+
+    async function viewUserDetails(userId, userName, userEmail, userRole, userStatus) {
+        
+        
+        document.getElementById('userName').value = userName;
+        document.getElementById('userEmail').value = userEmail;
+        document.getElementById('userRole').value = userRole;
+        document.getElementById('userStatus').value = userStatus;
+    }
+</script>

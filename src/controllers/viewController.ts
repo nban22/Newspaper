@@ -186,7 +186,11 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
 
     if (article.is_premium && user === null) {
         const message = "Bài viết chỉ dành cho độc giả!";
-        return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
+        return res.status(StatusCodes.FORBIDDEN).render("pages/default/access_denied", {
+            layout: "layouts/default",
+            title: "Truy cập bị từ chối",
+            message,
+        });
     }
 
     if (article.is_premium && user?.role === "subscriber") {
@@ -196,7 +200,11 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
             if (subscriber.subscription_status === "expired") {
                 message = "Tài khoản của bạn đã hết hạn";
             }
-            return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
+            return res.status(StatusCodes.FORBIDDEN).render("pages/default/access_denied", {
+                layout: "layouts/default",
+                title: "Truy cập bị từ chối",
+                message,
+            });
         }
     }
 

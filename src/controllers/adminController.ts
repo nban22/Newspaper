@@ -4,9 +4,9 @@ import Category from "../models/category";
 import Article from "../models/article";
 import ArticleTag from "../models/article_tag";
 import Tag from "../models/tag";
-import AppError from "../utils/AppError";
 import { StatusCodes } from "http-status-codes";
 import formatDate from "../utils/formatDate";
+import User from "../models/user";
 
 export const getCategoryManagementPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -48,5 +48,46 @@ export const getTagManagementPage = catchAsync(async (req: Request, res: Respons
     res.status(StatusCodes.OK).render("pages/admin/tags", {
         user: user,
         tags: tagsWithTotalArticles,
+    });
+});
+
+export const getArticleManagementPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    const articles = await Article.find().populate("category_id").populate("writer_id").lean();
+
+    const articlesFiltered = articles.map((article: any) => ({
+        _id: article?._id,
+        title: article?.title,
+        is_premium: article?.is_premium,
+        category: article?.category_id?.name,
+        writer_name: article?.writer_id?.full_name,
+        created_at: article?.created_at,
+        status: article?.status,
+    }));
+
+    res.status(StatusCodes.OK).render("pages/admin/articles_management", {
+        layout: "layouts/admin",
+        title: "Quản lý bài viết",
+        user: user,
+        articles: articlesFiltered,
+    });
+});
+
+export const getUserManagementPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.body.user;
+    const users = await User.find();
+
+    const editors = users.filter(user => user.role === "editor");
+
+    const categories = await Category.find().lean();
+
+    res.status(StatusCodes.OK).render("pages/admin/users_management", {
+        layout: "layouts/admin",
+        title: "Quản lý người dùng",
+        user: user,
+        users: users,
+        editors: editors,
+        categories: categories,
+
     });
 });

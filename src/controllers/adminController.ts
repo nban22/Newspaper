@@ -7,6 +7,7 @@ import Tag from "../models/tag";
 import { StatusCodes } from "http-status-codes";
 import formatDate from "../utils/formatDate";
 import User from "../models/user";
+import SubscriberProfile from "../models/subscriberProfile";
 
 export const getCategoryManagementPage = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body.user;
@@ -81,6 +82,13 @@ export const getUserManagementPage = catchAsync(async (req: Request, res: Respon
 
     const categories = await Category.find().lean();
 
+    const readers = users.filter(user => user.role === "subscriber") as any;
+    for (const reader of readers) {
+        const subscriberProfile = await SubscriberProfile.findOne({ user_id: reader._id });
+        reader.subscription_status = subscriberProfile?.subscription_status;
+        reader.expiryDate = subscriberProfile?.expiryDate;
+    }
+
     res.status(StatusCodes.OK).render("pages/admin/users_management", {
         layout: "layouts/admin",
         title: "Quản lý người dùng",
@@ -88,6 +96,6 @@ export const getUserManagementPage = catchAsync(async (req: Request, res: Respon
         users: users,
         editors: editors,
         categories: categories,
-
+        readers: readers,
     });
 });

@@ -6,7 +6,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/admin/users" method="POST">
+          <form id="addUserForm">
             <div class="mb-3">
               <label for="name" class="form-label">Tên Người Dùng</label>
               <input type="text" id="name" name="name" class="form-control" required>
@@ -16,11 +16,15 @@
               <input type="email" id="email" name="email" class="form-control" required>
             </div>
             <div class="mb-3">
+              <label for="password" class="form-label">Mật Khẩu</label>
+              <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
               <label for="role" class="form-label">Vai trò</label>
               <select id="role" name="role" class="form-select" required>
-                <option value="Độc giả">Độc giả</option>
-                <option value="Biên tập viên">Biên tập viên</option>
-                <option value="Phóng viên">Phóng viên</option>
+                <option value="writer">Phóng viên</option>
+                <option value="editor">Biên tập viên</option>
+                <option value="subscriber">Độc giả</option>
               </select>
             </div>
         </div>
@@ -32,3 +36,37 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.querySelector("#addUserForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.querySelector("#name").value;
+      const email = document.querySelector("#email").value;
+      const password = document.querySelector("#password").value;
+      const role = document.querySelector("#role").value;
+      const response = await fetch("/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert("Thêm người dùng thành công");
+        document.querySelector("#addUserModal").classList.remove("show");
+        document.querySelector("#addUserModal").setAttribute("aria-hidden", "true");
+        document.querySelector("#addUserModal").setAttribute("style", "display: none");
+        document.querySelector(".modal-backdrop").remove();
+        document.querySelector("#addUserForm").reset();
+      } else {
+        alert(`Thêm người dùng thất bại lỗi: ${data.message}`);
+
+      }
+    });
+  </script>

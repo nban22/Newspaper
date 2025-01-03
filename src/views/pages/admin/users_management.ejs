@@ -8,6 +8,9 @@
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#assignCategoryModal">
             Phân công chuyên mục
         </button>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#renewAccountModal">
+            Gia hạn tài khoản
+        </button>
     </div>
 
     <table class="table table-bordered table-striped">
@@ -29,13 +32,10 @@
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
                     <td>
-                        <% if (user.role === 'subscriber') { %>
-                            <form action="/admin/users/<%= user.id %>/extend" method="POST" class="d-inline">
-                                <input type="hidden" name="_method" value="PUT">
-                                <button type="submit" class="btn btn-primary btn-sm">Gia hạn</button>
-                            </form>
-                        <% } else { %>
+                        <% if (user.active) { %>
                             <span class="badge bg-success">Hoạt động</span>
+                            <% } else { %>
+                            <span class="badge bg-danger">Khóa</span>
                         <% } %>
                     </td>
                     <td>
@@ -69,6 +69,7 @@
     <%- include('../../components/modal/admin_update_user') %>
     <%- include('../../components/modal/admin_delete_user') %>
     <%- include('../../components/modal/admin_assign_category') %>
+    <%- include('../../components/modal/admin_renew_sub_account') %>
 
 <script>
     // Mock user data retrieval function (you can replace it with a real API call)

@@ -1,0 +1,62 @@
+<!-- Modal Gia Hạn Tài Khoản Độc Giả -->
+<div class="modal fade" id="renewAccountModal" tabindex="-1" aria-labelledby="renewAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="renewAccountModalLabel">Gia Hạn Tài Khoản Độc Giả</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="renewAccountForm">
+          <!-- Chọn Độc Giả -->
+          <div class="mb-3">
+            <label for="readerSelect" class="form-label">Chọn Độc Giả</label>
+            <select class="form-select" id="readerSelect" required>
+              <option value="">Chọn độc giả</option>
+              <% readers.forEach(reader => { %>
+                <option value="<%= reader.id %>"><%= reader.email %> - Trạng thái: <%= reader.subscription_status %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Số Tháng Gia Hạn -->
+          <div class="mb-3">
+            <label for="renewDuration" class="form-label">Số Tháng Gia Hạn</label>
+            <input type="number" class="form-control" id="renewDuration" placeholder="Nhập số tháng" min="1" required />
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary" id="renewButton">Gia Hạn</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.querySelector("#renewAccountForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const readerId = document.querySelector("#readerSelect").value;
+    const duration = document.querySelector("#renewDuration").value;
+    const response = await fetch("/api/v1/users/renew-subscription", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        readerId,
+        duration,
+      }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      alert("Gia hạn tài khoản thành công");
+      window.location.reload();
+    } else {
+      alert(data.message);
+    }
+  });
+</script>

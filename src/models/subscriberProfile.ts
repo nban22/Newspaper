@@ -41,8 +41,8 @@ const SubscriberProfileSchema: Schema<ISubscriberProfile> = new mongoose.Schema(
 
     subscription_status: {
         type: String,
-        enum: ["active", "expired"],
-        default: "active",
+        enum: ["active", "expired", "normal"],
+        default: "normal",
     },
     avatar: { type: String },
 });

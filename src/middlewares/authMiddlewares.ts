@@ -73,7 +73,7 @@ export const authenticateJWT = catchAsync(
                 req.body.user = null;
                 return next();
             } else {
-                return next(new AppError(StatusCodes.UNAUTHORIZED, `Invalid accesstoken with error name ${err.name}`));
+                return next(new AppError(StatusCodes.UNAUTHORIZED, `Invalid accesstoken with error name ${err.name}`, true));
             }
         }
 

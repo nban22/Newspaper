@@ -50,6 +50,7 @@ app.set("layout", false);
 app.use((req, res, next) => {
     res.locals.scripts = res.locals.scripts || "";
     res.locals.styles = res.locals.styles || "";
+    res.locals.user = res.locals.user || null;
     next();
 });
 
@@ -79,6 +80,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
     if (err.renderErrorPage) {
         return res.status(err.statusCode).render("pages/error/not_found_page", {
+            layout: "layouts/default",
+            title: "404 - Không tìm thấy trang",
             message: process.env.NODE_ENV === "development" ? err.message : false,
         });
     }

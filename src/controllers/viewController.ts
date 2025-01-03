@@ -24,6 +24,7 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
     const user = req.body.user;
 
     const latestArticles = (await articleController.getLatestArticles()).data.articles;
+    const topArticles = (await articleController.getTopArticles()).data.articles;
 
     const trendingArticles = (await Article.find({ status: "published" })).map((article) => ({
         ...article.toObject(),
@@ -66,8 +67,9 @@ export const getHomePage = catchAsync(async (req: Request, res: Response, next: 
         layout: "layouts/default",
         scripts: `<script src="/js/pages/home.js"></script>`,
         title: "Trang chủ",
-        user: user,
-        profile: profile,
+        user,
+        profile,
+        topArticles: topArticles,
         latestArticle: latestArticles,
         featuredArticles: featuredArticles,
         topCategories: topCategories,
@@ -163,7 +165,7 @@ export const getArticlePage = catchAsync(async (req: Request, res: Response, nex
     }
 
     if (article.is_premium && user === null) {
-        const message = "Bài viết này chỉ dành cho người đăng ký thành viên!";
+        const message = "Bài viết chỉ dành cho độc giả!";
         return res.status(StatusCodes.FORBIDDEN).render("pages/access_denied", { message });
     }
 

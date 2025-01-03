@@ -39,9 +39,9 @@
 </head>
 <body>
   <div class="access-denied-container">
-    <h1>Từ chối truy cập!</h1>
+    <h1>Bạn không có quyền truy cập bài báo này</h1>
     <p> <%= message %></p>
-    <% if (message === "Bài viết này chỉ dành cho người đăng ký thành viên!") { %>
+    <% if (message === "Bài viết chỉ dành cho độc giả!") { %>
       <a href="/signup" class="btn btn-primary">Đăng ký tại đây</a>
     <% } %>
   </div>

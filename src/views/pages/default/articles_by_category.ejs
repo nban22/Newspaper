@@ -11,18 +11,13 @@
             <% articles.forEach(article=> { %>
             <li class="">
                 <div class="article-card">
-                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2 position-relative">
-                        <div class="position-absolute bottom-0 start-0">
-                            <% if (article.is_premium) { %>
-                            <span class="badge rounded-pill bg-warning text-dark m-2">Premium</span>
-                            <% } %>
-                        </div>
+                    <div class="d-flex flex-wrap justify-content-center p-2 gap-2">
                         <% if (article.status==='published' ) { %>
                         <a class="text-dark" style="flex: 0 1 250px" href="/article/<%- article._id %>" >
                             <img src="<%= article.thumbnail %>" class="img-fluid rounded-top" alt="<%= article.title %>" />
                         </a>
                         <% } else { %>
-                        <a class="text-dark" style="flex: 0 1 250px" href="/edit_article/<%- article._id %>">
+                        <a class="text-dark" style="flex: 0 1 250px;" href="/edit_article/<%- article._id %>">
                             <img src="<%= article.thumbnail %>" class="img-fluid rounded-top" alt="<%= article.title %>" />
                         </a>
                         <% } %>
@@ -35,12 +30,20 @@
                                     <span class="metadata-divider">•</span>
                                     <span class="created-date text-muted" style="font-size: 0.9rem">
                                         <%= new Date(article.created_at).toLocaleDateString('vi-VN', { day: 'numeric' ,
-                                        month: 'numeric' , year: 'numeric' , hour: '2-digit' , minute: '2-digit' }) %>
+                                        month: 'numeric' , year: 'numeric' }) %>
                                     </span>
                                 </div>
+                                <div class="d-flex justify-content-between">
                                 <div class="tags-container" id="tags-<%= article._id %>">
                                     <!-- Tags will be loaded here -->
                                 </div>
+                                <div class="badge-container position-relative">
+                                    <% if (article.is_premium) { %>
+                                    <span class="badge rounded-pill bg-warning text-dark">Premium</span>
+                                    <% } %>
+                                </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -56,7 +59,7 @@
     <nav aria-label="Article Pagination">
         <ul class="pagination">
             <!-- Previous Page Button -->
-            <% if (page> 1) { %>
+            <% if (page > 1) { %>
             <li class="page-item">
                 <a class="page-link" href="?page=<%= page - 1 %>" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
@@ -71,7 +74,7 @@
 
             <!-- Page Number Text -->
             <li class="page-item disabled">
-                <span class="page-link">Page <%= page %> of <%= totalPages %></span>
+                <span class="page-link">Trang <%= page %>/<%= totalPages %></span>
             </li>
 
             <!-- Next Page Button -->

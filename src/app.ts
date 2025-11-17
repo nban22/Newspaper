@@ -58,6 +58,15 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, "../public")));
 
+// Health check endpoint
+app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({
+        status: "success",
+        message: "Server is healthy",
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.use("/auth/facebook", facebookRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/v1", authRouter);
